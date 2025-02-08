@@ -42,9 +42,9 @@ export const Teach: React.FC = () => {
   }, []);
 
   return (
-    <main className="min-h-screen bg-white p-4">
+    <main className="min-h-screen p-4">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="md:text-2xl sm:text-xl  font-bold">Ваши курсы</h2>
+        <h2 className="md:text-2xl sm:text-xl font-bold">Ваши курсы</h2>
         <Button
             onClick={handleAddCourse}
             variant="outline"

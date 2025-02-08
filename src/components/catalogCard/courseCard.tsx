@@ -39,7 +39,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   
     return (
       <Card
-        className="w-full h-auto md:h-[200px] border-0 bg-white rounded-lg shadow-inner shadow-md hover:shadow-hover-even 
+        className="w-full h-auto md:h-[200px] border-0 bg-white rounded-lg shadow-inner shadow-sm hover:shadow-hover-even 
         transition-shadow duration-300 p-4 flex flex-col justify-between cursor-pointer"
         onClick={handleCardClick}
       >

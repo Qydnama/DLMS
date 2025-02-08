@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LanguageSelector } from '@/components/header/languageSelector';
-import { ProfilePopover } from "@/components/header/profilePopover";
+// import { ProfilePopover } from "@/components/header/profilePopover";
 import { Menu } from "lucide-react";
 import {
     DropdownMenu,
@@ -17,6 +17,7 @@ import {
     NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import { useTranslation } from "react-i18next";
+import { TonConnectButton } from '@tonconnect/ui-react';
 
 
 interface HeaderProps {
@@ -45,11 +46,11 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
 
     return (
         <header
-        className={`bg-white fixed top-0 w-full z-10 ${
+        className={`bg-white fixed z-10 ${
             hideBorder ? "" : "border-b border-gray-300"
-        } transition duration-300 ${className}`}
+        } transition duration-300 ${className} `}
         >
-            <div className="w-full flex justify-between items-center px-5">
+            <div className="max-w-screen-xl flex justify-between items-center px-5 mx-auto">
                 <div className="flex items-center space-x-3">
                     {/* Logo */}
                     <Link to="/catalog">
@@ -144,7 +145,8 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
                     </div>
 
                     {/* Profile */}
-                    <ProfilePopover />
+                    {/* <ProfilePopover /> */}
+                    <TonConnectButton />
                 </div>
             </div>
         </header>

@@ -1,11 +1,11 @@
 import React from "react";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 import { Languages } from "lucide-react";
 import { useTranslation } from "react-i18next"; // Import the i18next hook
 
 
 export const LanguageSelector: React.FC = () => {
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
     const { i18n } = useTranslation(); 
 
     const changeLanguage = (lang: string) => {
@@ -16,11 +16,11 @@ export const LanguageSelector: React.FC = () => {
         <div className="flex items-center">
         {/* Language Dropdown */}
         <Select onValueChange={changeLanguage}>
-            <SelectTrigger className="text-base flex items-center px-4 py-2 rounded-md hover:text-blue-500 transition duration-200 border-none">
+            <SelectTrigger className="text-base flex items-center px-1 py-2 rounded-md hover:text-blue-500 transition duration-200 border-none">
             {/* Icon and Text Together */}
             <div className="flex items-center space-x-2">
                 <Languages className="w-5 h-5" />
-                <SelectValue placeholder={t("current-language")}/>
+                {/* <SelectValue placeholder={t("current-language")}/> */}
             </div>
             </SelectTrigger>
             <SelectContent>
