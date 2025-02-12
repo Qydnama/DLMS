@@ -12,6 +12,11 @@
     "profile": "Profile",
     "settings": "Settings",
     "logout": "Logout",
-    "current-language": "English"
+    "current-language": "English",
+    "language": "Language",
+    "system": "System",
+    "dark": "Dark",
+    "light": "Light",
+    "theme": "Theme"
   }
   

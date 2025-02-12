@@ -12,6 +12,12 @@
     "profile": "Профиль",
     "settings": "Баптаулар",
     "logout": "Шығу",
-    "currect-language": "Қазақша"
+    "currect-language": "Қазақша",
+    "language": "Тіл",
+    "system": "Система",
+    "dark": "Қара",
+    "light": "Ақ",
+    "theme": "Тема"
+
   }
   

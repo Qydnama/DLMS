@@ -1,5 +1,4 @@
 import React from "react";
-import { Separator } from "@/components/ui/separator";
 import { useTranslation } from "react-i18next";
 
 
@@ -11,9 +10,8 @@ export const Footer: React.FC<FooterProps> = ({className}) => {
     const { t } = useTranslation();
 
     return (
-        <footer className={`text-gray-600`}>
+        <footer className={`text-gray-600 bg-white shadow-2xl`}>
             {/* Line on Top */}
-            <Separator className="bg-gray-300" />
 
             <div className={`container mx-auto px-4 py-6 ${className}`}>
                 <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">

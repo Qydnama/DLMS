@@ -37,33 +37,35 @@ export const Teach: React.FC = () => {
         navigate(`./new`);
     };
   useEffect(() => {
-    const timeout = setTimeout(() => setIsLoading(false), 2000); // Simulate data loading
+    const timeout = setTimeout(() => setIsLoading(false), 500); // Simulate data loading
     return () => clearTimeout(timeout);
   }, []);
 
   return (
-    <main className="min-h-screen p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="md:text-2xl sm:text-xl font-bold">Ваши курсы</h2>
-        <Button
-            onClick={handleAddCourse}
-            variant="outline"
-            className="flex items-center border-blue-500 text-blue-500 
-            hover:border-blue-700 hover:text-blue-700 transition-colors duration-200"
-            >
-            <Plus className="w-5 h-5" />
-            <span>New course</span>
-        </Button>
-      </div>
-      <div className="space-y-4">
-        {isLoading
-            ? Array.from({ length: 3 }).map((_, index) => (
-                <TeachCardSkeleton key={index} />
-                ))
-            : mockCourses.map((course) => (
-                <TeachCard key={course.courseId} {...course} />
-                ))}
-      </div>
+    <main className="p-4 max-w-4xl bg-white rounded-xl shadow-md p-4 flex flex-col items-center mx-auto pb-10">
+        <div className="w-full max-w-3xl">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="md:text-2xl sm:text-xl font-bold">Ваши курсы</h2>
+                <Button
+                    onClick={handleAddCourse}
+                    variant="outline"
+                    className="flex items-center border-blue-500 text-blue-500 
+                    hover:border-blue-700 hover:text-blue-700 transition-colors duration-200"
+                    >
+                    <Plus className="w-5 h-5" />
+                    <span>New course</span>
+                </Button>
+            </div>
+            <div className="space-y-4">
+                {isLoading
+                    ? Array.from({ length: 3 }).map((_, index) => (
+                        <TeachCardSkeleton key={index} />
+                        ))
+                    : mockCourses.map((course) => (
+                        <TeachCard key={course.courseId} {...course} />
+                        ))}
+            </div>
+         </div>
     </main>
   );
 };

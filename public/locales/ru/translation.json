@@ -12,6 +12,11 @@
     "profile": "Профиль",
     "settings": "Настройки",
     "logout": "Выйти",
-    "currect-language": "Русский"
+    "currect-language": "Русский",
+    "language": "Язык",
+    "system": "Системная",
+    "dark": "Темная",
+    "light": "Светлая",
+    "theme": "Тема"
   }
   

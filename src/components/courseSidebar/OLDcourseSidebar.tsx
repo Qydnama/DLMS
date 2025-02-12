@@ -6,9 +6,10 @@ import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
+  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar"
-
+import { Button } from "@/components/ui/button";
 
 const data = [
       {
@@ -18,12 +19,16 @@ const data = [
         isActive: true,
         items: [
           {
-            title: "Syllabus",
-            url: "syllabus",
+            title: "Information",
+            url: "#",
           },
           {
-            title: "Quizzes",
-            url: "quizzes",
+            title: "Syllabus",
+            url: "#",
+          },
+          {
+            title: "Checklist",
+            url: "#",
           },
         ],
       },
@@ -50,31 +55,44 @@ const data = [
 
 
 export function CourseSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-    const courseTitle = "Example Course Example eCourseCourseCourseCourseCours Course Example Example Course Example Course Example Course ";
+    const courseTitle = "Example Course Example Course Example Example Course Example Course Example Course";
     const courseImage = "/images/cards/1.png";
     const { isMobile } = useSidebar();
+  
 
+    function handlePublishCourse(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+        event.preventDefault();
+
+    }
 
     return (
-        <div className="bg-white rounded-l-2xl m-0 sm:mt-5 sm:ml-5">
-            {isMobile}
-            <Sidebar collapsible={isMobile ? "icon" : "none"} {...props} className="bg-white rounded-l-2xl h-[calc(100vh-64px)] sticky top-[64px] left-0">
+        <div className="bg-white rounded-2xl shadow-md">
+            {isMobile && <SidebarTrigger />}
+            <Sidebar collapsible={isMobile ? "icon" : "none"} {...props} className="bg-white rounded-2xl h-[calc(100vh-64px)] sticky top-[64px] left-0">
                 <SidebarHeader className="flex p-4">
                     <Avatar className="w-24 h-24 rounded-lg overflow-hidden">
                         <AvatarImage src={courseImage} alt={courseTitle} />
                         <AvatarFallback>EC</AvatarFallback>
                     </Avatar>
                     <div>
-                        <p className="line-clamp-5 text-md font-semibold break-words">{courseTitle}</p>
+                        <p className="line-clamp-3 text-md font-semibold break-words">{courseTitle}</p>
                     </div>
+                    <Button
+                        onClick={handlePublishCourse}
+                        variant="outline"
+                        className="w-24 h-9 border-blue-500 text-blue-500 
+                        hover:border-blue-700 hover:text-blue-700 transition-colors duration-200"
+                        >
+                        <span>Publish</span>
+                    </Button>
                 </SidebarHeader>
-                <SidebarContent>
-                    <SidebarMain items={data} />
-                </SidebarContent>
-                {/* <SidebarFooter>
-                <NavUser user={data.user} />
-                </SidebarFooter> */}
-            </Sidebar>
+            <SidebarContent>
+                <SidebarMain items={data} />
+            </SidebarContent>
+            {/* <SidebarFooter>
+            <NavUser user={data.user} />
+            </SidebarFooter> */}
+        </Sidebar>
       </div>
     )
   }

@@ -3,44 +3,44 @@ import {
   Card,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import { EllipsisVertical } from "lucide-react";
+// import {
+//   DropdownMenu,
+//   DropdownMenuTrigger,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+// } from "@/components/ui/dropdown-menu";
+// import { EllipsisVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
-interface TeachCardProps {
+interface LearnCardProps {
   courseId: string;
   title: string;
   image: string;
 }
 
-export const TeachCard: React.FC<TeachCardProps> = ({ courseId, title, image }) => {
+export const LearnCard: React.FC<LearnCardProps> = ({ courseId, title, image }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
     navigate(`/course/${courseId}`);
   };
-  const handleInfoClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigate(`/course/${courseId}/information`);
-  };
-  const handleSyllabusClick = (e: React.MouseEvent) => {
+  const handleLessonsClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigate(`/course/${courseId}/syllabus`);
+  };
+  const handleQuizzesClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/course/${courseId}/quizzes`);
   };
 
   return (
     <Card
-      className="h-auto xs:h-[200px] cursor-pointer relative border-0 w-full max-w-4xl p-4 shadow-inner shadow-md hover:shadow-hover-even transition-shadow duration-150"
+      className="h-auto xs:h-[200px] bg-gray-50 cursor-pointer relative border-0 w-full max-w-4xl p-4 shadow-inner shadow-md hover:shadow-hover-even transition-shadow duration-150"
       onClick={handleCardClick}
     >
       {/* Меню справа */}
-      <div className="absolute top-4 right-4">
+      {/* <div className="absolute top-4 right-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="p-2 rounded-md hover:bg-gray-100">
@@ -60,7 +60,7 @@ export const TeachCard: React.FC<TeachCardProps> = ({ courseId, title, image }) 
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </div> */}
 
       {/* Основной контент */}
       <div className="flex items-center">
@@ -84,16 +84,16 @@ export const TeachCard: React.FC<TeachCardProps> = ({ courseId, title, image }) 
             <Button
               variant="link"
               className="text-blue-500"
-              onClick={handleInfoClick}
+              onClick={handleLessonsClick}
             >
-              Описание
+              Уроки
             </Button>
             <Button
               variant="link"
               className="text-blue-500"
-              onClick={handleSyllabusClick}
+              onClick={handleQuizzesClick}
             >
-              Содержание
+              Тесты
             </Button>
           </div>
         </div>
