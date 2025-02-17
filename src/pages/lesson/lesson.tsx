@@ -10,6 +10,7 @@ export function Lesson() {
 
     const data = {
         course: {
+            courseId: "1",
             courseTitle: "Example Course Example eCourseCourseCourseCourseCours Course Example Example Course Example Course Example Course "
         },
         lessons: [

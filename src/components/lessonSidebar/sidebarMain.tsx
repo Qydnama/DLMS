@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/sidebar"
 
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Link } from "react-router-dom"
 
 
 export function SidebarMain({
@@ -20,6 +21,7 @@ export function SidebarMain({
 }) {
   return (
     <SidebarGroup>
+        <SidebarGroupLabel className="text-base text-black hover:underline"><Link to="../quizzes">Quizzes</Link></SidebarGroupLabel>
         <SidebarGroupLabel>Syllabus</SidebarGroupLabel>
         <SidebarMenu>
             <ScrollArea className="h-[700px]">

@@ -1,6 +1,7 @@
 import React from "react";
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion"
 
 import { MainLayout } from "@/layouts/mainLayout";
 import { Catalog } from "@/pages/catalog/catalog";
@@ -15,35 +16,67 @@ import { Learn } from "@/pages/learn/learn";
 import { Syllabus } from "@/pages/learn/syllabus";
 import { Quizzes } from "@/pages/learn/quizzes";
 import { Lesson } from "@/pages/lesson/lesson";
+import { Quiz } from "@/pages/quiz/quiz";
+import { QuizAttempt } from "@/pages/quiz/quizAttempt";
+import { QuizReview } from "@/pages/quiz/quizReview";
+import { CoursePromo } from "@/pages/coursePromo/coursePromo";
 
+
+function AnimatedRoute({ children }: { children: React.ReactNode }) {
+    return (
+      <motion.div
+        // Начинаем справа за экраном
+        initial={{ x: "100%" }}
+        // Анимировано двигаемся в 0
+        animate={{ x: 0 }}
+        // При выходе уезжаем налево
+        exit={{ x: "-100%" }}
+        transition={{ duration: 0.38 }}
+        // Позиционируем абсолютно, чтобы старый и новый экраны перекрывались
+        style={{ position: "absolute", width: "100%", top: 0, left: 0 }}
+      >
+        {children}
+      </motion.div>
+    );
+}
 
 const App: React.FC = () => {
+    const location = useLocation();
+
     return (
-        <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/Qydnama/first_contract_front_end/refs/heads/main/public/tonconnect-manifest.json">
-            <CourseBuilderProvider>
-                <Routes>
-                    <Route index element={<Navigate to="catalog" replace />} />
-                    <Route path="catalog" element={ <MainLayout children={<Catalog />} />} />
-                    
-                    <Route path="learn" element={ <MainLayout children={<Learn />}></MainLayout>} />
+        <AnimatePresence mode="wait">
+            <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/Qydnama/first_contract_front_end/refs/heads/main/public/tonconnect-manifest.json">
+                <CourseBuilderProvider>
+                    <Routes location={location} key={location.pathname}>
+                        <Route index element={<Navigate to="catalog" replace />} />
+                        <Route path="catalog" element={ <MainLayout children={<Catalog />} />} />
+                        
+                        <Route path="learn" element={ <MainLayout children={<Learn />}></MainLayout>} />
 
-                    <Route path="teach" element={ <Navigate to="/teach/courses" replace /> } />
-                    <Route path="teach/courses" >
-                        <Route index element={ <MainLayout><Teach /></MainLayout> } />
-                        <Route path="new" element={ <MainLayout><PinataCreateCourse /></MainLayout> } />
-                        <Route path="create" element={ <MainLayout><CreateCourse children={undefined} /></MainLayout> } />
-                    </Route>
+                        <Route path="teach" element={ <Navigate to="/teach/courses" replace /> } />
+                        <Route path="teach/courses" >
+                            <Route index element={ <MainLayout><Teach /></MainLayout> } />
+                            <Route path="new" element={ <MainLayout><PinataCreateCourse /></MainLayout> } />
+                            <Route path="create" element={ <MainLayout><CreateCourse children={undefined} /></MainLayout> } />
+                        </Route>
 
-                    <Route path="course/:courseId">
-                        <Route index element={<Navigate to="syllabus" replace />} />
-                        <Route path="syllabus" element={ <MainLayout><CourseSidebarLayout children={<Syllabus />} /></MainLayout> } />
-                        <Route path="quizzes" element={ <MainLayout><CourseSidebarLayout children={<Quizzes />} /></MainLayout> } />
-                        <Route path="lesson/:lessonId" element={<MainLayout><Lesson /></MainLayout>} />
-                    </Route>
-                    
-                </Routes>
-            </CourseBuilderProvider>
-        </TonConnectUIProvider>
+                        <Route path="course/:courseId">
+                            <Route index element={<Navigate to="syllabus" replace />} />
+                            <Route path="promo" element={<MainLayout><CoursePromo /></MainLayout>} />
+                            <Route path="syllabus" element={ <MainLayout><CourseSidebarLayout children={<Syllabus />} /></MainLayout> } />
+                            <Route path="quizzes" element={ <MainLayout><CourseSidebarLayout children={<Quizzes />} /></MainLayout> } />
+                            <Route path="lesson/:lessonId" element={<MainLayout><Lesson /></MainLayout>} />
+                            <Route path="quiz/:quizId">
+                                <Route index element={<MainLayout><Quiz /></MainLayout>} />
+                                <Route path="attempt" element={<AnimatedRoute><QuizAttempt /></AnimatedRoute>} />
+                                <Route path="review" element={<AnimatedRoute><QuizReview /></AnimatedRoute>} />
+                            </Route>
+                        </Route>
+                        
+                    </Routes>
+                </CourseBuilderProvider>
+            </TonConnectUIProvider>
+        </AnimatePresence>
     );
   };
   

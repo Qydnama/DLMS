@@ -7,7 +7,7 @@ import { CourseSidebar } from "@/components/courseSidebar/courseSidebar"
 export function CourseSidebarLayout({ children }: { children: React.ReactNode }) {
     return (
         <SidebarProvider>
-            <div className="flex w-full max-w-screen-xl mx-auto bg-white rounded-2xl shadow-md">
+            <div className="flex w-full mx-auto bg-white rounded-2xl shadow-md">
                 {/* Sidebar */}
                 <CourseSidebar />
                 {/* Divider */}

@@ -29,7 +29,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
     const navigate = useNavigate();
   
     const handleCardClick = () => {
-      navigate(`/course/${courseId}`);
+      navigate(`/course/${courseId}/promo`);
     };
   
     const handleAuthorClick = (e: React.MouseEvent) => {

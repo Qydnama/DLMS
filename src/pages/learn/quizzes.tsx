@@ -51,7 +51,7 @@ export const Quizzes = () => {
       },
       {
         id: "7",
-        title: "State Management in React",
+        title: "JavaScript Fundamental Development Development Development Development Development Development Development Development Development Development Development Development Development Development DevelopmentDevelopment Development Development DevelopmentDevelopmentDevelopmentDevelopment Development Developments",
         completed: true,
         score: 7,
         totalQuestions: 10,
@@ -68,11 +68,11 @@ export const Quizzes = () => {
     const navigate = useNavigate();
   
     const handleQuizClick = (quizId: string) => {
-      navigate(`/quiz/${quizId}`);
+      navigate(`../quiz/${quizId}`);
     };
   
     return (
-      <div className="max-w-4xl mx-auto p-0 pt-6 pr-6 md:p-6 bg-white">
+      <div className="max-w-4xl mx-auto p-0 pt-6 md:pr-6 md:p-6">
         {/* Sidebar Trigger + Title */}
         <div className="flex items-center gap-2 mb-4">
           <SidebarTrigger className="block min-[1000px]:hidden pl-3" />
@@ -99,16 +99,16 @@ export const Quizzes = () => {
               >
   
                 {/* Quiz Details */}
-                <div className="ml-2 sm:ml-4 flex-1">
-                  <Label className="text-xs cursor-pointer md:text-sm lg:text-base line-clamp-3 font-semibold break-words">
+                <div className="ml-2 sm:ml-4 flex-1 min-w-0">
+                <Label className="break-all sm:break-words text-xs cursor-pointer md:text-sm lg:text-base line-clamp-3 font-semibold">
                     {index + 1}. {quiz.title}
-                  </Label>
+                </Label>
                 </div>
   
                 {/* Completion Status / Score */}
                 <div className="pl-2 flex flex-col items-end">
                   {quiz.completed ? (
-                    <span className="flex space-x-1 text-green-600 font-semibold text-xs sm:text-sm">
+                    <span className="flex space-x-1 text-green-600 font-semibold text-[10px] sm:text-sm">
                         <Check className="w-4 h-4 sm:w-5 sm:h-5" />
                         <span>Score: {quiz.score}/{quiz.totalQuestions}</span>
                     </span>
@@ -116,9 +116,9 @@ export const Quizzes = () => {
                     <span className="text-gray-400 text-xs sm:text-sm">Not completed</span>
                   )}
                   {/* Question Count */}
-                  <div className="flex items-center text-gray-500 text-xs sm:text-sm mt-1">
-                    <ListOrdered className="w-4 h-4 mr-1" />
-                    {quiz.totalQuestions} Questions
+                  <div className="flex justify-between items-center text-gray-500 text-xs sm:text-sm mt-1">
+                    <ListOrdered className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                    <span className="">{quiz.totalQuestions} Questions</span>
                   </div>
                 </div>
               </Card>

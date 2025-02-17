@@ -152,8 +152,8 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
 
                     {/* Profile */}
                     {/* <ProfilePopover /> */}
-                    <SettingsPopover />
                     <TonConnectButton className="p-0 m-0" />
+                    <SettingsPopover />
                 </div>
             </div>
         </header>

@@ -71,7 +71,7 @@ export const Syllabus = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-0 pt-6 pr-6 md:p-6 bg-white">
+    <div className="max-w-4xl mx-auto p-0 pt-6 md:pr-6 md:p-6">
         <div className="flex items-center gap-2 mb-4">
             <SidebarTrigger className="block min-[1000px]:hidden pl-3" /> {/* Sidebar button before Syllabus text */}
             <h2 className="text-xl sm:text-2xl font-bold">Syllabus</h2>
@@ -101,7 +101,7 @@ export const Syllabus = () => {
 
                     {/* Lesson Details */}
                     <div className="ml-2 sm:ml-4 flex-1">
-                    <Label className="cursor-pointer text-xs md:text-sm lg:text-base line-clamp-3 font-semibold break-words">
+                    <Label className="cursor-pointer text-xs md:text-sm lg:text-base line-clamp-3 font-semibold break-all sm:break-words">
                         {index + 1}. {lesson.title}
                     </Label>
                     </div>

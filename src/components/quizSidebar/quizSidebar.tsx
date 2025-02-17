@@ -1,4 +1,4 @@
-import { SidebarMain } from "@/components/lessonSidebar/sidebarMain"
+import { SidebarMain } from "@/components/quizSidebar/sidebarMain"
 
 import {
   Sidebar,
@@ -10,14 +10,14 @@ import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 
 
-interface LessonSidebarProps extends React.ComponentProps<typeof Sidebar> {
+interface QuizSidebarProps extends React.ComponentProps<typeof Sidebar> {
     data: {
         course: { courseId: string; courseTitle: string };
-        lessons: { id: string; title: string; videoId: string }[];
+        quizzes: { id: string; title: string; completed: boolean, score: null | number, totalQuestions: number }[];
     };
 }
 
-export function LessonSidebar({ data, ...props }: LessonSidebarProps) {
+export function QuizSidebar({ data, ...props }: QuizSidebarProps) {
     const navigate = useNavigate();
     const { isMobile } = useSidebar();
 
@@ -38,7 +38,7 @@ export function LessonSidebar({ data, ...props }: LessonSidebarProps) {
 
                 </SidebarHeader>
                 <SidebarContent>
-                    <SidebarMain lessons={data.lessons} />
+                    <SidebarMain quizzes={data.quizzes} />
                 </SidebarContent>
                 {/* <SidebarFooter>
                 <NavUser user={data.user} />

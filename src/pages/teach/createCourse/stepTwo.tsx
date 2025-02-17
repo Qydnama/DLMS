@@ -2,6 +2,25 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { CirclePlus, X } from "lucide-react";
+import { z } from "zod";
+import { useEffect, useState } from "react";
+
+// **Zod Validation Schema**
+const youtubeUrlRegex = new RegExp(
+    /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/
+);
+
+const lessonSchema = z.object({
+    title: z.string().min(5, "Lesson title must be at least 5 characters"),
+    videoUrl: z.string().regex(youtubeUrlRegex, "Enter a valid YouTube URL"),
+});
+
+const stepTwoSchema = z.object({
+    lessons: z
+        .array(lessonSchema)
+        .min(1, "You must have at least 1 lesson")
+        .max(20, "You cannot have more than 20 lessons"),
+});
 
 interface StepTwoProps {
     courseData: {
@@ -10,12 +29,72 @@ interface StepTwoProps {
             videoUrl: string;
         }[];
     };
-    handleAddLesson: () => void;
-    handleRemoveLesson: (index: number) => void;
-    handleLessonChange: (index: number, field: string, value: string) => void;
+    setCourseData: React.Dispatch<React.SetStateAction<{
+            logo: string;
+            title: string;
+            summary: string;
+            recommendedWorkload: string;
+            whatYouWillLearn: string;
+            about: string;
+            whatYouWillGain: string;
+            initialRequirements: string;
+            price: number;
+            lessons: { title: string; videoUrl: string }[];
+    }>>;
+    setValidationStatus: React.Dispatch<React.SetStateAction<{ stepOne: boolean; stepTwo: boolean; stepThree: boolean; }>>
+    showErrors: boolean;
 }
 
-export function StepTwo({ courseData, handleAddLesson, handleRemoveLesson, handleLessonChange }: StepTwoProps) {
+export function StepTwo({ courseData, setCourseData, setValidationStatus, showErrors}: StepTwoProps) {
+    const [errors, setErrors] = useState<Record<number, { title?: string; videoUrl?: string }>>({});
+
+    useEffect(() => {
+        const validate = () => {
+            const result = stepTwoSchema.safeParse({ lessons: courseData.lessons });
+            if (!result.success) {
+                const errorMessages: Record<number, { title?: string; videoUrl?: string }> = {};
+
+                result.error.issues.forEach((issue) => {
+                    const lessonIndex = parseInt(issue.path[1] as string, 10);
+                    if (!errorMessages[lessonIndex]) errorMessages[lessonIndex] = {};
+                    if (issue.path[2] === "title") errorMessages[lessonIndex].title = issue.message;
+                    if (issue.path[2] === "videoUrl") errorMessages[lessonIndex].videoUrl = issue.message;
+                });
+
+                setErrors(errorMessages);
+                setValidationStatus((prev) => ({ ...prev, stepTwo: false }));
+            } else {
+                setErrors({});
+                setValidationStatus((prev) => ({ ...prev, stepTwo: true }));
+            }
+        };
+
+        validate();
+    }, [courseData, setValidationStatus]);
+
+    const handleAddLesson = () => {
+            setCourseData((prev) => ({
+                ...prev,
+                lessons: [...prev.lessons, { title: "", videoUrl: "" }],
+            }));
+        };
+    
+    const handleLessonChange = (index: number, field: string, value: string) => {
+        setCourseData((prev) => {
+            const updatedLessons = [...prev.lessons];
+            updatedLessons[index] = { ...updatedLessons[index], [field]: value };
+            return { ...prev, lessons: updatedLessons };
+        });
+    };
+
+    const handleRemoveLesson = (index: number) => {
+        setCourseData((prev) => ({
+            ...prev,
+            lessons: prev.lessons.filter((_, i) => i !== index), // Removes the lesson
+        }));
+    };
+
+
     return (
         <div>
             <div className="space-y-4">
@@ -25,6 +104,7 @@ export function StepTwo({ courseData, handleAddLesson, handleRemoveLesson, handl
                         onClick={handleAddLesson}
                         type="button"
                         className="rounded-2xl gap-1.5 p-2.5 bg-blue-500 flex items-center border-blue-500 hover:border-blue-700 hover:bg-blue-700 transition-colors duration-200"
+                        disabled={courseData.lessons.length >= 20}
                     >
                         <CirclePlus className="" style={{ width: '20px', height: '20px' }} />
                         Add Lesson
@@ -36,6 +116,7 @@ export function StepTwo({ courseData, handleAddLesson, handleRemoveLesson, handl
                     <div key={index} className="relative p-4 border rounded-xl space-y-4 bg-gray-50">
                         <div className="flex justify-between">
                             {/* X Button (Delete Lesson) */}
+                            {courseData.lessons.length > 1 && (
                             <Button
                                 onClick={() => handleRemoveLesson(index)}
                                 type="button"
@@ -44,6 +125,7 @@ export function StepTwo({ courseData, handleAddLesson, handleRemoveLesson, handl
                             >
                                 <X className="w-5 h-5" />
                             </Button>
+                            )}
 
                             {/* Lesson Number */}
                             <h3 className="text-lg font-medium text-gray-700">
@@ -65,8 +147,15 @@ export function StepTwo({ courseData, handleAddLesson, handleRemoveLesson, handl
                                 maxLength={120}
                                 className="rounded-2xl"
                             />
-                            <div className="text-gray-500 text-xs mt-1 text-right">
-                                <span>{lesson.title.length}/120</span>
+                            <div className="flex justify-between">
+                                <div>
+                                {showErrors && errors[index]?.title && (
+                                    <p className="text-red-500 text-xs">{errors[index].title}</p>
+                                )}
+                                </div>
+                                <div className="text-gray-500 text-xs mt-1 text-right">
+                                    <span>{lesson.title.length}/120</span>
+                                </div>
                             </div>
                         </div>
 
@@ -83,6 +172,9 @@ export function StepTwo({ courseData, handleAddLesson, handleRemoveLesson, handl
                                 onChange={(e) => handleLessonChange(index, "videoUrl", e.target.value)}
                                 className="rounded-2xl"
                             />
+                            {showErrors && errors[index]?.videoUrl && (
+                                <p className="text-red-500 text-xs">{errors[index].videoUrl}</p>
+                            )}
                         </div>
                     </div>
                 ))}

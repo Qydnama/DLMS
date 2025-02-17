@@ -11,7 +11,7 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }
         if (location.pathname.includes("/lesson/")) {
         return "max-w-screen-2xl"; 
         }
-        return "max-w-screen-xl px-4"; 
+        return "max-w-screen-xl sm:px-4"; 
     };
 
     const getCustomCSS = () => {
