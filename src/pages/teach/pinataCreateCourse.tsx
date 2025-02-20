@@ -42,7 +42,7 @@ export const PinataCreateCourse: React.FC = () => {
   return (
     <div className="pt-2 md:p-6">
         <div className="flex justify-center">
-            <div className="w-full max-w-screen-md rounded-lg lg:p-6 pt-2 bg-white rounded-xl shadow-md">
+            <div className="w-full max-w-screen-md rounded-3xl lg:p-6 pt-2 bg-white rounded-xl shadow-md">
                 <h1 className="text-xl mb-5 md:text-2xl font-bold">Создание нового курса</h1>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -78,8 +78,8 @@ export const PinataCreateCourse: React.FC = () => {
                         </div>
                         {/* Кнопка отправки */}
                         <Button type="submit" className="bg-blue-500 flex items-center border-blue-500
-                        hover:border-blue-700 hover:bg-blue-700 transition-colors duration-200">
-                        Создать курс
+                        hover:border-blue-700 hover:bg-blue-700 transition-colors duration-200 rounded-2xl">
+                        <span className="font-semibold">Создать курс</span>
                         </Button>
 
                         <div className="flex justify-between text-gray-500 text-xs mt-1">

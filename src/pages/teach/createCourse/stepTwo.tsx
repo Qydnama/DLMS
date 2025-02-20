@@ -99,15 +99,17 @@ export function StepTwo({ courseData, setCourseData, setValidationStatus, showEr
         <div>
             <div className="space-y-4">
                 <div className="mt-5 items-center flex justify-between">
-                    <p className="text-xl font-semibold text-gray-800">Course Lessons</p>
+                    <p className="text-xl font-semibold text-gray-800">Course Modules</p>
                     <Button
                         onClick={handleAddLesson}
                         type="button"
-                        className="rounded-2xl gap-1.5 p-2.5 bg-blue-500 flex items-center border-blue-500 hover:border-blue-700 hover:bg-blue-700 transition-colors duration-200"
+                        variant="outline"
+                        className="flex gap-1.5 p-2.5 items-center border-blue-500 text-blue-500 
+                    hover:border-blue-700 hover:text-blue-700 transition-colors duration-200 rounded-2xl"
                         disabled={courseData.lessons.length >= 20}
                     >
                         <CirclePlus className="" style={{ width: '20px', height: '20px' }} />
-                        Add Lesson
+                        <span className="font-semibold">Add Lesson</span>
                     </Button>
                 </div>
 

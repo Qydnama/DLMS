@@ -42,7 +42,7 @@ export const Teach: React.FC = () => {
   }, []);
 
   return (
-    <main className="p-4 max-w-4xl bg-white rounded-xl shadow-md p-4 flex flex-col items-center mx-auto pb-10">
+    <main className="p-4 max-w-4xl bg-white rounded-3xl shadow-md p-4 flex flex-col items-center mx-auto pb-10">
         <div className="w-full max-w-3xl">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="md:text-2xl sm:text-xl font-bold">Ваши курсы</h2>
@@ -50,10 +50,10 @@ export const Teach: React.FC = () => {
                     onClick={handleAddCourse}
                     variant="outline"
                     className="flex items-center border-blue-500 text-blue-500 
-                    hover:border-blue-700 hover:text-blue-700 transition-colors duration-200"
+                    hover:border-blue-700 hover:text-blue-700 transition-colors duration-200 rounded-2xl"
                     >
                     <Plus className="w-5 h-5" />
-                    <span>New course</span>
+                    <span className="font-semibold">New course</span>
                 </Button>
             </div>
             <div className="space-y-4">

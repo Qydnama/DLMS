@@ -39,7 +39,7 @@ export const SettingsPopover: React.FC = () => {
           <div className="space-y-1">
             <div className="mb-4">
                 <Link
-                    to="/profile"
+                    to="/users/UQDKHZ7e70CzqdvZCC83Z4WVR8POC_ZB0J1Y4zo88G-zCSRH"
                     className="flex items-center space-x-2 text-center text-base p-2 block w-full text-gray-900 hover:text-blue-500 hover:bg-gray-100 rounded-md transition duration-200"
                     >
                     <span>{t("profile")}</span>

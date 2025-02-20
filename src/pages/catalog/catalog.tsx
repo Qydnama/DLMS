@@ -311,7 +311,7 @@ export function Catalog() {
     }, [observerRef.current, visibleCourses, courses]);
   
     return (
-      <main className="min-h-screen bg-white rounded-xl shadow-md">
+      <main className="min-h-screen bg-white rounded-3xl shadow-md md:p-2">
             <div className="mx-auto p-4">
                 <div>
                 <h2 className="text-2xl font-bold mb-6 text-gray-800">Online Courses</h2>

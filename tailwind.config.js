@@ -24,6 +24,7 @@ module.exports = {
     		},
     		colors: {
                 goodGray: '#eceef0',
+                goluboy: '#089cec',
     			background: 'hsl(var(--background))',
     			foreground: 'hsl(var(--foreground))',
     			card: {

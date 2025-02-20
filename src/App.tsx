@@ -20,6 +20,8 @@ import { Quiz } from "@/pages/quiz/quiz";
 import { QuizAttempt } from "@/pages/quiz/quizAttempt";
 import { QuizReview } from "@/pages/quiz/quizReview";
 import { CoursePromo } from "@/pages/coursePromo/coursePromo";
+import { UserProfile } from "@/pages/users/profile";
+import { PageNotFound } from "@/pages/error/pageNotFound";
 
 
 function AnimatedRoute({ children }: { children: React.ReactNode }) {
@@ -72,6 +74,13 @@ const App: React.FC = () => {
                                 <Route path="review" element={<AnimatedRoute><QuizReview /></AnimatedRoute>} />
                             </Route>
                         </Route>
+
+                        <Route path="users/:userAddress">
+                            <Route index element={<MainLayout><UserProfile /></MainLayout>} />
+                            <Route path="certificate" element={<MainLayout>undefined</MainLayout>} />
+                        </Route>
+
+                        <Route path="*" element={<MainLayout><PageNotFound /></MainLayout>} />
                         
                     </Routes>
                 </CourseBuilderProvider>

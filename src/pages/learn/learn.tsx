@@ -35,7 +35,7 @@ export const Learn: React.FC = () => {
   }, []);
 
   return (
-    <main className="flex flex-col items-center mx-auto max-w-4xl w-full bg-white rounded-xl shadow-md p-4 pt-6 pb-10">
+    <main className="flex flex-col items-center mx-auto max-w-4xl w-full bg-white rounded-3xl shadow-md p-4 pt-6 pb-10">
         <div className="w-full max-w-3xl">
             <div className="mb-6">
                 <h2 className="md:text-2xl sm:text-xl font-bold">Мое обучение</h2>

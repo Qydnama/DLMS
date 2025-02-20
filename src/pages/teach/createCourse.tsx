@@ -105,7 +105,7 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
 
 
     return (
-        <div className="p-6 max-w-4xl mx-auto bg-white rounded-xl shadow-md">
+        <div className="p-6 max-w-4xl mx-auto bg-white rounded-3xl shadow-md">
             {children}
             <StepSlider currentStep={currentStep} totalSteps={totalSteps} />
             <Separator className="mt-3 mb-6" />
@@ -156,7 +156,7 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
                         disabled={currentStep === 1}
                      >
                         <ChevronLeft className="flex justify-center items-center" style={{ width: '18px', height: '18px' }}/>
-                        <span className="m-0 p-0">Previous</span>
+                        <span className="m-0 p-0 font-semibold">Previous</span>
                     </Button>
                     <Button onClick={handleNextStep} type="button" 
                         className={`rounded-2xl bg-blue-500 p-2.5 gap-0 flex justify-center items-center ${ (validationStatus.stepOne && validationStatus.stepTwo && validationStatus.stepThree) === false && currentStep === totalSteps
@@ -165,7 +165,7 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
                         }`}
                         disabled={(validationStatus.stepOne && validationStatus.stepTwo && validationStatus.stepThree) === false && currentStep === totalSteps}
                      >
-                        <span>{currentStep !== totalSteps ? "Next" : "Create Course"}</span>
+                        <span className="font-semibold">{currentStep !== totalSteps ? "Next" : "Create Course"}</span>
                         <ChevronRight className="flex justify-center items-center" style={{ width: '18px', height: '18px' }}/>
                     </Button>
                 </div>

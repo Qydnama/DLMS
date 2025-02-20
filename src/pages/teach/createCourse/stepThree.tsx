@@ -199,11 +199,13 @@ export function StepThree({
                 <Button
                     onClick={handleAddQuiz}
                     type="button"
-                    className="rounded-2xl gap-1.5 p-2.5 bg-blue-500 flex items-center border-blue-500 hover:border-blue-700 hover:bg-blue-700 transition-colors duration-200"
+                    variant="outline"
+                    className="gap-1.5 p-2.5 flex items-center border-blue-500 text-blue-500 
+                    hover:border-blue-700 hover:text-blue-700 transition-colors duration-200 rounded-2xl"
                     disabled={quizzes.length >= 10}
                 >
                     <CirclePlus className="" style={{ width: '20px', height: '20px' }} />
-                    Add Quiz
+                    <span className="font-semibold">Add Quiz</span>
                 </Button>
             </div>
 
@@ -212,8 +214,8 @@ export function StepThree({
                 defaultValue="quiz-0" value={`quiz-${activeQuizIndex}`}
                 onValueChange={(value) => setActiveQuizIndex(parseInt(value.split("-")[1]))}
             >
-                <TabsList className="py-6 rounded-t-2xl bg-white">
-                    <ScrollArea className="w-full max-w-[844px]">
+                <TabsList className="py-6 rounded-t-2xl bg-white w-[100%] flex justify-start">
+                    <ScrollArea className="">
                         <div className="flex space-x-0">
                             {quizzes.map((quiz, index) => {
                                 const hasError = !!errors[index];
@@ -375,11 +377,14 @@ export function StepThree({
                             {/* Add Question */}
                             <Button
                                 type="button"
+                                variant="outline"
                                 onClick={handleAddQuestion}
-                                className="rounded-2xl p-2.5 bg-blue-500 hover:bg-blue-600 mt-4"
+                                className="p-2.5 mt-4 gap-1.5 flex items-center border-blue-500 text-blue-500 
+                    hover:border-blue-700 hover:text-blue-700 transition-colors duration-200 rounded-2xl"
                                 disabled={quizzes[activeQuizIndex].questions.length >= 20}
                             >
-                                Add Question
+                                <CirclePlus className="" style={{ width: '20px', height: '20px' }} />
+                                <span className="font-semibold">Add Question</span>
                             </Button>
 
                             <div className="ml-2 flex justify-between text-gray-500 text-xs mt-1">
