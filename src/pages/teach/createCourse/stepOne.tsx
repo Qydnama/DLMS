@@ -27,7 +27,20 @@ interface StepOneProps {
         whatYouWillGain: string;
         initialRequirements: string;
         price: number;
-        lessons: { title: string; videoUrl: string }[];
+        modules: {
+            moduleTitle: string;
+            quiz?: {
+                questions: {
+                    questionText: string;
+                    options: string[];
+                    correctAnswer: number;
+                }[];
+            };
+            lessons: {
+            title: string;
+            videoUrl: string;
+            }[];
+        }[];
     }>>;
     setValidationStatus: React.Dispatch<React.SetStateAction<{ stepOne: boolean; stepTwo: boolean; stepThree: boolean; }>>
     showErrors: boolean;

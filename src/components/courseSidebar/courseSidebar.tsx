@@ -1,4 +1,4 @@
-import { BookOpenText, Settings } from "lucide-react"
+import { BookOpenText } from "lucide-react"
 import { SidebarMain } from "@/components/courseSidebar/sidebarMain"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
@@ -27,25 +27,25 @@ const data = [
           },
         ],
       },
-      {
-        title: "Settings",
-        url: "#",
-        icon: Settings,
-        items: [
-          {
-            title: "Publication",
-            url: "#",
-          },
-          {
-            title: "Price",
-            url: "#",
-          },
-          {
-            title: "Certificates",
-            url: "#",
-          },
-        ],
-    }
+    //   {
+    //     title: "Settings",
+    //     url: "#",
+    //     icon: Settings,
+    //     items: [
+    //       {
+    //         title: "Publication",
+    //         url: "#",
+    //       },
+    //       {
+    //         title: "Price",
+    //         url: "#",
+    //       },
+    //       {
+    //         title: "Certificates",
+    //         url: "#",
+    //       },
+    //     ],
+    // }
 ]
 
 

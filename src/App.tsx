@@ -27,14 +27,10 @@ import { PageNotFound } from "@/pages/error/pageNotFound";
 function AnimatedRoute({ children }: { children: React.ReactNode }) {
     return (
       <motion.div
-        // Начинаем справа за экраном
         initial={{ x: "100%" }}
-        // Анимировано двигаемся в 0
         animate={{ x: 0 }}
-        // При выходе уезжаем налево
         exit={{ x: "-100%" }}
         transition={{ duration: 0.38 }}
-        // Позиционируем абсолютно, чтобы старый и новый экраны перекрывались
         style={{ position: "absolute", width: "100%", top: 0, left: 0 }}
       >
         {children}

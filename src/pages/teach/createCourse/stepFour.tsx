@@ -17,7 +17,20 @@ interface StepFourProps {
         whatYouWillGain: string;
         initialRequirements: string;
         price: number;
-        lessons: { title: string; videoUrl: string }[];
+        modules: {
+            moduleTitle: string;
+            quiz?: {
+                questions: {
+                    questionText: string;
+                    options: string[];
+                    correctAnswer: number;
+                }[];
+            };
+            lessons: {
+                title: string;
+                videoUrl: string;
+            }[];
+        }[];
     }>>;
     validationStatus: { stepOne: boolean; stepTwo: boolean; stepThree: boolean};
     setCurrentStep: React.Dispatch<React.SetStateAction<number>>;

@@ -42,7 +42,7 @@ export const PinataCreateCourse: React.FC = () => {
   return (
     <div className="pt-2 md:p-6">
         <div className="flex justify-center">
-            <div className="w-full max-w-screen-md rounded-3xl lg:p-6 pt-2 bg-white rounded-xl shadow-md">
+            <div className="w-full max-w-4xl rounded-3xl lg:p-6 pt-2 bg-white shadow-md">
                 <h1 className="text-xl mb-5 md:text-2xl font-bold">Создание нового курса</h1>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

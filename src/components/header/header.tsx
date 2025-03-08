@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-// import { LanguageSelector } from '@/components/header/languageSelector';
-// import { ProfilePopover } from "@/components/header/profilePopover";
-// import { Menu } from "lucide-react";
-// import {
-//     DropdownMenu,
-//     DropdownMenuTrigger,
-//     DropdownMenuContent,
-//     DropdownMenuItem,
-// } from "@/components/ui/dropdown-menu";
 
 import {
     NavigationMenu,
@@ -28,7 +19,6 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ className }) => {
     const { t } = useTranslation();
-    // const [isMenuOpen, setMenuOpen] = useState(false);
     const [hideBorder, setHideBorder] = useState(false);
 
     useEffect(() => {
@@ -62,46 +52,6 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
                             <span className="text-lg font-bold hidden lg:flex">{t("logo-name")}</span>
                         </div>
                     </Link>
-                    {/* Menu Button (Visible only <= 1024px) */}
-                    {/* <div className="md:hidden">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <button
-                                className="p-2 rounded-md hover:bg-gray-100"
-                                aria-label="Open menu"
-                                onClick={() => setMenuOpen(!isMenuOpen)}
-                                >
-                                <Menu className="w-6 h-6" />
-                                </button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="p-0 w-auto bg-white shadow-md rounded-md">
-                                
-                                <DropdownMenuItem className="p-0">
-                                <Link to="/catalog" className="text-center text-base p-2 w-full text-gray-700 hover:text-blue-500">
-                                    {t("catalog")}
-                                </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="p-0">
-                                <Link to="/learn" className="text-center text-base p-2 block w-full text-gray-700 hover:text-blue-500">
-                                    {t("learning")}
-                                </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="p-0">
-                                <Link to="/teach" className="text-center text-base p-2 block w-full text-gray-700 hover:text-blue-500">
-                                    {t("teaching")}
-                                </Link>
-                                </DropdownMenuItem>
-
-                              
-                                <DropdownMenuItem>
-                                    <div className="flex items-center">
-                                        <LanguageSelector  />
-                                    </div>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div> */}
-
                     {/* Navigation */}
                     <NavigationMenu className="hidden md:flex text-base">
                     <NavigationMenuList>
@@ -139,19 +89,9 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
                     </NavigationMenu>
                 </div>
 
-
-
-                {/* Right Block (Language Selector and Profile) */}
-                <div className="flex items-center space-x-3">
+                {/* Right Block (Ton Connect and Wallet) */}
+                <div className="flex items-center space-x-1 sm:space-x-3">
                     <SearchBar className=""/>
-
-                    {/* Language Selector */}
-                    {/* <div className="hidden md:flex items-center px-3 py-2 rounded-md">
-                        <LanguageSelector />
-                    </div> */}
-
-                    {/* Profile */}
-                    {/* <ProfilePopover /> */}
                     <TonConnectButton className="p-0 m-0" />
                     <SettingsPopover />
                 </div>

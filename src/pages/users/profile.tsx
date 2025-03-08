@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Copy, Check } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -30,6 +30,21 @@ export function UserProfile() {
         setTimeout(() => setCopied(false), 1000);
     };
 
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+      const handleResize = () => setIsMobile(window.innerWidth <= 640);
+      window.addEventListener('resize', handleResize);
+      handleResize(); 
+      return () => window.removeEventListener('resize', handleResize);
+    }, []);
+  
+    const truncateAddress = (address: string) => {
+      return isMobile
+        ? `${address.slice(0, 8)}...${address.slice(-8)}`
+        : address;
+    };
+
     return (
         <div className="mt-8 mx-auto space-y-3">
             <div className="rounded-3xl py-4 px-8 bg-white shadow-sm">
@@ -49,16 +64,14 @@ export function UserProfile() {
                                     <p>Address</p>
                                     </TableCell>
                                     <TableCell onClick={handleCopy} className="py-2 flex items-center space-x-2 w-full group relative">
-                                    <p>{userData.address}</p>
-                                    <button
-                                        className="opacity-0 group-hover:opacity-100 transition-opacity bg-white-500 duration-200"
-                                    >
-                                        {copied ? (
-                                        <Check className="w-[13px] h-[13px] text-green-500" />
-                                        ) : (
-                                        <Copy className="w-[13px] h-[13px]" />
-                                        )}
-                                    </button>
+                                        <p className="truncate max-w-full">{truncateAddress(userData.address)}</p>
+                                        <button className="opacity-0 group-hover:opacity-100 transition-opacity bg-white-500 duration-200">
+                                            {copied ? (
+                                            <Check className="w-[13px] h-[13px] text-green-500" />
+                                            ) : (
+                                            <Copy className="w-[13px] h-[13px]" />
+                                            )}
+                                        </button>
                                     </TableCell>
                                 </TableRow>
                                 <TableRow className="border-0">
