@@ -23,7 +23,6 @@ const moduleSchema = z.object({
     moduleTitle: z
         .string()
         .min(5, "Module title must be at least 5 characters"),
-    hasQuiz: z.boolean(),
     lessons: z
         .array(lessonSchema)
         .min(1, "Must have at least 1 lesson")
@@ -50,8 +49,17 @@ interface StepTwoProps {
         whatYouWillGain: string;
         initialRequirements: string;
         price: number;
+        level: string;
+        language: string;
         modules: {
             moduleTitle: string;
+            quiz: {
+                questions: {
+                    questionText: string;
+                    options: string[];
+                    correctAnswer: number;
+                }[];
+            };
             lessons: {
                 title: string;
                 videoUrl: string;
@@ -69,9 +77,14 @@ interface StepTwoProps {
             whatYouWillGain: string;
             initialRequirements: string;
             price: number;
+            level: string;
+            language: string;
+            certificate: {
+                image: string;       
+            };
             modules: {
                 moduleTitle: string;
-                quiz?: {
+                quiz: {
                     questions: {
                         questionText: string;
                         options: string[];
@@ -90,6 +103,7 @@ interface StepTwoProps {
             stepOne: boolean;
             stepTwo: boolean;
             stepThree: boolean;
+            stepFour: boolean;
         }>
     >;
     showErrors: boolean;
@@ -109,8 +123,10 @@ export function StepTwo({
 }: StepTwoProps) {
     // Ошибки вида errors[moduleIndex][lessonIndex] = { title?: string; videoUrl?: string }
     const [errors, setErrors] = useState<
-        Record<number, Record<number, { title?: string; videoUrl?: string }>>
+        Record<number, { moduleTitle?: string; lessons?: Record<number, { title?: string; videoUrl?: string }> }>
     >({});
+    
+
 
     useEffect(() => {
         const validate = () => {
@@ -118,38 +134,46 @@ export function StepTwo({
                 modules: courseData.modules,
             });
             if (!result.success) {
-                // Собираем ошибки в tempErrors
                 const tempErrors: Record<
                     number,
-                    Record<number, { title?: string; videoUrl?: string }>
+                    { moduleTitle?: string; lessons?: Record<number, { title?: string; videoUrl?: string }> }
                 > = {};
-
+    
                 for (const issue of result.error.issues) {
-                    // Например, issue.path = ["modules", 0, "lessons", 1, "title"]
                     if (issue.path[0] === "modules") {
                         const moduleIndex = Number(issue.path[1]);
                         if (Number.isNaN(moduleIndex)) continue;
-
-                        // Проверяем, lessons ли это
+    
+                        // Ошибка в названии модуля
+                        if (issue.path[2] === "moduleTitle") {
+                            if (!tempErrors[moduleIndex]) {
+                                tempErrors[moduleIndex] = { moduleTitle: undefined, lessons: {} };
+                            }
+                            tempErrors[moduleIndex].moduleTitle = issue.message;
+                        }
+    
+                        // Ошибки в уроках
                         if (issue.path[2] === "lessons") {
                             const lessonIndex = Number(issue.path[3]);
                             if (!tempErrors[moduleIndex]) {
-                                tempErrors[moduleIndex] = {};
+                                tempErrors[moduleIndex] = { moduleTitle: undefined, lessons: {} };
                             }
-                            if (!tempErrors[moduleIndex][lessonIndex]) {
-                                tempErrors[moduleIndex][lessonIndex] = {};
+                            if (!tempErrors[moduleIndex].lessons) {
+                                tempErrors[moduleIndex].lessons = {};
                             }
+                            if (!tempErrors[moduleIndex].lessons![lessonIndex]) {
+                                tempErrors[moduleIndex].lessons![lessonIndex] = {};
+                            }
+    
                             if (issue.path[4] === "title") {
-                                tempErrors[moduleIndex][lessonIndex].title =
-                                    issue.message;
+                                tempErrors[moduleIndex].lessons![lessonIndex].title = issue.message;
                             } else if (issue.path[4] === "videoUrl") {
-                                tempErrors[moduleIndex][lessonIndex].videoUrl =
-                                    issue.message;
+                                tempErrors[moduleIndex].lessons![lessonIndex].videoUrl = issue.message;
                             }
                         }
                     }
                 }
-
+    
                 setErrors(tempErrors);
                 setValidationStatus((prev) => ({ ...prev, stepTwo: false }));
             } else {
@@ -157,9 +181,11 @@ export function StepTwo({
                 setValidationStatus((prev) => ({ ...prev, stepTwo: true }));
             }
         };
-
+    
         validate();
     }, [courseData, setValidationStatus]);
+    
+    
 
     // Добавить модуль
     const handleAddModule = () => {
@@ -319,15 +345,13 @@ export function StepTwo({
                                 <Label>Module Title</Label>
                                 <Input
                                     value={mod.moduleTitle}
-                                    onChange={(e) =>
-                                        handleModuleTitleChange(
-                                            modIndex,
-                                            e.target.value
-                                        )
-                                    }
+                                    onChange={(e) => handleModuleTitleChange(modIndex, e.target.value)}
                                     maxLength={64}
-                                    className="rounded-2xl mt-1"
+                                    className={`rounded-2xl mt-1 ${showErrors && errors[modIndex]?.moduleTitle ? "border-red-500" : ""}`}
                                 />
+                                {showErrors && errors[modIndex]?.moduleTitle && (
+                                    <p className="text-red-500 text-xs mt-1">{errors[modIndex]?.moduleTitle}</p>
+                                )}
                                 <div className="text-right text-gray-400 text-xs">
                                     {mod.moduleTitle.length}/64
                                 </div>
@@ -379,17 +403,11 @@ export function StepTwo({
                                                 maxLength={120}
                                                 className="rounded-2xl mt-1"
                                             />
-                                            {showErrors &&
-                                                errors[modIndex]?.[lessonIndex]
-                                                    ?.title && (
-                                                    <p className="text-red-500 text-xs">
-                                                        {
-                                                            errors[modIndex][
-                                                                lessonIndex
-                                                            ].title
-                                                        }
-                                                    </p>
-                                                )}
+                                            {showErrors && errors[modIndex]?.lessons?.[lessonIndex]?.title && (
+                                                <p className="text-red-500 text-xs">
+                                                    {errors[modIndex]?.lessons?.[lessonIndex]?.title || ""}
+                                                </p>
+                                            )}
                                             <div className="text-right text-gray-400 text-xs">
                                                 {lesson.title.length}/120
                                             </div>
@@ -412,11 +430,11 @@ export function StepTwo({
                                                 className="rounded-2xl mt-1"
                                             />
                                             {showErrors &&
-                                                errors[modIndex]?.[lessonIndex]
+                                                errors[modIndex]?.lessons?.[lessonIndex]
                                                     ?.videoUrl && (
                                                     <p className="text-red-500 text-xs">
                                                         {
-                                                            errors[modIndex][
+                                                            errors[modIndex]?.lessons?.[
                                                                 lessonIndex
                                                             ].videoUrl
                                                         }

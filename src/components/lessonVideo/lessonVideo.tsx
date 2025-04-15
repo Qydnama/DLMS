@@ -1,7 +1,7 @@
 import YouTube, { YouTubeProps } from 'react-youtube';
 
 interface LessonVideoProps {
-  video_id: string;
+  video_id: string | undefined;
 }
 
 export function LessonVideo({ video_id }: LessonVideoProps) {

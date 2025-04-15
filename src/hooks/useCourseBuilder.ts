@@ -1,4 +1,3 @@
-// useCourseBuilder.ts
 import { useContext } from "react";
 import { CourseBuilderContext } from "@/context/courseBuilderContext";
 

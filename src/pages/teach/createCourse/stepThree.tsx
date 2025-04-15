@@ -48,28 +48,34 @@ interface ModuleQuiz {
 
 interface ModuleData {
   moduleTitle: string;
-  quiz?: ModuleQuiz; 
+  quiz: ModuleQuiz; 
   lessons: { title: string; videoUrl: string }[];
 }
 
 interface CourseDataType {
-  logo: string;
-  title: string;
-  summary: string;
-  recommendedWorkload: string;
-  whatYouWillLearn: string;
-  about: string;
-  whatYouWillGain: string;
-  initialRequirements: string;
-  price: number;
-  modules: ModuleData[];
+    logo: string;
+    title: string;
+    summary: string;
+    recommendedWorkload: string;
+    whatYouWillLearn: string;
+    about: string;
+    whatYouWillGain: string;
+    initialRequirements: string;
+    level: string;
+    language: string;
+
+    price: number;
+    modules: ModuleData[];
+    certificate: {
+        image: string;       
+};
 }
 
 interface StepThreeProps {
   courseData: CourseDataType;
   setCourseData: React.Dispatch<React.SetStateAction<CourseDataType>>;
   setValidationStatus: React.Dispatch<
-    React.SetStateAction<{ stepOne: boolean; stepTwo: boolean; stepThree: boolean }>
+    React.SetStateAction<{ stepOne: boolean; stepTwo: boolean; stepThree: boolean, stepFour: boolean }>
   >;
   showErrors: boolean;
   // Управление вкладками среди hasQuiz-модулей

@@ -1,55 +1,73 @@
-import React, { useEffect, useState } from "react";
 import { LearnCard } from "@/components/learnCard/learnCard";
 import { LearnCardSkeleton } from "@/components/learnCard/learnCardSkeleton";
+import useSWR from "swr";
+import { fetchLearnCourses, LearnCourseInterface } from "@/lib/learnService";
+import { ErrorPage } from "@/pages/error/error";
+import { Link } from "react-router-dom";
 
+export const Learn = () => {
+    const {
+        data: courses,
+        error,
+        isLoading,
+    } = useSWR<LearnCourseInterface[]>("learn-courses", fetchLearnCourses, {
+        shouldRetryOnError: false,
+    });
 
-interface Course {
-  courseId: string;
-  title: string;
-  image: string;
-}
+    if (error) {
+        return (
+            <ErrorPage
+                first={"Courses Not Found"}
+                second={"We couldn't find your courses."}
+                third={"Please try again later."}
+            />
+        );
+    }
 
-export const Learn: React.FC = () => {
-    const [isLoading, setIsLoading] = useState(true);
-  const mockCourses: Course[] = [
-    {
-      courseId: "1",
-      title: "Основы программирования на Python",
-      image: "/images/cards/1.png",
-    },
-    {
-      courseId: "2",
-      title: "Введение в веб-разработку с HTML и CSS  ReactReactReact ReactReactReact ReactReactReact ReactReactReact ReactReactReact ReactReactReact ReactReactReact ReactReactReact ReactReactReact ReactReactReact ",
-      image: "/images/cards/1.png",
-    },
-    {
-      courseId: "3",
-      title: "Разработка приложений с React React React React React React React React React React React React React",
-      image: "/images/cards/1.png",
-    },
-  ];
+    return (
+        <main className="flex flex-col min-h-96 items-center mx-auto max-w-4xl w-full bg-white rounded-[2vw] shadow-md p-4 pt-6 pb-10">
+            <div className="w-full max-w-3xl">
+                <div className="mb-6">
+                    <h2 className="md:text-2xl sm:text-xl font-bold">
+                        Мое обучение
+                    </h2>
+                </div>
+                <div className="w-full space-y-4 flex flex-col items-center">
+                    {isLoading && !courses && (
+                        <>
+                            {Array.from({ length: 3 }).map((_, index) => (
+                                <LearnCardSkeleton key={index} />
+                            ))}
+                        </>
+                    )}
 
-  useEffect(() => {
-    const timeout = setTimeout(() => setIsLoading(false), 500); // Simulate data loading
-    return () => clearTimeout(timeout);
-  }, []);
+                    {courses && courses.length === 0 && (
+                        <div className="flex flex-col items-center space-y-4 mt-8">
+                            <img
+                                src="/images/coding.svg"
+                                alt="No courses"
+                                className="w-[180px] h-auto"
+                            />
+                            <p className="text-gray-700 text-center text-sm md:text-lg">
+                                Find your first course in{" "}
+                                <Link
+                                    to="/catalog"
+                                    className="text-goluboy hover:text-blue-600 underline"
+                                >
+                                    our catalog
+                                </Link>
+                                .
+                            </p>
+                        </div>
+                    )}
 
-  return (
-    <main className="flex flex-col items-center mx-auto max-w-4xl w-full bg-white rounded-3xl shadow-md p-4 pt-6 pb-10">
-        <div className="w-full max-w-3xl">
-            <div className="mb-6">
-                <h2 className="md:text-2xl sm:text-xl font-bold">Мое обучение</h2>
-            </div>
-            <div className="w-full space-y-4 flex flex-col items-center">
-                {isLoading
-                    ? Array.from({ length: 3 }).map((_, index) => (
-                        <LearnCardSkeleton key={index} />
-                        ))
-                    : mockCourses.map((course) => (
-                        <LearnCard key={course.courseId} {...course} />
+                    {courses &&
+                        courses.length > 0 &&
+                        courses.map((course) => (
+                            <LearnCard key={course.courseId} {...course} />
                         ))}
+                </div>
             </div>
-        </div>
-    </main>
-  );
+        </main>
+    );
 };

@@ -1,337 +1,119 @@
-import  { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { CourseCard } from "@/components/catalogCard/courseCard";
 import { CourseCardSkeleton } from "@/components/catalogCard/courseCardSkeleton";
+import useSWR from "swr";
+import { CourseInterface, fetchCatalogCourses } from "@/lib/catalogService";
 
-const mockData = [
-  {
-    courseId: "1",
-    authorId: "a1",
-    title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
-    author: 'Андрей Сумин',
-    price: 27,
-    duration: 40,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 41
-  },
-  {
-    courseId: "2",
-    authorId: "a2",
-    title: 'Лучший по Python. Для всех начинающих!',
-    author: 'Сергей Балакрев',
-    price: 20,
-    duration: 92,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 6328
-  },
-  {
-    courseId: "3",
-    authorId: "a3",
-    title: 'Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024',
-    author: 'Илья Перминов',
-    price: 39,
-    duration: 10,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 11467
-  },
-  {
-    courseId: "1",
-    authorId: "a1",
-    title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
-    author: 'Андрей Сумин',
-    price: 27,
-    duration: 40,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 41
-  },
-  {
-    courseId: "2",
-    authorId: "a2",
-    title: 'Лучший по Python. Для всех начинающих!',
-    author: 'Сергей Балакрев',
-    price: 20,
-    duration: 92,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 6328
-  },
-  {
-    courseId: "3",
-    authorId: "a3",
-    title: 'Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024',
-    author: 'Илья Перминов',
-    price: 39,
-    duration: 10,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 11467
-  },
-  {
-    courseId: "1",
-    authorId: "a1",
-    title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
-    author: 'Андрей Сумин',
-    price: 27,
-    duration: 40,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 41
-  },
-  {
-    courseId: "2",
-    authorId: "a2",
-    title: 'Лучший по Python. Для всех начинающих!',
-    author: 'Сергей Балакрев',
-    price: 20,
-    duration: 92,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 6328
-  },
-  {
-    courseId: "3",
-    authorId: "a3",
-    title: 'Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024',
-    author: 'Илья Перминов',
-    price: 39,
-    duration: 10,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 11467
-  },
-  {
-    courseId: "1",
-    authorId: "a1",
-    title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
-    author: 'Андрей Сумин',
-    price: 27,
-    duration: 40,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 41
-  },
-  {
-    courseId: "2",
-    authorId: "a2",
-    title: 'Лучший по Python. Для всех начинающих!',
-    author: 'Сергей Балакрев',
-    price: 20,
-    duration: 92,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 6328
-  },
-  {
-    courseId: "3",
-    authorId: "a3",
-    title: 'Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024',
-    author: 'Илья Перминов',
-    price: 39,
-    duration: 10,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 11467
-  },
-  {
-    courseId: "1",
-    authorId: "a1",
-    title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
-    author: 'Андрей Сумин',
-    price: 27,
-    duration: 40,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 41
-  },
-  {
-    courseId: "2",
-    authorId: "a2",
-    title: 'Лучший по Python. Для всех начинающих!',
-    author: 'Сергей Балакрев',
-    price: 20,
-    duration: 92,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 6328
-  },
-  {
-    courseId: "3",
-    authorId: "a3",
-    title: 'Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024',
-    author: 'Илья Перминов',
-    price: 39,
-    duration: 10,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 11467
-  },
-  {
-    courseId: "1",
-    authorId: "a1",
-    title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
-    author: 'Андрей Сумин',
-    price: 27,
-    duration: 40,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 41
-  },
-  {
-    courseId: "2",
-    authorId: "a2",
-    title: 'Лучший по Python. Для всех начинающих!',
-    author: 'Сергей Балакрев',
-    price: 20,
-    duration: 92,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 6328
-  },
-  {
-    courseId: "3",
-    authorId: "a3",
-    title: 'Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024',
-    author: 'Илья Перминов',
-    price: 39,
-    duration: 10,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 11467
-  },
-  {
-    courseId: "1",
-    authorId: "a1",
-    title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
-    author: 'Андрей Сумин',
-    price: 27,
-    duration: 40,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 41
-  },
-  {
-    courseId: "2",
-    authorId: "a2",
-    title: 'Лучший по Python. Для всех начинающих!',
-    author: 'Сергей Балакрев',
-    price: 20,
-    duration: 92,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 6328
-  },
-  {
-    courseId: "3",
-    authorId: "a3",
-    title: 'Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024',
-    author: 'Илья Перминов',
-    price: 39,
-    duration: 10,
-    rating: 5,
-    image: '/images/cards/1.png',
-    users: 11467
-  },
-
-];
-
-interface Course {
-    courseId: string;
-    authorId: string;
-    title: string;
-    author: string;
-    price: number;
-    duration: number;
-    rating: number;
-    image: string;
-    users: number;
-  }
+const ITEMS_PER_PAGE = 12;
 
 export function Catalog() {
+    const {
+        data: courses,
+        error,
+        isLoading,
+    } = useSWR<CourseInterface[]>("catalog-courses", fetchCatalogCourses, {
+        shouldRetryOnError: false,
+    });
 
-  
-    const [courses, setCourses] = useState<Course[]>([]);
-    const [visibleCourses, setVisibleCourses] = useState<Course[]>([]);
-    const [isLoading, setIsLoading] = useState(true); // Устанавливаем начальное значение true
+    const [visibleCourses, setVisibleCourses] = useState<CourseInterface[]>([]);
+    const [loadingMore, setLoadingMore] = useState(false);
+
     const observerRef = useRef<HTMLDivElement | null>(null);
-  
-    const ITEMS_PER_PAGE = 12;
-  
-    // Инициализация данных
+
     useEffect(() => {
-      setTimeout(() => {
-        setCourses(mockData);
-        setVisibleCourses(mockData.slice(0, ITEMS_PER_PAGE));
-        setIsLoading(false); // Завершаем начальную загрузку
-      }, 2000); // Имитация задержки в 2 секунды
-    }, []);
-  
+        if (courses) {
+            setVisibleCourses(courses.slice(0, ITEMS_PER_PAGE));
+        }
+    }, [courses]);
+
     const loadMoreCourses = () => {
-      if (!isLoading) {
-        setIsLoading(true);
-  
-        const nextPageCourses = courses.slice(
-          visibleCourses.length,
-          visibleCourses.length + ITEMS_PER_PAGE
-        );
-  
-        if (nextPageCourses.length === 0) {
-          setIsLoading(false);
-          return;
+        if (!courses) return;
+        if (loadingMore) return;
+
+        setLoadingMore(true);
+
+        // Next chunk
+        const start = visibleCourses.length;
+        const end = start + ITEMS_PER_PAGE;
+        const nextChunk = courses.slice(start, end);
+
+        // If no more data, stop
+        if (nextChunk.length === 0) {
+            setLoadingMore(false);
+            return;
         }
-  
+
         setTimeout(() => {
-          setVisibleCourses((prev) => [...prev, ...nextPageCourses]);
-          setIsLoading(false);
-        }, 2000); // Имитация задержки
-      }
+            setVisibleCourses((prev) => [...prev, ...nextChunk]);
+            setLoadingMore(false);
+        }, 1500);
     };
-  
+
     useEffect(() => {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting) {
-            loadMoreCourses();
-          }
-        },
-        { threshold: 1.0 }
-      );
-  
-      if (observerRef.current) {
-        observer.observe(observerRef.current);
-      }
-  
-      return () => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    loadMoreCourses();
+                }
+            },
+            { threshold: 1.0 }
+        );
+
         if (observerRef.current) {
-          observer.unobserve(observerRef.current);
+            observer.observe(observerRef.current);
         }
-      };
-    }, [observerRef.current, visibleCourses, courses]);
-  
+
+        return () => {
+            if (observerRef.current) {
+                observer.unobserve(observerRef.current);
+            }
+        };
+    }, [observerRef, visibleCourses, courses, loadingMore]);
+
+    if (error) {
+        return (
+            <main className="min-h-screen bg-white rounded-[2vw] shadow-md p-4">
+                <p className="text-center text-red-500 mt-8">
+                    Failed to load courses: {String(error)}
+                </p>
+            </main>
+        );
+    }
+
     return (
-      <main className="min-h-screen bg-white rounded-3xl shadow-md md:p-2">
-            <div className="mx-auto p-4">
-                <div>
-                <h2 className="text-2xl font-bold mb-6 text-gray-800">Online Courses</h2>
-                </div>
+        <main className="min-h-screen bg-white rounded-[2vw] shadow-md p-4">
+            <div className="mx-auto p-2">
+                <h2 className="text-2xl font-bold mb-6 text-gray-800">
+                    Online Courses
+                </h2>
+
+                {/* 8) The grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6">
-                     {isLoading && visibleCourses.length === 0
-                        ? Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
-                            <CourseCardSkeleton key={index} />
-                        ))
-                        : visibleCourses.map((course) => (
-                            <CourseCard key={course.courseId} {...course} />
+                    {/* If we are still loading initial data (courses == undefined) */}
+                    {isLoading &&
+                        !courses &&
+                        Array.from({ length: ITEMS_PER_PAGE }).map((_, idx) => (
+                            <CourseCardSkeleton key={idx} />
                         ))}
-                    {isLoading && visibleCourses.length > 0 &&
-                        Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
-                        <CourseCardSkeleton key={index} />
+
+                    {/* Otherwise, show the visible courses */}
+                    {visibleCourses.map((course) => (
+                        <CourseCard
+                            key={course.courseId + course.authorId}
+                            {...course}
+                        />
+                    ))}
+
+                    {/* If we have loaded some data, but we're actively loading more, show some skeleton placeholders */}
+                    {loadingMore &&
+                        Array.from({ length: ITEMS_PER_PAGE }).map((_, idx) => (
+                            <CourseCardSkeleton key={"loadMore-" + idx} />
                         ))}
                 </div>
+
+                {/* 9) Intersection observer sentinel */}
                 <div ref={observerRef} className="h-10" />
             </div>
-      </main>
+        </main>
     );
-  }
-  
+}

@@ -74,6 +74,7 @@ export function CourseSidebar({ ...props }: React.ComponentProps<typeof Sidebar>
                 {/* <SidebarFooter>
                 <NavUser user={data.user} />
                 </SidebarFooter> */}
+                
             </Sidebar>
       </div>
     )

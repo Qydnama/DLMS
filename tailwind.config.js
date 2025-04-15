@@ -9,13 +9,13 @@ module.exports = {
     				'Open Sans'
     			]
     		},
-            screen: {
-                'mob': '1000px'
-            },
+    		screen: {
+    			mob: '1000px'
+    		},
     		boxShadow: {
     			even: '0 0 10px rgba(0, 0, 0, 0.2)',
     			'hover-even': '0 0 20px rgba(0, 0, 0, 0.3)',
-                'hover-loweven': '0 0 10px rgba(0, 0, 0, 0.3)'
+    			'hover-loweven': '0 0 10px rgba(0, 0, 0, 0.3)'
     		},
     		borderRadius: {
     			lg: 'var(--radius)',
@@ -23,8 +23,8 @@ module.exports = {
     			sm: 'calc(var(--radius) - 4px)'
     		},
     		colors: {
-                goodGray: '#eceef0',
-                goluboy: '#089cec',
+    			goodGray: '#eceef0',
+    			goluboy: '#089cec',
     			background: 'hsl(var(--background))',
     			foreground: 'hsl(var(--foreground))',
     			card: {
@@ -75,6 +75,28 @@ module.exports = {
     				border: 'hsl(var(--sidebar-border))',
     				ring: 'hsl(var(--sidebar-ring))'
     			}
+    		},
+    		keyframes: {
+    			'accordion-down': {
+    				from: {
+    					height: '0'
+    				},
+    				to: {
+    					height: 'var(--radix-accordion-content-height)'
+    				}
+    			},
+    			'accordion-up': {
+    				from: {
+    					height: 'var(--radix-accordion-content-height)'
+    				},
+    				to: {
+    					height: '0'
+    				}
+    			}
+    		},
+    		animation: {
+    			'accordion-down': 'accordion-down 0.2s ease-out',
+    			'accordion-up': 'accordion-up 0.2s ease-out'
     		}
     	}
     },

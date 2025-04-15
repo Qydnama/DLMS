@@ -1,16 +1,13 @@
-import React from "react";
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion"
+import { AnimatePresence } from "framer-motion"
+import { AnimQuiz } from "@/components/animated/animQuizAttempt";
 
 import { MainLayout } from "@/layouts/mainLayout";
 import { Catalog } from "@/pages/catalog/catalog";
-import { Teach } from "@/pages/teach/courses";
-import { PinataCreateCourse } from "@/pages/teach/pinataCreateCourse";
-import { CourseSidebarLayout } from "@/layouts/courseSidebarLayout";
+import { Teach } from "@/pages/teach/teach";
 import { CreateCourse } from "@/pages/teach/createCourse";
 
-// import { CourseRedirect } from "@/components/courseRedirect";
 import { CourseBuilderProvider } from "@/context/courseBuilderProvider";
 import { Learn } from "@/pages/learn/learn";
 import { Syllabus } from "@/pages/learn/syllabus";
@@ -21,24 +18,13 @@ import { QuizAttempt } from "@/pages/quiz/quizAttempt";
 import { QuizReview } from "@/pages/quiz/quizReview";
 import { CoursePromo } from "@/pages/coursePromo/coursePromo";
 import { UserProfile } from "@/pages/users/profile";
+import { CoursePromoSample } from "@/pages/teach/createCourse/coursePromoSample";
+
 import { PageNotFound } from "@/pages/error/pageNotFound";
+import { UserNotAuthorized } from "@/pages/error/userNotAuthorized";
+import { ProtectedRoute } from '@/pages/protectedRoute/protectedRoute';
 
-
-function AnimatedRoute({ children }: { children: React.ReactNode }) {
-    return (
-      <motion.div
-        initial={{ x: "100%" }}
-        animate={{ x: 0 }}
-        exit={{ x: "-100%" }}
-        transition={{ duration: 0.38 }}
-        style={{ position: "absolute", width: "100%", top: 0, left: 0 }}
-      >
-        {children}
-      </motion.div>
-    );
-}
-
-const App: React.FC = () => {
+export default function App() {
     const location = useLocation();
 
     return (
@@ -49,33 +35,36 @@ const App: React.FC = () => {
                         <Route index element={<Navigate to="catalog" replace />} />
                         <Route path="catalog" element={ <MainLayout children={<Catalog />} />} />
                         
-                        <Route path="learn" element={ <MainLayout children={<Learn />}></MainLayout>} />
+                        <Route path="learn" element={ <ProtectedRoute><MainLayout children={<Learn />}></MainLayout></ProtectedRoute>} />
 
-                        <Route path="teach" element={ <Navigate to="/teach/courses" replace /> } />
+                        <Route path="teach" element={ <ProtectedRoute><Navigate to="/teach/courses" replace /></ProtectedRoute> } />
                         <Route path="teach/courses" >
-                            <Route index element={ <MainLayout><Teach /></MainLayout> } />
-                            <Route path="new" element={ <MainLayout><PinataCreateCourse /></MainLayout> } />
-                            <Route path="create" element={ <MainLayout><CreateCourse children={undefined} /></MainLayout> } />
+                            <Route index element={ <ProtectedRoute><MainLayout><Teach /></MainLayout></ProtectedRoute> } />
+                            <Route path="create">
+                                <Route index element={ <ProtectedRoute><MainLayout><CreateCourse children={undefined} /></MainLayout></ProtectedRoute> } />
+                                <Route path="coursePromo" element={<ProtectedRoute><MainLayout><CoursePromoSample /></MainLayout></ProtectedRoute>} />
+                            </Route>
+
                         </Route>
 
                         <Route path="course/:courseId">
                             <Route index element={<Navigate to="syllabus" replace />} />
                             <Route path="promo" element={<MainLayout><CoursePromo /></MainLayout>} />
-                            <Route path="syllabus" element={ <MainLayout><CourseSidebarLayout children={<Syllabus />} /></MainLayout> } />
-                            <Route path="quizzes" element={ <MainLayout><CourseSidebarLayout children={<Quizzes />} /></MainLayout> } />
-                            <Route path="lesson/:lessonId" element={<MainLayout><Lesson /></MainLayout>} />
+                            <Route path="syllabus" element={ <ProtectedRoute><MainLayout><Syllabus /></MainLayout></ProtectedRoute> } />
+                            <Route path="quizzes" element={ <ProtectedRoute><MainLayout><Quizzes /></MainLayout></ProtectedRoute> } />
+                            <Route path="lesson/:lessonId" element={<ProtectedRoute><MainLayout><Lesson /></MainLayout></ProtectedRoute>} />
                             <Route path="quiz/:quizId">
-                                <Route index element={<MainLayout><Quiz /></MainLayout>} />
-                                <Route path="attempt" element={<AnimatedRoute><QuizAttempt /></AnimatedRoute>} />
-                                <Route path="review" element={<AnimatedRoute><QuizReview /></AnimatedRoute>} />
+                                <Route index element={<ProtectedRoute><MainLayout><Quiz /></MainLayout></ProtectedRoute>} />
+                                <Route path="attempt" element={<ProtectedRoute><AnimQuiz><QuizAttempt /></AnimQuiz></ProtectedRoute>} />
+                                <Route path="review" element={<ProtectedRoute><AnimQuiz><QuizReview /></AnimQuiz></ProtectedRoute>} />
                             </Route>
                         </Route>
 
-                        <Route path="users/:userAddress">
+                        <Route path="users/:walletAddr">
                             <Route index element={<MainLayout><UserProfile /></MainLayout>} />
-                            <Route path="certificate" element={<MainLayout>undefined</MainLayout>} />
                         </Route>
 
+                        <Route path="/unauthorized" element={<MainLayout><UserNotAuthorized /></MainLayout>} />
                         <Route path="*" element={<MainLayout><PageNotFound /></MainLayout>} />
                         
                     </Routes>
@@ -85,6 +74,6 @@ const App: React.FC = () => {
     );
   };
   
-  export default App;
+  
 
 

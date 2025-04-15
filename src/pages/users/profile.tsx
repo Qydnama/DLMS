@@ -1,54 +1,75 @@
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Copy, Check } from "lucide-react";
-import { useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "@/components/ui/table";
+import { useState } from "react";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { fetchTonWalletData } from "@/lib/userService";
+import useSWR from "swr";
+import { ProfileSkeleton } from "@/components/profile/profileSkeleton";
+import { ErrorPage } from "../error/error";
 
 export function UserProfile() {
+    const { walletAddr } = useParams();
+    const {
+        data: userData,
+        error,
+        isLoading,
+    } = useSWR(
+        walletAddr ? ["ton-wallet-data", walletAddr] : null,
+        // fetcher
+        ([, address]) => fetchTonWalletData(address),
+        { shouldRetryOnError: false }
+    );
     const [copied, setCopied] = useState(false);
+    const isMobile = useIsMobile();
 
-    // 1. Grab the current "section" from query params, default to "courses"
     const [searchParams, setSearchParams] = useSearchParams();
     const section = searchParams.get("section") ?? "courses";
 
-    // Example user data
-    const userData = {
-        id: "1",
-        name: "Blip Blop Blop Blip",
-        address: "UQDKHZ7e70CzqdvZCC83Z4WVR8POC_ZB0J1Y4zo88G-zCSRH",
-        balance: "3,239.404 TON ≈ $11,661,857.67",
+    const truncateAddress = (address: string) => {
+        if (address.length <= 16) return address;
+        return isMobile
+            ? `${address.slice(0, 8)}...${address.slice(-8)}`
+            : address;
     };
 
     const handleCopy = () => {
+        if (!userData?.address) return;
         navigator.clipboard.writeText(userData.address);
         setCopied(true);
         setTimeout(() => setCopied(false), 1000);
     };
 
-    const [isMobile, setIsMobile] = useState(false);
+    // Loading state
+    if (isLoading) {
+        return <ProfileSkeleton />;
+    }
 
-    useEffect(() => {
-      const handleResize = () => setIsMobile(window.innerWidth <= 640);
-      window.addEventListener('resize', handleResize);
-      handleResize(); 
-      return () => window.removeEventListener('resize', handleResize);
-    }, []);
-  
-    const truncateAddress = (address: string) => {
-      return isMobile
-        ? `${address.slice(0, 8)}...${address.slice(-8)}`
-        : address;
-    };
+    // Error state
+    if (error) {
+        return (
+            <ErrorPage
+                first={"Wallet Not Found"}
+                second={"We couldn't find a user with this wallet."}
+                third={"Please double-check the address and try again."}
+            />
+        );
+    }
 
+    // Null fallback (just in case)
+    if (!userData) {
+        return (
+            <div className="mt-8 text-center text-gray-500">
+                <p>User not found.</p>
+            </div>
+        );
+    }
+
+    // Rendered profile
     return (
         <div className="mt-8 mx-auto space-y-3">
             <div className="rounded-3xl py-4 px-8 bg-white shadow-sm">
-                {/* User Info */}
                 <div className="flex flex-row justify-between items-center">
                     <div className="space-y-2 text-left">
                         <Table>
@@ -57,19 +78,26 @@ export function UserProfile() {
                                     <TableCell className="w-[50px] font-semibold p-0 pr-6 py-2">
                                         <p>Name</p>
                                     </TableCell>
-                                    <TableCell className="py-0">{userData.name}</TableCell>
+                                    <TableCell className="py-0">
+                                        {userData.name}
+                                    </TableCell>
                                 </TableRow>
                                 <TableRow className="border-0">
                                     <TableCell className="font-semibold p-0 py-2">
-                                    <p>Address</p>
+                                        <p>Address</p>
                                     </TableCell>
-                                    <TableCell onClick={handleCopy} className="py-2 flex items-center space-x-2 w-full group relative">
-                                        <p className="truncate max-w-full">{truncateAddress(userData.address)}</p>
+                                    <TableCell
+                                        onClick={handleCopy}
+                                        className="py-2 flex items-center space-x-2 w-full group relative"
+                                    >
+                                        <p className="truncate max-w-full">
+                                            {truncateAddress(userData.address)}
+                                        </p>
                                         <button className="opacity-0 group-hover:opacity-100 transition-opacity bg-white-500 duration-200">
                                             {copied ? (
-                                            <Check className="w-[13px] h-[13px] text-green-500" />
+                                                <Check className="w-[13px] h-[13px] text-blue-500" />
                                             ) : (
-                                            <Copy className="w-[13px] h-[13px]" />
+                                                <Copy className="w-[13px] h-[13px]" />
                                             )}
                                         </button>
                                     </TableCell>
@@ -78,7 +106,9 @@ export function UserProfile() {
                                     <TableCell className="font-semibold p-0 py-2">
                                         <p>Balance</p>
                                     </TableCell>
-                                    <TableCell className="py-0">{userData.balance}</TableCell>
+                                    <TableCell className="py-0">
+                                        {userData.balance} TON
+                                    </TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -86,46 +116,43 @@ export function UserProfile() {
                 </div>
             </div>
 
+            {/* Tabs Section */}
             <div className="bg-white py-4 px-8 rounded-3xl shadow-sm">
-                {/* User Courses and Certificates */}
                 <Tabs
                     value={section}
                     onValueChange={(val) => {
-                    setSearchParams({ section: val });
+                        setSearchParams({ section: val });
                     }}
                 >
-                    
-                    <TabsList className="w-full flex justify-start bg-white p-0 space-x-5 ">
+                    <TabsList className="w-full flex justify-start bg-white p-0 space-x-5">
                         <TabsTrigger
                             value="courses"
                             className="text-md data-[state=active]:underline underline-offset-8 px-0 py-2"
                         >
-                            <span className="font-semibond">My Courses</span>
+                            <span className="font-semibold">My Courses</span>
                         </TabsTrigger>
                         <TabsTrigger
                             value="certificates"
                             className="text-md data-[state=active]:underline underline-offset-8 px-0 py-2"
                         >
-                            <span className="font-semibond">Certificates</span>
+                            <span className="font-semibold">Certificates</span>
                         </TabsTrigger>
                     </TabsList>
 
-                    {/* My Courses Content */}
                     <TabsContent value="courses">
-                    <div className="mt-4 space-y-4 ">
-                        <p className="text-gray-600 text-center md:text-left">
-                        No courses enrolled yet.
-                        </p>
-                    </div>
+                        <div className="mt-4 space-y-4">
+                            <p className="text-gray-600 text-center md:text-left">
+                                No courses enrolled yet.
+                            </p>
+                        </div>
                     </TabsContent>
 
-                    {/* Certificates Content */}
                     <TabsContent value="certificates">
-                    <div className="mt-4 space-y-4 ">
-                        <p className="text-gray-600 text-center md:text-left">
-                        No certificates available.
-                        </p>
-                    </div>
+                        <div className="mt-4 space-y-4">
+                            <p className="text-gray-600 text-center md:text-left">
+                                No certificates available.
+                            </p>
+                        </div>
                     </TabsContent>
                 </Tabs>
             </div>

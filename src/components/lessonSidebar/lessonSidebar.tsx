@@ -12,12 +12,17 @@ import { useNavigate } from "react-router-dom";
 
 interface LessonSidebarProps extends React.ComponentProps<typeof Sidebar> {
     data: {
-        course: { courseId: string; courseTitle: string };
+      course: { courseId: string; courseTitle: string };
+      modules: {
+        moduleTitle: string;
         lessons: { id: string; title: string; videoId: string }[];
+      }[];
     };
+    activeLessonId: string | undefined;
 }
+  
 
-export function LessonSidebar({ data, ...props }: LessonSidebarProps) {
+export function LessonSidebar({ data, activeLessonId, ...props }: LessonSidebarProps) {
     const navigate = useNavigate();
     const { isMobile } = useSidebar();
 
@@ -27,9 +32,9 @@ export function LessonSidebar({ data, ...props }: LessonSidebarProps) {
 
 
     return (
-        <div className="bg-white m-0 rounded-2xl">
+        <div className="bg-white m-0 rounded-[2vw]">
             {isMobile}
-            <Sidebar collapsible={isMobile ? "icon" : "none"} {...props} className="bg-white rounded-2xl">
+            <Sidebar collapsible={isMobile ? "icon" : "none"} {...props} className="bg-white rounded-[2vw]">
                 <SidebarHeader className="flex px-4 pt-6 pb-0">
                     <div>
                         <p  onClick={handleTitleClick} className="cursor-pointer line-clamp-5 hover:underline text-md font-semibold break-words">{data.course.courseTitle}</p>
@@ -38,7 +43,7 @@ export function LessonSidebar({ data, ...props }: LessonSidebarProps) {
 
                 </SidebarHeader>
                 <SidebarContent>
-                    <SidebarMain lessons={data.lessons} />
+                    <SidebarMain modules={data.modules} activeLessonId={activeLessonId} />
                 </SidebarContent>
                 {/* <SidebarFooter>
                 <NavUser user={data.user} />

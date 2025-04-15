@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface SearchBarProps {
   className?: string;
@@ -13,9 +14,16 @@ interface SearchBarProps {
 
 export const SearchBar: React.FC<SearchBarProps> = ({ className }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      navigate(`/users/${searchQuery.trim()}`);
+    }
   };
 
   return (
@@ -35,6 +43,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ className }) => {
             placeholder="Search wallet address..."
             value={searchQuery}
             onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
             className="w-full border-0 p-0"
           />
 

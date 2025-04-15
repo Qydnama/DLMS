@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Check, X } from "lucide-react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface StepFourProps {
     courseData: {
-        price: number;
-    };
-    setCourseData: React.Dispatch<React.SetStateAction<{
         logo: string;
         title: string;
         summary: string;
@@ -17,9 +16,14 @@ interface StepFourProps {
         whatYouWillGain: string;
         initialRequirements: string;
         price: number;
+        level: string;
+        language: string;
+        certificate: {
+            image: string; // base64 или URL
+        };
         modules: {
             moduleTitle: string;
-            quiz?: {
+            quiz: {
                 questions: {
                     questionText: string;
                     options: string[];
@@ -31,25 +35,173 @@ interface StepFourProps {
                 videoUrl: string;
             }[];
         }[];
-    }>>;
-    validationStatus: { stepOne: boolean; stepTwo: boolean; stepThree: boolean};
-    setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+    };
+    setCourseData: React.Dispatch<
+        React.SetStateAction<{
+            logo: string;
+            title: string;
+            summary: string;
+            recommendedWorkload: string;
+            whatYouWillLearn: string;
+            about: string;
+            whatYouWillGain: string;
+            initialRequirements: string;
+            price: number;
+            level: string;
+            language: string;
+            certificate: { image: string };
+            modules: {
+                moduleTitle: string;
+                quiz: {
+                    questions: {
+                        questionText: string;
+                        options: string[];
+                        correctAnswer: number;
+                    }[];
+                };
+                lessons: {
+                    title: string;
+                    videoUrl: string;
+                }[];
+            }[];
+        }>
+    >;
+    setValidationStatus: React.Dispatch<
+        React.SetStateAction<{
+            stepOne: boolean;
+            stepTwo: boolean;
+            stepThree: boolean;
+            stepFour: boolean;
+        }>
+    >;
 }
 
-export function StepFour({ courseData, setCourseData, validationStatus, setCurrentStep }: StepFourProps) {
+// 1) Определяем Zod‐схему для цены и файла
+const stepFourSchema = z.object({
+    price: z
+        .number()
+        .min(1, "Price must be at least 1 TON")
+        .max(999999, "Price is too high"),
+    certificateFile: z
+        .any()
+        .refine(
+            (file: File | undefined) =>
+                file === undefined || file.size <= 4 * 1024 * 1024,
+            {
+                message: "File must be <= 4MB",
+            }
+        )
+        .refine(
+            (file: File | undefined) =>
+                file === undefined ||
+                ["image/jpeg", "image/png", "image/gif", "image/webp"].includes(
+                    file.type
+                ),
+            {
+                message: "Only JPG, PNG, GIF, WEBP images are allowed",
+            }
+        )
+        .optional(),
+});
 
-    const handleInputChange = (field: string, value: string | number | boolean) => {
-        setCourseData((prev) => ({ ...prev, [field]: value }));
+type StepFourForm = z.infer<typeof stepFourSchema>;
+
+export function StepFour({
+    courseData,
+    setCourseData,
+    setValidationStatus,
+}: StepFourProps) {
+    // Локальный стейт для превью файла
+    const [preview, setPreview] = useState(courseData.certificate.image || "");
+
+    // 2) useForm c mode="onChange", чтобы ошибки/валидность обновлялись при вводе
+    const {
+        register,
+        watch,
+        formState: { errors, isValid },
+        setValue,
+    } = useForm<StepFourForm>({
+        resolver: zodResolver(stepFourSchema),
+        defaultValues: {
+            price: courseData.price,
+            certificateFile: undefined,
+        },
+        mode: "onChange", // проверяет валидность сразу при изменениях
+    });
+
+    // 3) Отслеживаем isValid, чтобы обновлять setValidationStatus
+    useEffect(() => {
+        if (isValid) {
+            setValidationStatus((prev) => ({ ...prev, stepFour: true }));
+        } else {
+            setValidationStatus((prev) => ({ ...prev, stepFour: false }));
+        }
+    }, [isValid, setValidationStatus]);
+
+    // 4) Следим за изменением поля price
+    useEffect(() => {
+        const subscription = watch((value, { name }) => {
+            if (name === "price" && typeof value.price === "number") {
+                handlePriceChange(value.price);
+            }
+        });
+        return () => subscription.unsubscribe();
+    }, [watch]);
+
+    // 5) Обработка цены → записываем в courseData
+    const handlePriceChange = (newPrice: number) => {
+        setCourseData((prev) => ({ ...prev, price: newPrice }));
+    };
+
+    // 6) Обработка загрузки файла
+    const handleFileChange = async (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const file = event.target.files?.[0];
+        setValue("certificateFile", file, { shouldValidate: true });
+
+        if (file) {
+            // Генерируем превью (Base64)
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const base64 = e.target?.result as string;
+                setPreview(base64);
+                // Сохраняем Base64 в courseData
+                setCourseData((prev) => ({
+                    ...prev,
+                    certificate: {
+                        ...prev.certificate,
+                        image: base64,
+                    },
+                }));
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // Сбрасываем файл
+            setPreview("");
+            setCourseData((prev) => ({
+                ...prev,
+                certificate: {
+                    ...prev.certificate,
+                    image: "",
+                },
+            }));
+        }
     };
 
     return (
         <div className="space-y-6">
             <div className="space-y-6">
-                <h2 className="text-xl font-semibold text-gray-800">Pricing & Access</h2>
+                <h2 className="text-xl font-semibold text-gray-800">
+                    Pricing & Certificates
+                </h2>
 
                 {/* Course Price */}
                 <div className="space-y-3">
-                    <Label htmlFor="price" className="block text-sm font-medium">
+                    <Label
+                        htmlFor="price"
+                        className="block text-sm font-medium"
+                    >
                         Course Price (TON)
                     </Label>
                     <Input
@@ -59,47 +211,54 @@ export function StepFour({ courseData, setCourseData, validationStatus, setCurre
                         step="0.1"
                         className="w-full rounded-2xl"
                         placeholder="Enter price in TON"
-                        value={courseData.price}
-                        onChange={(e) => handleInputChange("price", parseFloat(e.target.value))}
+                        {...register("price", { valueAsNumber: true })}
                     />
+                    {errors.price && (
+                        <p className="text-red-500 text-xs mt-1">
+                            {errors.price.message}
+                        </p>
+                    )}
                 </div>
             </div>
-            <div>
 
-                <div className="bg-gray-100 p-4 rounded-xl shadow-md">
-                <h3 className="text-lg font-semibold">Checklist</h3>
-                <ul className="mt-3 space-y-2 text-md font-medium">
-                    <li onClick={() => setCurrentStep(1)} className="flex items-center cursor-pointer hover:underline">
-                        {validationStatus.stepOne ? (
-                            <Check className="text-green-500 w-5 h-5 mr-2" />
-                        ) : (
-                            <X className="text-red-500 w-5 h-5 mr-2" />
-                        )}
-                        Course Information
-                    </li>
-                    <li onClick={() => setCurrentStep(2)} className="flex items-center cursor-pointer hover:underline">
-                        {validationStatus.stepTwo ? (
-                                <Check className="text-green-500 w-5 h-5 mr-2" />
-                            ) : (
-                                <X className="text-red-500 w-5 h-5 mr-2" />
-                        )}
-                        Lessons
-                    </li>
-                    <li onClick={() => setCurrentStep(3)} className="flex items-center cursor-pointer hover:underline">
-                        {validationStatus.stepThree ? (
-                            <Check className="text-green-500 w-5 h-5 mr-2" />
-                        ) : (
-                            <X className="text-red-500 w-5 h-5 mr-2" />
-                        )}
-                        Quizzes
-                    </li>
-                </ul>
-                </div>
 
+            {/* Certificate Section */}
+            <div className="space-y-2">
+                <Label
+                    htmlFor="certificateFile"
+                    className="block text-sm font-medium"
+                >
+                    Custom certificate image (optional)
+                </Label>
+
+                {/* File Input */}
+                <Input
+                    id="certificateFile"
+                    type="file"
+                    accept="image/*"
+                    className="w-full rounded-2xl"
+                    onChange={handleFileChange}
+                />
+                {errors.certificateFile?.message && (
+                    <p className="text-red-500 text-xs mt-1">
+                        {errors.certificateFile?.message as string}
+                    </p>
+                )}
+                {/* Preview */}
+                {preview ? (
+                    <div className="mt-4 w-40 h-40 overflow-hidden rounded-md border">
+                        <img
+                            src={preview}
+                            alt="Certificate Preview"
+                            className="object-cover w-full h-full"
+                        />
+                    </div>
+                ) : (
+                    <p className="text-xs text-gray-400 mt-2">
+                        No certificate image selected yet.
+                    </p>
+                )}
             </div>
-
-
-            
         </div>
     );
 }

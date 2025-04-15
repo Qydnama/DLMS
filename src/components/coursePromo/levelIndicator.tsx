@@ -1,14 +1,14 @@
 export const LevelIndicator = ({ level }: { level: string }) => {
     let bars = [];
   
-    switch (level.toLowerCase()) {
-      case "beginner":
+    switch (level) {
+      case "Beginner":
         bars = [true, false, false];
         break;
-      case "intermediate":
+      case "Intermediate":
         bars = [true, true, false];
         break;
-      case "expert":
+      case "Expert":
         bars = [true, true, true];
         break;
       default:
