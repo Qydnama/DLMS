@@ -4,80 +4,56 @@ import { Label } from "@/components/ui/label";
 import { Check, ListOrdered } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { CourseSidebar } from "../../components/courseSidebar/courseSidebar";
+import { CourseSidebar } from "@/components/courseSidebar/courseSidebar";
 
-export const Quizzes = () => {
-    const quizzes = [
-        {
-            id: "1",
-            title: "Introduction to Web Development",
-            completed: true,
-            score: 8,
-            totalQuestions: 10,
-        },
-        {
-            id: "2",
-            title: "HTML Basics",
-            completed: false,
-            score: null,
-            totalQuestions: 8,
-        },
-        {
-            id: "3",
-            title: "CSS for Styling",
-            completed: true,
-            score: 6,
-            totalQuestions: 7,
-        },
-        {
-            id: "4",
-            title: "JavaScript Fundamentals",
-            completed: false,
-            score: null,
-            totalQuestions: 12,
-        },
-        {
-            id: "5",
-            title: "Advanced JavaScript",
-            completed: true,
-            score: 10,
-            totalQuestions: 10,
-        },
-        {
-            id: "6",
-            title: "React Basics",
-            completed: false,
-            score: null,
-            totalQuestions: 9,
-        },
-        {
-            id: "7",
-            title: "JavaScript Fundamental Development Development Development Development Development Development Development Development Development Development Development Development Development Development DevelopmentDevelopment Development Development DevelopmentDevelopmentDevelopmentDevelopment Development Developments",
-            completed: true,
-            score: 7,
-            totalQuestions: 10,
-        },
-        {
-            id: "8",
-            title: "Next.js Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals FundamentalsFundamentals Fundamentals Fundamentals Fundamentals",
-            completed: false,
-            score: null,
-            totalQuestions: 11,
-        },
-    ];
+import useSWR from "swr";
+import { QuizzesSkeleton } from "@/components/quizzes/quizzesSkeleton";
+import { fetchCourseData, CourseDataInterface } from "@/lib/courseService";
 
+export function Quizzes() {
     const navigate = useNavigate();
+
+    const {
+        data: course,
+        error,
+        isLoading,
+      } = useSWR<CourseDataInterface>("course-data", fetchCourseData, {
+        shouldRetryOnError: false,
+      });
 
     const handleQuizClick = (quizId: string) => {
         navigate(`../quiz/${quizId}`);
     };
 
+    if (error) {
+        return (
+          <div className="p-4 text-center text-red-500">
+            Failed to load course data: {String(error)}
+          </div>
+        );
+    }
+
+    if (isLoading || !course) {
+        return <QuizzesSkeleton />;
+    }
+
+    const allQuizzes = course.modules.map((mod, index) => {
+        // For demonstration: a "title" from moduleTitle, or some quiz-specific fields
+        return {
+          id: `${index + 1}`,
+          title: `${mod.moduleTitle}`,
+          completed: mod.completed,
+          score: mod.completed ? mod.score : null,   // example
+          totalQuestions: mod.quiz.questions.length,
+        };
+    });
+
     return (
         <SidebarProvider>
             <div className="flex w-full mx-auto bg-white rounded-[2vw] shadow-md">
                 {/* Sidebar */}
-                <CourseSidebar />
-                <div className="flex-row max-w-4xl mx-auto p-0 pt-6 md:pr-6 md:p-6">
+                <CourseSidebar courseData={course} />
+                <div className="max-w-4xl flex-grow mx-auto p-0 pt-6 md:pr-6 md:p-6">
                     {/* Sidebar Trigger + Title */}
                     <div className="flex items-center gap-2 mb-4">
                         <SidebarTrigger className="block min-[1000px]:hidden pl-3" />
@@ -89,12 +65,12 @@ export const Quizzes = () => {
                     <Separator className="mb-4" />
 
                     <div className="w-full">
-                        {quizzes.map((quiz, index) => {
+                        {allQuizzes.map((quiz, index) => {
                             // Apply responsive border-radius styles
                             const borderRadiusClass =
                                 index === 0
                                     ? "rounded-none sm:rounded-t-lg"
-                                    : index === quizzes.length - 1
+                                    : index === allQuizzes.length - 1
                                     ? "rounded-none sm:rounded-b-lg"
                                     : "rounded-none";
 

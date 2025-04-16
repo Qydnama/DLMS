@@ -37,8 +37,7 @@ export default function App() {
                         
                         <Route path="learn" element={ <ProtectedRoute><MainLayout children={<Learn />}></MainLayout></ProtectedRoute>} />
 
-                        <Route path="teach" element={ <ProtectedRoute><Navigate to="/teach/courses" replace /></ProtectedRoute> } />
-                        <Route path="teach/courses" >
+                        <Route path="teach" >
                             <Route index element={ <ProtectedRoute><MainLayout><Teach /></MainLayout></ProtectedRoute> } />
                             <Route path="create">
                                 <Route index element={ <ProtectedRoute><MainLayout><CreateCourse children={undefined} /></MainLayout></ProtectedRoute> } />

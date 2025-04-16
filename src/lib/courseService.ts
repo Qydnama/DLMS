@@ -15,6 +15,9 @@ export interface CourseDataInterface {
     };
     modules: {
         moduleTitle: string;
+        completed: boolean;
+        score: number | undefined;
+        id: string;
         quiz: {
             questions: {
                 questionText: string;
@@ -23,14 +26,16 @@ export interface CourseDataInterface {
             }[];
         };
         lessons: {
+            id: string;
             title: string;
-            videoUrl: string;
+            videoId: string;
+            thumbnail: string;
         }[];
     }[];
 }
 
 const mockCourseData: CourseDataInterface = {
-    logo: "/images/courseLogo.png",
+    logo: "/images/cards/1.png",
     title: "Fundamentals of Full-stack Web Development",
     summary: `This course will teach you the basics of front-end and back-end 
       web development, covering HTML, CSS, JavaScript, Node.js and more.`,
@@ -56,44 +61,72 @@ const mockCourseData: CourseDataInterface = {
     },
     modules: [
         {
-            moduleTitle: "Getting Started with Front-end",
-            quiz: {
-                questions: [
-                    {
-                        questionText:
-                            "Which tag is used to include JavaScript in HTML?",
-                        options: ["<js>", "<script>", "<javascript>", "<code>"],
-                        correctAnswer: 1,
-                    },
-                    {
-                        questionText: "CSS stands for?",
-                        options: [
-                            "Cascading Style Sheets",
-                            "Colorful Style Rules",
-                            "Computer Style System",
-                            "Coding Syntax Sheets",
-                        ],
-                        correctAnswer: 0,
-                    },
-                ],
-            },
+            moduleTitle: "Making Project: Tic-Tac-Toe",
+            completed: true,
+            score: 8,
+            id: "1",
             lessons: [
                 {
+                    id: "m1-l1",
+                    title: "Introduction to Web Development",
+                    videoId: "v2A-aM-qICA",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m1-l2",
                     title: "HTML Basics",
-                    videoUrl: "https://youtube.com/abc123",
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "/images/cards/1.png",
                 },
                 {
+                    id: "m1-l3",
                     title: "CSS Fundamentals",
-                    videoUrl: "https://youtube.com/def456",
+                    videoId: "tgbNymZ7vqY",
+                    thumbnail: "/images/cards/1.png",
                 },
                 {
-                    title: "JavaScript Introduction",
-                    videoUrl: "https://youtube.com/ghi789",
+                    id: "m1-l4",
+                    title: "JavaScript Basics",
+                    videoId: "3JluqTojuME",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m1-l5",
+                    title: "React for Beginners",
+                    videoId: "Ke90Tje7VS0",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m1-l6",
+                    title: "Introduction to Web Development",
+                    videoId: "v2A-aM-qICA",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m1-l7",
+                    title: "HTML Basics",
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m1-l8",
+                    title: "CSS Fundamentals",
+                    videoId: "tgbNymZ7vqY",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m1-l9",
+                    title: "JavaScript Basics",
+                    videoId: "3JluqTojuME",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m1-l10",
+                    title: "React for Beginners",
+                    videoId: "Ke90Tje7VS0",
+                    thumbnail: "/images/cards/1.png",
                 },
             ],
-        },
-        {
-            moduleTitle: "Back-end Essentials",
             quiz: {
                 questions: [
                     {
@@ -109,16 +142,422 @@ const mockCourseData: CourseDataInterface = {
                     },
                 ],
             },
+        },
+        {
+            moduleTitle: "Working with FastApi",
+            id: "2",
+            completed: true,
+            score: 5,
             lessons: [
                 {
-                    title: "Node.js Overview",
-                    videoUrl: "https://youtube.com/nodejs01",
+                    id: "m2-l1",
+                    title: "Introduction to Web Development",
+                    videoId: "v2A-aM-qICA",
+                    thumbnail: "/images/cards/1.png",
                 },
                 {
-                    title: "Express.js Basics",
-                    videoUrl: "https://youtube.com/nodejs02",
+                    id: "m2-l2",
+                    title: "HTML Basics",
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m2-l3",
+                    title: "CSS Fundamentals",
+                    videoId: "tgbNymZ7vqY",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m2-l4",
+                    title: "JavaScript Basics",
+                    videoId: "3JluqTojuME",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m2-l5",
+                    title: "React for Beginners",
+                    videoId: "Ke90Tje7VS0",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m2-l6",
+                    title: "Introduction to Web Development",
+                    videoId: "v2A-aM-qICA",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m2-l7",
+                    title: "HTML Basics",
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m2-l8",
+                    title: "CSS Fundamentals",
+                    videoId: "tgbNymZ7vqY",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m2-l9",
+                    title: "JavaScript Basics",
+                    videoId: "3JluqTojuME",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m2-l10",
+                    title: "React for Beginners",
+                    videoId: "Ke90Tje7VS0",
+                    thumbnail: "/images/cards/1.png",
                 },
             ],
+            quiz: {
+                questions: [
+                    {
+                        questionText:
+                            "Node.js uses which engine for JavaScript?",
+                        options: [
+                            "Chakra",
+                            "SpiderMonkey",
+                            "V8",
+                            "Java Virtual Machine",
+                        ],
+                        correctAnswer: 2,
+                    },
+                ],
+            },
+        },
+        {
+            moduleTitle: "CSS Fundamentals",
+            id: "3",
+            completed: false,
+            score: undefined,
+            lessons: [
+                {
+                    id: "m3-l1",
+                    title: "Introduction to Web Development",
+                    videoId: "v2A-aM-qICA",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m3-l2",
+                    title: "HTML Basics",
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m3-l3",
+                    title: "CSS Fundamentals",
+                    videoId: "tgbNymZ7vqY",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m3-l4",
+                    title: "JavaScript Basics",
+                    videoId: "3JluqTojuME",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m3-l5",
+                    title: "React for Beginners",
+                    videoId: "Ke90Tje7VS0",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m3-l6",
+                    title: "Introduction to Web Development",
+                    videoId: "v2A-aM-qICA",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m3-l7",
+                    title: "HTML Basics",
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m3-l8",
+                    title: "CSS Fundamentals",
+                    videoId: "tgbNymZ7vqY",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m3-l9",
+                    title: "JavaScript Basics",
+                    videoId: "3JluqTojuME",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m3-l10",
+                    title: "React for Beginners",
+                    videoId: "Ke90Tje7VS0",
+                    thumbnail: "/images/cards/1.png",
+                },
+            ],
+            quiz: {
+                questions: [
+                    {
+                        questionText:
+                            "Node.js uses which engine for JavaScript?",
+                        options: [
+                            "Chakra",
+                            "SpiderMonkey",
+                            "V8",
+                            "Java Virtual Machine",
+                        ],
+                        correctAnswer: 2,
+                    },
+                ],
+            },
+        },
+        {
+            moduleTitle: "React for Beginners",
+            id: "4",
+            completed: false,
+            score: undefined,
+            lessons: [
+                {
+                    id: "m4-l1",
+                    title: "Introduction to Web Development",
+                    videoId: "v2A-aM-qICA",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m4-l2",
+                    title: "HTML Basics",
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m4-l3",
+                    title: "CSS Fundamentals",
+                    videoId: "tgbNymZ7vqY",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m4-l4",
+                    title: "JavaScript Basics",
+                    videoId: "3JluqTojuME",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m4-l5",
+                    title: "React for Beginners",
+                    videoId: "Ke90Tje7VS0",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m4-l6",
+                    title: "Introduction to Web Development",
+                    videoId: "v2A-aM-qICA",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m4-l7",
+                    title: "HTML Basics",
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m4-l8",
+                    title: "CSS Fundamentals",
+                    videoId: "tgbNymZ7vqY",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m4-l9",
+                    title: "JavaScript Basics",
+                    videoId: "3JluqTojuME",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m4-l10",
+                    title: "React for Beginners",
+                    videoId: "Ke90Tje7VS0",
+                    thumbnail: "/images/cards/1.png",
+                },
+            ],
+            quiz: {
+                questions: [
+                    {
+                        questionText:
+                            "Node.js uses which engine for JavaScript?",
+                        options: [
+                            "Chakra",
+                            "SpiderMonkey",
+                            "V8",
+                            "Java Virtual Machine",
+                        ],
+                        correctAnswer: 2,
+                    },
+                ],
+            },
+        },
+        {
+            moduleTitle: "JavaScript Basics",
+            id: "5",
+            completed: false,
+            score: undefined,
+            lessons: [
+                {
+                    id: "m5-l1",
+                    title: "Introduction to Web Development",
+                    videoId: "v2A-aM-qICA",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m5-l2",
+                    title: "HTML Basics",
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m5-l3",
+                    title: "CSS Fundamentals",
+                    videoId: "tgbNymZ7vqY",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m5-l4",
+                    title: "JavaScript Basics",
+                    videoId: "3JluqTojuME",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m5-l5",
+                    title: "React for Beginners",
+                    videoId: "Ke90Tje7VS0",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m5-l6",
+                    title: "Introduction to Web Development",
+                    videoId: "v2A-aM-qICA",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m5-l7",
+                    title: "HTML Basics",
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m5-l8",
+                    title: "CSS Fundamentals",
+                    videoId: "tgbNymZ7vqY",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m5-l9",
+                    title: "JavaScript Basics",
+                    videoId: "3JluqTojuME",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m5-l10",
+                    title: "React for Beginners",
+                    videoId: "Ke90Tje7VS0",
+                    thumbnail: "/images/cards/1.png",
+                },
+            ],
+            quiz: {
+                questions: [
+                    {
+                        questionText:
+                            "Node.js uses which engine for JavaScript?",
+                        options: [
+                            "Chakra",
+                            "SpiderMonkey",
+                            "V8",
+                            "Java Virtual Machine",
+                        ],
+                        correctAnswer: 2,
+                    },
+                ],
+            },
+        },
+        {
+            moduleTitle:
+                "JavaScript Basics awdawd wad awda wd adw awd awd awd aw",
+            completed: false,
+            score: undefined,
+            id: "5",
+            lessons: [
+                {
+                    id: "m6-l1",
+                    title: "Introduction to Web Development",
+                    videoId: "v2A-aM-qICA",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m6-l2",
+                    title: "HTML Basics",
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m6-l3",
+                    title: "CSS Fundamentals",
+                    videoId: "tgbNymZ7vqY",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m6-l4",
+                    title: "JavaScript Basics",
+                    videoId: "3JluqTojuME",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m6-l5",
+                    title: "React for Beginners",
+                    videoId: "Ke90Tje7VS0",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m6-l6",
+                    title: "Introduction to Web Development",
+                    videoId: "v2A-aM-qICA",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m6-l7",
+                    title: "HTML Basics",
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m6-l8",
+                    title: "CSS Fundamentals",
+                    videoId: "tgbNymZ7vqY",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m6-l9",
+                    title: "JavaScript Basics",
+                    videoId: "3JluqTojuME",
+                    thumbnail: "/images/cards/1.png",
+                },
+                {
+                    id: "m6-l10",
+                    title: "React for Beginners",
+                    videoId: "Ke90Tje7VS0",
+                    thumbnail: "/images/cards/1.png",
+                },
+            ],
+            quiz: {
+                questions: [
+                    {
+                        questionText:
+                            "Node.js uses which engine for JavaScript?",
+                        options: [
+                            "Chakra",
+                            "SpiderMonkey",
+                            "V8",
+                            "Java Virtual Machine",
+                        ],
+                        correctAnswer: 2,
+                    },
+                ],
+            },
         },
     ],
 };

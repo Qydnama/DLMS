@@ -19,11 +19,11 @@ const data = [
         items: [
           {
             title: "Syllabus",
-            url: "syllabus",
+            url: "../syllabus",
           },
           {
             title: "Quizzes",
-            url: "quizzes",
+            url: "../quizzes",
           },
         ],
       },
@@ -49,9 +49,12 @@ const data = [
 ]
 
 
-export function CourseSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-    const courseTitle = "Example Course Example eCourseCourseCourseCourseCours Course Example Example Course Example Course Example Course ";
-    const courseImage = "/images/cards/1.png";
+interface CourseData {
+  logo: string;
+  title: string;
+}
+
+export function CourseSidebar({ courseData, ...props }: { courseData: CourseData }) {
     const { isMobile } = useSidebar();
 
 
@@ -61,11 +64,11 @@ export function CourseSidebar({ ...props }: React.ComponentProps<typeof Sidebar>
             <Sidebar collapsible={isMobile ? "icon" : "none"} {...props} className="bg-white rounded-l-2xl h-[calc(100vh-64px)] sticky top-[64px] left-0">
                 <SidebarHeader className="flex p-4">
                     <Avatar className="w-24 h-24 rounded-lg overflow-hidden">
-                        <AvatarImage src={courseImage} alt={courseTitle} />
+                        <AvatarImage src={courseData.logo} alt={courseData.title} />
                         <AvatarFallback>EC</AvatarFallback>
                     </Avatar>
                     <div>
-                        <p className="line-clamp-5 text-md font-semibold break-words">{courseTitle}</p>
+                        <p className="line-clamp-5 text-md font-semibold break-words">{courseData.title}</p>
                     </div>
                 </SidebarHeader>
                 <SidebarContent>
