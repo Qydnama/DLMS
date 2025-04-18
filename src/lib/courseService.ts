@@ -1,4 +1,98 @@
+export interface QuestionInterface {
+    id: number;
+    text: string;
+    options: string[];
+    correctIndex: number;
+}
+
+export interface QuizInterface {
+    questions: QuestionInterface[];
+}
+
+export interface LessonInterface {
+    id: string;
+    title: string;
+    videoId: string;
+    thumbnail: string;
+}
+
+/* Helpful enums */
+export enum CourseLevel {
+    Beginner = "beginner",
+    Intermediate = "intermediate",
+    Advanced = "advanced",
+}
+
+export enum CourseLanguage {
+    En = "en",
+    Ru = "ru",
+    Kz = "kz",
+}
+
+export interface ModuleInterface {
+    id: string;
+    title: string;
+    completed: boolean;
+    score?: number; // optional
+    lessons: LessonInterface[];
+    quiz: QuizInterface;
+}
+
+export interface CertificateInterface {
+    image: string;
+}
+
+export interface CourseDescriptionInterface {
+    summary: string;
+    workload: string; // e.g. “4–5h / week”
+    learn: string; // “What you’ll learn” bullet points
+    about: string; // long text
+    gains: string; // long text
+    requirements: string; // multi‑line text
+}
+
+/* ────────────────────────────────
+     3. Course root
+     ──────────────────────────────── */
+
 export interface CourseDataInterface {
+    id: string;
+
+    /* Presentation */
+    title: string;
+    logo: string;
+    certificate: CertificateInterface;
+
+    /* Meta */
+    priceTon: number;
+    level: CourseLevel;
+    language: CourseLanguage;
+
+    description: CourseDescriptionInterface;
+
+    modules: ModuleInterface[];
+}
+
+/* ────────────────────────────────
+     4. “Database‑ish” shape
+     ──────────────────────────────── */
+
+/**
+ * One course payload ‑ everything flattened into look‑up maps.
+ * Much easier to PATCH a single entity, memoise selectors, share
+ * between React Query / SWR cache & global state, etc.
+ */
+// export interface CourseDataBundle {
+//     course: Course;
+
+//     modules: Record<string, Module>;
+//     lessons: Record<string, Lesson>;
+//     quizzes: Record<string, Quiz>;
+//     questions: Record<string, Question>;
+// }
+
+export interface CourseDataInterface2 {
+    id: string;
     logo: string;
     title: string;
     summary: string;
@@ -14,15 +108,15 @@ export interface CourseDataInterface {
         image: string;
     };
     modules: {
-        moduleTitle: string;
+        title: string;
         completed: boolean;
         score: number | undefined;
         id: string;
         quiz: {
             questions: {
-                questionText: string;
+                text: string;
                 options: string[];
-                correctAnswer: number;
+                correctIndex: number;
             }[];
         };
         lessons: {
@@ -35,36 +129,39 @@ export interface CourseDataInterface {
 }
 
 const mockCourseData: CourseDataInterface = {
-    logo: "/images/cards/1.png",
+    id: "1",
     title: "Fundamentals of Full-stack Web Development",
-    summary: `This course will teach you the basics of front-end and back-end 
+    logo: "/images/cards/1.png",
+    certificate: {
+        image: "/images/sampleCertificate.png",
+    },
+    priceTon: 79,
+    level: CourseLevel.Advanced,
+    language: CourseLanguage.En,
+    description: {
+        summary: `This course will teach you the basics of front-end and back-end 
       web development, covering HTML, CSS, JavaScript, Node.js and more.`,
-    recommendedWorkload: "4-5 hours per week",
-    whatYouWillLearn: `You'll gain the core skills needed to build and deploy 
+        workload: "4-5 hours per week",
+        learn: `You'll gain the core skills needed to build and deploy 
       modern web applications from scratch.`,
-    about: `In this course, we dive into the essential technologies used in 
+        about: `In this course, we dive into the essential technologies used in 
       full-stack web development. From structuring your project to deploying on a 
       cloud platform, each step is covered in a practical manner.`,
-    whatYouWillGain: `Strong foundational knowledge in building dynamic web 
+        gains: `Strong foundational knowledge in building dynamic web 
       applications, an understanding of code organization, best practices, 
       and real-world experience with toolchains.`,
-    initialRequirements: `1. Basic understanding of programming concepts
+        requirements: `1. Basic understanding of programming concepts
   2. Familiarity with JavaScript recommended
   3. No prior web development experience required
   4. Desire to build real projects from scratch
   `,
-    price: 79,
-    level: "Intermediate",
-    language: "English",
-    certificate: {
-        image: "/images/sampleCertificate.png",
     },
     modules: [
         {
-            moduleTitle: "Making Project: Tic-Tac-Toe",
+            id: "1",
+            title: "Making Project: Tic-Tac-Toe",
             completed: true,
             score: 8,
-            id: "1",
             lessons: [
                 {
                     id: "m1-l1",
@@ -130,21 +227,120 @@ const mockCourseData: CourseDataInterface = {
             quiz: {
                 questions: [
                     {
-                        questionText:
-                            "Node.js uses which engine for JavaScript?",
+                        id: 1,
+                        text: "Which sentence is correct? Select the correct option.",
                         options: [
-                            "Chakra",
-                            "SpiderMonkey",
-                            "V8",
-                            "Java Virtual Machine",
+                            "They is students.",
+                            "We is students.",
+                            "They are students.",
+                            "Are they students?"
                         ],
-                        correctAnswer: 2,
+                        correctIndex: 2
                     },
+                    {
+                        id: 2,
+                        text: "Which sentence is correct? Select the correct option.",
+                        options: [
+                            "She are happy.",
+                            "She is happy.",
+                            "She am happy.",
+                            "Are she happy?"
+                        ],
+                        correctIndex: 1
+                    },
+                    {
+                        id: 3,
+                        text: "Which sentence is correct? Select the correct option.",
+                        options: [
+                            "She are happy.",
+                            "She is happy.",
+                            "She am happy.",
+                            "Are she happy?"
+                        ],
+                        correctIndex: 1
+                    },
+                    {
+                        id: 4,
+                        text: "Next.js Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals",
+                        options: [
+                            "She are happy. Next.js Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals",
+                            "She is happy. Next.js Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals",
+                            "She am happy.",
+                            "Are she happy?"
+                        ],
+                        correctIndex: 1
+                    },
+                    {
+                        id: 5,
+                        text: "Which sentence is correct? Select the correct option.",
+                        options: [
+                            "She are happy.",
+                            "She is happy.",
+                            "She am happy.",
+                            "Are she happy?"
+                        ],
+                        correctIndex: 1
+                    },
+                    {
+                        id: 6,
+                        text: "Which sentence is correct? Select the correct option.",
+                        options: [
+                            "She are happy.",
+                            "She is happy.",
+                            "She am happy.",
+                            "Are she happy?"
+                        ],
+                        correctIndex: 1
+                    },
+                    {
+                        id: 7,
+                        text: "Which sentence is correct? Select the correct option.",
+                        options: [
+                            "She are happy.",
+                            "She is happy.",
+                            "She am happy.",
+                            "Are she happy?"
+                        ],
+                        correctIndex: 1
+                    },
+                    {
+                        id: 8,
+                        text: "Which sentence is correct? Select the correct option.",
+                        options: [
+                            "She are happy.",
+                            "She is happy.",
+                            "She am happy.",
+                            "Are she happy?"
+                        ],
+                        correctIndex: 1
+                    },
+                    {
+                        id: 9,
+                        text: "Which sentence is correct? Select the correct option.",
+                        options: [
+                            "She are happy.",
+                            "She is happy.",
+                            "She am happy.",
+                            "Are she happy?"
+                        ],
+                        correctIndex: 1
+                    },
+                    {
+                        id: 10,
+                        text: "Which sentence is correct? Select the correct option.",
+                        options: [
+                            "She are happy.",
+                            "She is happy.",
+                            "She am happy.",
+                            "Are she happy?"
+                        ],
+                        correctIndex: 1
+                    }
                 ],
             },
         },
         {
-            moduleTitle: "Working with FastApi",
+            title: "Working with FastApi",
             id: "2",
             completed: true,
             score: 5,
@@ -213,21 +409,21 @@ const mockCourseData: CourseDataInterface = {
             quiz: {
                 questions: [
                     {
-                        questionText:
-                            "Node.js uses which engine for JavaScript?",
+                        id: 1,
+                        text: "Which sentence is correct? Select the correct option.",
                         options: [
-                            "Chakra",
-                            "SpiderMonkey",
-                            "V8",
-                            "Java Virtual Machine",
+                            "They is students.",
+                            "We is students.",
+                            "They are students.",
+                            "Are they students?"
                         ],
-                        correctAnswer: 2,
+                        correctIndex: 2
                     },
                 ],
             },
         },
         {
-            moduleTitle: "CSS Fundamentals",
+            title: "CSS Fundamentals",
             id: "3",
             completed: false,
             score: undefined,
@@ -296,21 +492,21 @@ const mockCourseData: CourseDataInterface = {
             quiz: {
                 questions: [
                     {
-                        questionText:
-                            "Node.js uses which engine for JavaScript?",
+                        id: 1,
+                        text: "Which sentence is correct? Select the correct option.",
                         options: [
-                            "Chakra",
-                            "SpiderMonkey",
-                            "V8",
-                            "Java Virtual Machine",
+                            "They is students.",
+                            "We is students.",
+                            "They are students.",
+                            "Are they students?"
                         ],
-                        correctAnswer: 2,
+                        correctIndex: 2
                     },
                 ],
             },
         },
         {
-            moduleTitle: "React for Beginners",
+            title: "React for Beginners",
             id: "4",
             completed: false,
             score: undefined,
@@ -379,21 +575,21 @@ const mockCourseData: CourseDataInterface = {
             quiz: {
                 questions: [
                     {
-                        questionText:
-                            "Node.js uses which engine for JavaScript?",
+                        id: 1,
+                        text: "Which sentence is correct? Select the correct option.",
                         options: [
-                            "Chakra",
-                            "SpiderMonkey",
-                            "V8",
-                            "Java Virtual Machine",
+                            "They is students.",
+                            "We is students.",
+                            "They are students.",
+                            "Are they students?"
                         ],
-                        correctAnswer: 2,
+                        correctIndex: 2
                     },
                 ],
             },
         },
         {
-            moduleTitle: "JavaScript Basics",
+            title: "JavaScript Basics",
             id: "5",
             completed: false,
             score: undefined,
@@ -462,22 +658,21 @@ const mockCourseData: CourseDataInterface = {
             quiz: {
                 questions: [
                     {
-                        questionText:
-                            "Node.js uses which engine for JavaScript?",
+                        id: 1,
+                        text: "Which sentence is correct? Select the correct option.",
                         options: [
-                            "Chakra",
-                            "SpiderMonkey",
-                            "V8",
-                            "Java Virtual Machine",
+                            "They is students.",
+                            "We is students.",
+                            "They are students.",
+                            "Are they students?"
                         ],
-                        correctAnswer: 2,
+                        correctIndex: 2
                     },
                 ],
             },
         },
         {
-            moduleTitle:
-                "JavaScript Basics awdawd wad awda wd adw awd awd awd aw",
+            title: "JavaScript Basics awdawd wad awda wd adw awd awd awd aw",
             completed: false,
             score: undefined,
             id: "5",
@@ -546,15 +741,15 @@ const mockCourseData: CourseDataInterface = {
             quiz: {
                 questions: [
                     {
-                        questionText:
-                            "Node.js uses which engine for JavaScript?",
+                        id: 1,
+                        text: "Which sentence is correct? Select the correct option.",
                         options: [
-                            "Chakra",
-                            "SpiderMonkey",
-                            "V8",
-                            "Java Virtual Machine",
+                            "They is students.",
+                            "We is students.",
+                            "They are students.",
+                            "Are they students?"
                         ],
-                        correctAnswer: 2,
+                        correctIndex: 2
                     },
                 ],
             },

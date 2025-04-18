@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
+import { LessonInterface } from "@/lib/courseService";
 
 
 interface LessonSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -15,7 +16,7 @@ interface LessonSidebarProps extends React.ComponentProps<typeof Sidebar> {
       course: { courseId: string; courseTitle: string };
       modules: {
         moduleTitle: string;
-        lessons: { id: string; title: string; videoId: string }[];
+        lessons: LessonInterface[];
       }[];
     };
     activeLessonId: string | undefined;

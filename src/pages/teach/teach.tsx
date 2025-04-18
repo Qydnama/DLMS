@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { TeachCardSkeleton } from "@/components/teachCard/teachCardSkeleton";
 import useSWR from "swr";
 import { fetchTeachCourses, TeachCourseInterface } from "@/lib/teachService";
+import { ErrorPage } from "@/pages/error/error";
 
 export const Teach = () => {
     const {
@@ -23,13 +24,11 @@ export const Teach = () => {
 
     if (error) {
         return (
-            <main className="p-4 max-w-4xl bg-white rounded-[2vw] shadow-md flex flex-col items-center mx-auto pb-10">
-                <div className="w-full max-w-3xl">
-                    <div className="text-red-500 text-center mt-6">
-                        Failed to load your courses: {String(error)}
-                    </div>
-                </div>
-            </main>
+            <ErrorPage
+                first={"Courses Not Found"}
+                second={"We couldn't find your courses."}
+                third={"Please try again later."}
+            />
         );
     }
 

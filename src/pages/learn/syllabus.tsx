@@ -6,42 +6,44 @@ import { CourseSidebar } from "@/components/courseSidebar/courseSidebar";
 import useSWR from "swr";
 import { fetchCourseData, CourseDataInterface } from "@/lib/courseService";
 import { SyllabusSkeleton } from "@/components/syllabus/syllabusSkeleton";
-
+import { ErrorPage } from "@/pages/error/error";
 
 export function Syllabus() {
-    
     const navigate = useNavigate();
 
-    const { data: course, error, isLoading } = useSWR<CourseDataInterface>(
-    "course-data",
-    fetchCourseData,
-    { shouldRetryOnError: false }
-    );
+    const {
+        data: course,
+        error,
+        isLoading,
+    } = useSWR<CourseDataInterface>("course-data", fetchCourseData, {
+        shouldRetryOnError: false,
+    });
 
     // Функция перехода к конкретному уроку
     const handleLessonClick = (lessonId: string) => {
         navigate(`../lesson/${lessonId}`);
     };
 
+    if (error) {
+        return (
+            <ErrorPage
+                first={"Courses Not Found"}
+                second={"We couldn't find your courses."}
+                third={"Please try again later."}
+            />
+        );
+    }
 
- if (error) {
-   return (
-     <div className="p-4 text-center text-red-500">
-       Failed to load course data: {String(error)}
-     </div>
-   );
- }
-
-  // 3) If loading or no data => skeleton
- if (isLoading || !course) {
-   return <SyllabusSkeleton />;
- }
+    // 3) If loading or no data => skeleton
+    if (isLoading || !course) {
+        return <SyllabusSkeleton />;
+    }
 
     return (
         <SidebarProvider>
             <div className="flex w-full mx-auto bg-white rounded-[2vw] shadow-md">
                 {/* Sidebar */}
-                <CourseSidebar courseData={course}/>
+                <CourseSidebar courseData={course} />
 
                 <div className="max-w-4xl flex-grow mx-auto p-0 pt-6 md:pr-6 md:p-6">
                     <div className="flex items-center gap-2 mb-4">
@@ -63,7 +65,7 @@ export function Syllabus() {
                                     {/* Заголовок модуля с прогрессом */}
                                     <div className="flex items-center justify-between">
                                         <h3 className="font-medium text-base sm:text-lg">
-                                            {mIndex + 1}. {mod.moduleTitle}
+                                            {mIndex + 1}. {mod.title}
                                         </h3>
                                         <div className="flex items-center text-sm">
                                             {mod.completed ? (
@@ -72,8 +74,7 @@ export function Syllabus() {
                                                     <span>Done</span>
                                                 </div>
                                             ) : (
-                                                <span className="text-gray-500">
-                                                </span>
+                                                <span className="text-gray-500"></span>
                                             )}
                                         </div>
                                     </div>
@@ -98,7 +99,7 @@ export function Syllabus() {
                                                 </div>
 
                                                 {/* Название урока */}
-                                                <span className="flex-1 text-sm font-semibold truncate">
+                                                <span className="flex-1 text-sm font-semibold break-all sm:break-words">
                                                     {mIndex + 1}.{lIndex + 1}{" "}
                                                     {lesson.title}
                                                 </span>

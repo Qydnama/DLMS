@@ -31,11 +31,9 @@ export function CoursePromo() {
     if (error) {
         return (
             <ErrorPage
-                first={"404"}
-                second={"Sorry, didn't find any result."}
-                third={
-                    "Make sure your request is correct and repeat the search."
-                }
+                first={"Course Not Found"}
+                second={"We couldn't find your course."}
+                third={"Please try again later."}
             />
         );
     }

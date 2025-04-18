@@ -3,6 +3,7 @@ import { CourseCard } from "@/components/catalogCard/courseCard";
 import { CourseCardSkeleton } from "@/components/catalogCard/courseCardSkeleton";
 import useSWR from "swr";
 import { CourseInterface, fetchCatalogCourses } from "@/lib/catalogService";
+import { ErrorPage } from "../error/error";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -72,11 +73,11 @@ export function Catalog() {
 
     if (error) {
         return (
-            <main className="min-h-screen bg-white rounded-[2vw] shadow-md p-4">
-                <p className="text-center text-red-500 mt-8">
-                    Failed to load courses: {String(error)}
-                </p>
-            </main>
+            <ErrorPage
+                first={"Catalog Not Found"}
+                second={"We couldn't find catalog."}
+                third={"Please try again later."}
+            />
         );
     }
 

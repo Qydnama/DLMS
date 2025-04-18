@@ -14,7 +14,7 @@ const quizData = {
     questions: [
         {
             id: 1,
-            question: "Which sentence is correct? Select the correct option.",
+            text: "Which sentence is correct? Select the correct option.",
             options: [
                 "They is students.",
                 "We is students.",
@@ -25,7 +25,7 @@ const quizData = {
         },
         {
             id: 2,
-            question: "Which sentence is correct? Select the correct option.",
+            text: "Which sentence is correct? Select the correct option.",
             options: [
                 "She are happy.",
                 "She is happy.",
@@ -36,7 +36,7 @@ const quizData = {
         },
         {
             id: 3,
-            question: "Which sentence is correct? Select the correct option.",
+            text: "Which sentence is correct? Select the correct option.",
             options: [
                 "She are happy.",
                 "She is happy.",
@@ -47,7 +47,7 @@ const quizData = {
         },
         {
             id: 4,
-            question: "Next.js Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals",
+            text: "Next.js Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals",
             options: [
                 "She are happy. Next.js Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals",
                 "She is happy. Next.js Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals",
@@ -58,7 +58,7 @@ const quizData = {
         },
         {
             id: 5,
-            question: "Which sentence is correct? Select the correct option.",
+            text: "Which sentence is correct? Select the correct option.",
             options: [
                 "She are happy.",
                 "She is happy.",
@@ -69,7 +69,7 @@ const quizData = {
         },
         {
             id: 6,
-            question: "Which sentence is correct? Select the correct option.",
+            text: "Which sentence is correct? Select the correct option.",
             options: [
                 "She are happy.",
                 "She is happy.",
@@ -80,7 +80,7 @@ const quizData = {
         },
         {
             id: 7,
-            question: "Which sentence is correct? Select the correct option.",
+            text: "Which sentence is correct? Select the correct option.",
             options: [
                 "She are happy.",
                 "She is happy.",
@@ -91,7 +91,7 @@ const quizData = {
         },
         {
             id: 8,
-            question: "Which sentence is correct? Select the correct option.",
+            text: "Which sentence is correct? Select the correct option.",
             options: [
                 "She are happy.",
                 "She is happy.",
@@ -102,7 +102,7 @@ const quizData = {
         },
         {
             id: 9,
-            question: "Which sentence is correct? Select the correct option.",
+            text: "Which sentence is correct? Select the correct option.",
             options: [
                 "She are happy.",
                 "She is happy.",
@@ -113,7 +113,7 @@ const quizData = {
         },
         {
             id: 10,
-            question: "Which sentence is correct? Select the correct option.",
+            text: "Which sentence is correct? Select the correct option.",
             options: [
                 "She are happy.",
                 "She is happy.",
@@ -185,7 +185,7 @@ export function QuizAttempt() {
                     {quizData.questions.map((item, questionIndex) => (
                         <Card key={questionIndex} className="p-5 border-0">
                             <h3 className="text-md font-semibold text-gray-900">
-                                {questionIndex + 1}. {item.question}
+                                {questionIndex + 1}. {item.text}
                             </h3>
                             <RadioGroup 
                                 className="mt-4 space-y-2"

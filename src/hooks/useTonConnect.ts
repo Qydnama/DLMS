@@ -2,6 +2,11 @@ import { CHAIN, useIsConnectionRestored, useTonAddress, useTonConnectUI, useTonW
 import { useEffect, useState } from "react";
 import { Address, SenderArguments, Sender } from "ton-core";
 
+export const CHAINNET = {
+    MAINNET: -239,
+    TESTNET: -3
+} as const;
+
 export function useTonConnect(): {
     sender: Sender;
     isConnected: boolean;
@@ -18,7 +23,7 @@ export function useTonConnect(): {
     const [ready, setReady] = useState(false);
     const [isConnected, setIsConnected] = useState(false);
     const isConnectionRestored = useIsConnectionRestored();
-    console.log("wallet", wallet,"isConnectionRestored", isConnectionRestored, "isConnected", isConnected);
+    // console.log("wallet", wallet,"isConnectionRestored", isConnectionRestored, "isConnected", isConnected);
     useEffect(() => {
         if (isConnectionRestored) {
             setIsConnected(!!wallet); 

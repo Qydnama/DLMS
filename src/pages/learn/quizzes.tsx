@@ -9,6 +9,7 @@ import { CourseSidebar } from "@/components/courseSidebar/courseSidebar";
 import useSWR from "swr";
 import { QuizzesSkeleton } from "@/components/quizzes/quizzesSkeleton";
 import { fetchCourseData, CourseDataInterface } from "@/lib/courseService";
+import { ErrorPage } from "@/pages/error/error";
 
 export function Quizzes() {
     const navigate = useNavigate();
@@ -17,9 +18,9 @@ export function Quizzes() {
         data: course,
         error,
         isLoading,
-      } = useSWR<CourseDataInterface>("course-data", fetchCourseData, {
+    } = useSWR<CourseDataInterface>("course-data", fetchCourseData, {
         shouldRetryOnError: false,
-      });
+    });
 
     const handleQuizClick = (quizId: string) => {
         navigate(`../quiz/${quizId}`);
@@ -27,9 +28,11 @@ export function Quizzes() {
 
     if (error) {
         return (
-          <div className="p-4 text-center text-red-500">
-            Failed to load course data: {String(error)}
-          </div>
+            <ErrorPage
+                first={"Courses Not Found"}
+                second={"We couldn't find your courses."}
+                third={"Please try again later."}
+            />
         );
     }
 
@@ -40,11 +43,11 @@ export function Quizzes() {
     const allQuizzes = course.modules.map((mod, index) => {
         // For demonstration: a "title" from moduleTitle, or some quiz-specific fields
         return {
-          id: `${index + 1}`,
-          title: `${mod.moduleTitle}`,
-          completed: mod.completed,
-          score: mod.completed ? mod.score : null,   // example
-          totalQuestions: mod.quiz.questions.length,
+            id: `${index + 1}`,
+            title: `${mod.title}`,
+            completed: mod.completed,
+            score: mod.completed ? mod.score : null, // example
+            totalQuestions: mod.quiz.questions.length,
         };
     });
 
@@ -118,4 +121,4 @@ export function Quizzes() {
             </div>
         </SidebarProvider>
     );
-};
+}

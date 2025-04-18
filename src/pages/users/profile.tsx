@@ -60,9 +60,11 @@ export function UserProfile() {
     // Null fallback (just in case)
     if (!userData) {
         return (
-            <div className="mt-8 text-center text-gray-500">
-                <p>User not found.</p>
-            </div>
+            <ErrorPage
+                first={"Wallet doesn't exist"}
+                second={"We couldn't find a user with this wallet."}
+                third={"Please double-check the address and try again."}
+            />
         );
     }
 

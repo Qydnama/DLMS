@@ -27,9 +27,9 @@ export function QuizSidebar({ data, ...props }: QuizSidebarProps) {
 
 
     return (
-        <div className="bg-white m-0 rounded-2xl">
+        <div className="bg-white m-0 rounded-[2vw]">
             {isMobile}
-            <Sidebar collapsible={isMobile ? "icon" : "none"} {...props} className="bg-white rounded-2xl">
+            <Sidebar collapsible={isMobile ? "icon" : "none"} {...props} className="bg-white rounded-[2vw]">
                 <SidebarHeader className="flex px-4 pt-6 pb-0">
                     <div>
                         <p  onClick={handleTitleClick} className="cursor-pointer line-clamp-5 hover:underline text-md font-semibold break-words">{data.course.courseTitle}</p>
