@@ -14,24 +14,24 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 interface LearnCardProps {
-  courseId: string;
+  courseAddress: string;
   title: string;
   image: string;
 }
 
-export const LearnCard: React.FC<LearnCardProps> = ({ courseId, title, image }) => {
+export const LearnCard: React.FC<LearnCardProps> = ({ courseAddress, title, image }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/course/${courseId}`);
+    navigate(`/course/${courseAddress}`);
   };
   const handleLessonsClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/course/${courseId}/syllabus`);
+    navigate(`/course/${courseAddress}/syllabus`);
   };
   const handleQuizzesClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/course/${courseId}/quizzes`);
+    navigate(`/course/${courseAddress}/quizzes`);
   };
 
   return (

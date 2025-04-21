@@ -30,9 +30,13 @@ import {
                 {quizzes.map((quiz) => (
                   <SidebarMenuItem key={quiz.title}>
                     <SidebarMenuButton asChild>
-                      <a href={quiz.id}>
+                    <Link
+                                                to={`../quiz/${quiz.id}`} 
+                                                className="flex items-center w-full py-2 px-3 truncate"
+                                                replace // опционально: не засорять history
+                                            >
                         <p className="line-clamp-1 break-words">{quiz.id}. {quiz.title}</p>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

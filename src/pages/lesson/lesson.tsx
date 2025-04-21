@@ -5,27 +5,24 @@ import { LessonVideo } from "@/components/lessonVideo/lessonVideo";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import useSWR from "swr";
 import {
-    CourseDataInterface,
-    fetchCourseData,
     ModuleInterface,
     LessonInterface,
-} from "@/lib/courseService";
+} from "@/types/courseData";
 import { LessonSkeleton } from "@/components/lesson/lessonSkeleton";
 import { ErrorPage } from "@/pages/error/error";
+import { useCourseDataIfEnrolled } from "@/hooks/useCourseDataIfEnrolled";
 
 export function Lesson() {
     const { lessonId } = useParams<{ lessonId: string }>();
     const navigate = useNavigate();
 
+    const { courseAddress } = useParams();
     const {
         data: course,
         error,
         isLoading,
-    } = useSWR<CourseDataInterface>("course-data", fetchCourseData, {
-        shouldRetryOnError: false,
-    });
+    } = useCourseDataIfEnrolled(courseAddress)
 
     if (isLoading || !course) {
         return <LessonSkeleton />;
@@ -79,8 +76,9 @@ export function Lesson() {
                     <LessonSidebar
                         data={{
                             course: {
-                                courseId: course.id,
-                                courseTitle: course.title,
+                                // courseId: course.id,
+                                courseId: "1",
+                                courseTitle: course.name,
                             },
                             modules: allModules.map((m) => ({
                                 moduleTitle: m.title,

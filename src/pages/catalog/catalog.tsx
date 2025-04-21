@@ -100,7 +100,7 @@ export function Catalog() {
                     {/* Otherwise, show the visible courses */}
                     {visibleCourses.map((course) => (
                         <CourseCard
-                            key={course.courseId + course.authorId}
+                            key={course.courseAddress + course.authorAddress}
                             {...course}
                         />
                     ))}

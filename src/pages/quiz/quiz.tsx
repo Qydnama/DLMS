@@ -3,21 +3,20 @@ import { QuizSidebar } from "@/components/quizSidebar/quizSidebar";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import useSWR from "swr";
-import { CourseDataInterface, fetchCourseData, ModuleInterface } from "@/lib/courseService";
 import { QuizSkeleton } from "@/components/quiz/quizSkeleton";
+import { useCourseDataIfEnrolled } from "@/hooks/useCourseDataIfEnrolled";
+import { ModuleInterface } from "@/types/courseData";
 
 export function Quiz() {
     const { quizId } = useParams<{ quizId: string }>();
     const navigate = useNavigate();
 
+    const { courseAddress } = useParams();
     const {
         data: course,
         error,
         isLoading,
-    } = useSWR<CourseDataInterface>("course-data", fetchCourseData, {
-        shouldRetryOnError: false,
-    });
+    } = useCourseDataIfEnrolled(courseAddress)
 
 
     if (isLoading || !course) return <QuizSkeleton />;
@@ -40,8 +39,10 @@ export function Quiz() {
     const quizzes: QuizItem[] = course.modules.map((m: ModuleInterface) => ({
         id: m.id,
         title: m.title,
-        completed: m.completed,
-        score: m.score ?? null,
+        // completed: m.completed,
+        completed: false,
+        // score: m.score ?? null,
+        score: null,
         totalQuestions: m.quiz.questions.length,
     }));
 
@@ -64,7 +65,10 @@ export function Quiz() {
   };
 
   const sidebarPayload = {
-    course: { courseId: course.id, courseTitle: course.title },
+    course: { courseId: 
+        // course.id,
+        "1",
+         courseTitle: course.name },
     quizzes,
   };
 

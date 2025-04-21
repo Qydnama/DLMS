@@ -1,5 +1,4 @@
 import { Separator } from "@/components/ui/separator";
-import { Check } from "lucide-react";
 import { LevelIndicator } from "@/components/coursePromo/levelIndicator";
 import {
     Accordion,
@@ -8,24 +7,20 @@ import {
     AccordionContent,
 } from "@/components/ui/accordion";
 import { BuyPanel } from "@/components/coursePromo/buyPanel";
-import {
-    CoursePromoInterface,
-    fetchCoursePromo,
-} from "@/lib/coursePromoService";
-import useSWR from "swr";
 import { CoursePromoSkeleton } from "@/components/coursePromo/coursePromoSkeleton";
 import { ErrorPage } from "@/pages/error/error";
+import { useParams } from "react-router-dom";
+import { useCourseDataIfEnrolled } from "@/hooks/useCourseDataIfEnrolled";
 
 // Example course object with the required fields
 
 export function CoursePromo() {
+    const { courseAddress } = useParams();
     const {
         data: course,
         error,
         isLoading,
-    } = useSWR<CoursePromoInterface>("course-promo", fetchCoursePromo, {
-        shouldRetryOnError: false,
-    });
+    } = useCourseDataIfEnrolled(courseAddress)
 
     // 1) If error
     if (error) {
@@ -49,7 +44,7 @@ export function CoursePromo() {
             <div className="relative mx-auto h-[120px] sm:h-[160px] md:h-[200px] w-full sm:w-[96%] rounded-[2vw] overflow-hidden">
                 <img
                     className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 scale-125 blur-[10px]"
-                    src={course.logo}
+                    src={`https://ipfs.io/ipfs/${course.image.substring(7)}`}
                     alt="Course Background"
                 />
             </div>
@@ -60,7 +55,7 @@ export function CoursePromo() {
                     {/* Course Image */}
                     <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 bg-white-900 shadow-md rounded-xl overflow-hidden border border-[3px]">
                         <img
-                            src={course.logo}
+                            src={`https://ipfs.io/ipfs/${course.image.substring(7)}`}
                             alt="Course"
                             className="w-full h-full object-cover"
                         />
@@ -73,37 +68,37 @@ export function CoursePromo() {
                         {/* Course Text Info */}
                         <div className="mt-3 sm:mt-0">
                             <h1 className="text-2xl sm:text-2xl md:text-3xl font-bold text-gray-800">
-                                {course.title}
+                                {course.name}
                             </h1>
                             <span className="text-xs sm:text-sm text-gray-500 mt-1 ">
                                 Author:{" "}
                                 <span className="hover:underline cursor-pointer">
-                                    {course.authorName}
+                                    {course.social_links[0]}
                                 </span>
                             </span>
                         </div>
                         <p className=" mt-4 leading-relaxed">
-                            {course.summary}
+                            {course.attributes.summary}
                         </p>
 
                         {/* stats area */}
                         <div className="flex flex-col sm:flex-row mt-4 space-y-2 sm:space-y-0 sm:space-x-10 text-sm">
                             <div>
-                                <LevelIndicator level={course.level} />
+                                <LevelIndicator level={course.attributes.level} />
                             </div>
                             <div>
                                 <span className="font-semibold">
-                                    Students:{" "}
+                                    Students:{"0"}
                                 </span>
-                                <span>{course.students}</span>
+                                {/* <span>{course.students}</span> */}
                             </div>
                             <div>
                                 <span className="font-semibold">Language:</span>{" "}
-                                {course.language}
+                                {course.attributes.language}
                             </div>
                             <div>
-                                <span className="font-semibold">Rating:</span>{" "}
-                                {course.rating}
+                                <span className="font-semibold">Rating:</span>{"0"}
+                                {/* {course.rating} */}
                             </div>
                         </div>
                         <Separator className="mt-2 mb-3" />
@@ -115,19 +110,9 @@ export function CoursePromo() {
                                 <h2 className="text-2xl font-normal">
                                     What you will learn
                                 </h2>
-                                <ul className="mt-2 space-y-2">
-                                    {course.whatYouWillLearn.map(
-                                        (item, index) => (
-                                            <li
-                                                className="flex space-x-2 items-center"
-                                                key={index}
-                                            >
-                                                <Check className="w-5 h-5 text-green-500" />{" "}
-                                                <p>{item}</p>
-                                            </li>
-                                        )
-                                    )}
-                                </ul>
+                                <p className="mt-2 leading-relaxed whitespace-pre-wrap">
+                                    {course.attributes.learn}
+                                </p>
                             </div>
 
                             {/* About this course */}
@@ -136,17 +121,17 @@ export function CoursePromo() {
                                     About this course
                                 </h2>
                                 <p className="mt-2 leading-relaxed whitespace-pre-wrap">
-                                    {course.about}
+                                    {course.attributes.about}
                                 </p>
                             </div>
 
-                            {/* Whom this course is for */}
+                            {/* What You Will Gain */}
                             <div>
                                 <h2 className="text-2xl font-normal">
-                                    Whom this course is for
+                                    What You Will Gain
                                 </h2>
                                 <p className="mt-2 leading-relaxed whitespace-pre-wrap">
-                                    {course.whomThisCourseIsFor}
+                                    {course.attributes.gains}
                                 </p>
                             </div>
 
@@ -156,27 +141,8 @@ export function CoursePromo() {
                                     Initial requirements
                                 </h2>
                                 <p className="mt-2 leading-relaxed whitespace-pre-wrap">
-                                    {course.initialRequirements}
+                                    {course.attributes.requirements}
                                 </p>
-                            </div>
-
-                            {/* How you will learn */}
-                            <div>
-                                <h2 className="text-2xl font-normal">
-                                    How you will learn
-                                </h2>
-                                <ul className="mt-2 space-y-2">
-                                    {course.howWillYouLearn.map(
-                                        (item, index) => (
-                                            <li
-                                                className="flex space-x-2"
-                                                key={index}
-                                            >
-                                                <p>-</p> <p>{item}</p>
-                                            </li>
-                                        )
-                                    )}
-                                </ul>
                             </div>
 
                             {/* Course content */}
@@ -199,7 +165,7 @@ export function CoursePromo() {
                                                 className="border-b"
                                             >
                                                 <AccordionTrigger className="text-lg pb-3 pt-0">
-                                                    {module.moduleTitle}
+                                                    {module.title}
                                                 </AccordionTrigger>
                                                 <AccordionContent>
                                                     <ul className="mt-1 space-y-2">

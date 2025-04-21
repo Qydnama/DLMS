@@ -8,7 +8,6 @@ import { Catalog } from "@/pages/catalog/catalog";
 import { Teach } from "@/pages/teach/teach";
 import { CreateCourse } from "@/pages/teach/createCourse";
 
-import { CourseBuilderProvider } from "@/context/courseBuilderProvider";
 import { Learn } from "@/pages/learn/learn";
 import { Syllabus } from "@/pages/learn/syllabus";
 import { Quizzes } from "@/pages/learn/quizzes";
@@ -30,7 +29,6 @@ export default function App() {
     return (
         <AnimatePresence mode="wait">
             <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/Qydnama/first_contract_front_end/refs/heads/main/public/tonconnect-manifest.json">
-                <CourseBuilderProvider>
                     <Routes location={location} key={location.pathname}>
                         <Route index element={<Navigate to="catalog" replace />} />
                         <Route path="catalog" element={ <MainLayout children={<Catalog />} />} />
@@ -46,7 +44,7 @@ export default function App() {
 
                         </Route>
 
-                        <Route path="course/:courseId">
+                        <Route path="course/:courseAddress">
                             <Route index element={<Navigate to="syllabus" replace />} />
                             <Route path="promo" element={<MainLayout><CoursePromo /></MainLayout>} />
                             <Route path="syllabus" element={ <ProtectedRoute><MainLayout><Syllabus /></MainLayout></ProtectedRoute> } />
@@ -67,7 +65,6 @@ export default function App() {
                         <Route path="*" element={<MainLayout><PageNotFound /></MainLayout>} />
                         
                     </Routes>
-                </CourseBuilderProvider>
             </TonConnectUIProvider>
         </AnimatePresence>
     );

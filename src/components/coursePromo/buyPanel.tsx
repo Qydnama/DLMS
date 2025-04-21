@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { CoursePromoInterface } from "@/lib/coursePromoService";
+import { CourseDataInterface } from "@/lib/courseService";
 
 interface BuyPanelProps {
-    course: CoursePromoInterface;
+    course: CourseDataInterface;
 }
 
 export function BuyPanel({ course }: BuyPanelProps) {
@@ -16,7 +16,8 @@ export function BuyPanel({ course }: BuyPanelProps) {
         <div className="w-[90%] sm:w-[60%] md:w-full mx-auto">
             <div className="w-full">
                 <h3 className="text-xl font-bold text-gray-800">
-                    {course.price}
+                    100 TON
+                    {/* {course.price} */}
                 </h3>
 
                 <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white mt-2 md:mt-4 font-bold">
@@ -42,13 +43,10 @@ export function BuyPanel({ course }: BuyPanelProps) {
                         This course includes
                     </h4>
                     <p className="text-sm text-gray-700 mt-1">
-                        <strong>{course.lessonsCount}</strong> lessons
+                        <strong>{course.attributes.lessons}</strong> lessons
                     </p>
                     <p className="text-sm text-gray-700">
-                        <strong>{course.videoLength}</strong> of video
-                    </p>
-                    <p className="text-sm text-gray-700">
-                        <strong>{course.quizzesCount}</strong> quizzes
+                        <strong>{course.modules.length}</strong> modules and quizzes
                     </p>
                     <a
                         href="#course-content"

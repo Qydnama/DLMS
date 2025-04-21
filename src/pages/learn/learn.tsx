@@ -1,18 +1,20 @@
 import { LearnCard } from "@/components/learnCard/learnCard";
 import { LearnCardSkeleton } from "@/components/learnCard/learnCardSkeleton";
-import useSWR from "swr";
-import { fetchLearnCourses, LearnCourseInterface } from "@/lib/learnService";
+// import useSWR from "swr";
+// import { fetchLearnCourses, LearnCourseInterface } from "@/lib/learnService";
 import { ErrorPage } from "@/pages/error/error";
 import { Link } from "react-router-dom";
+import { useEnrolledCourses } from "@/hooks/useEnrolledCourseList";
 
 export const Learn = () => {
-    const {
-        data: courses,
-        error,
-        isLoading,
-    } = useSWR<LearnCourseInterface[]>("learn-courses", fetchLearnCourses, {
-        shouldRetryOnError: false,
-    });
+    const { data: courses, isLoading, error } = useEnrolledCourses();
+    // const {
+    //     data: courses,
+    //     error,
+    //     isLoading,
+    // } = useSWR<LearnCourseInterface[]>("learn-courses", fetchLearnCourses, {
+    //     shouldRetryOnError: false,
+    // });
 
     if (error) {
         return (
@@ -64,7 +66,7 @@ export const Learn = () => {
                     {courses &&
                         courses.length > 0 &&
                         courses.map((course) => (
-                            <LearnCard key={course.courseId} {...course} />
+                            <LearnCard key={course.courseAddress} {...course} />
                         ))}
                 </div>
             </div>

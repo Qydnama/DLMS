@@ -1,23 +1,20 @@
-import { Check } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+// import { Check } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { CourseSidebar } from "@/components/courseSidebar/courseSidebar";
-import useSWR from "swr";
-import { fetchCourseData, CourseDataInterface } from "@/lib/courseService";
 import { SyllabusSkeleton } from "@/components/syllabus/syllabusSkeleton";
 import { ErrorPage } from "@/pages/error/error";
+import { useCourseDataIfEnrolled } from "@/hooks/useCourseDataIfEnrolled";
 
 export function Syllabus() {
     const navigate = useNavigate();
-
+    const { courseAddress } = useParams();
     const {
         data: course,
         error,
         isLoading,
-    } = useSWR<CourseDataInterface>("course-data", fetchCourseData, {
-        shouldRetryOnError: false,
-    });
+    } = useCourseDataIfEnrolled(courseAddress)
 
     // Функция перехода к конкретному уроку
     const handleLessonClick = (lessonId: string) => {
@@ -68,14 +65,15 @@ export function Syllabus() {
                                             {mIndex + 1}. {mod.title}
                                         </h3>
                                         <div className="flex items-center text-sm">
-                                            {mod.completed ? (
+                                            {/* {mod.completed ? (
                                                 <div className="flex items-center text-green-600">
                                                     <Check className="w-4 h-4 mr-1" />
                                                     <span>Done</span>
                                                 </div>
                                             ) : (
                                                 <span className="text-gray-500"></span>
-                                            )}
+                                            )} */}
+                                            <span className="text-gray-500"></span>
                                         </div>
                                     </div>
 
@@ -90,13 +88,13 @@ export function Syllabus() {
                                                 }
                                             >
                                                 {/* Картинка урока */}
-                                                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-md overflow-hidden bg-gray-200 flex-shrink-0">
+                                                {/* <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-md overflow-hidden bg-gray-200 flex-shrink-0">
                                                     <img
                                                         src={lesson.thumbnail}
                                                         alt={lesson.title}
                                                         className="w-full h-full object-cover"
                                                     />
-                                                </div>
+                                                </div> */}
 
                                                 {/* Название урока */}
                                                 <span className="flex-1 text-sm font-semibold break-all sm:break-words">

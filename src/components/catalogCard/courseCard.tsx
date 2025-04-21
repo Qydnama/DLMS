@@ -10,8 +10,8 @@ interface CourseCardProps {
   duration: number;
   rating: number;
   image: string;
-  courseId: string;
-  authorId: string;
+  courseAddress: string;
+  authorAddress: string;
   users: number;
 }
 
@@ -22,19 +22,19 @@ export const CourseCard: React.FC<CourseCardProps> = ({
     duration,
     rating,
     image,
-    courseId,
-    authorId,
+    courseAddress,
+    authorAddress,
     users,
   }) => {
     const navigate = useNavigate();
-  
+    console.log(courseAddress);
     const handleCardClick = () => {
-      navigate(`/course/${courseId}/promo`);
+      navigate(`/course/${courseAddress}/promo`);
     };
   
     const handleAuthorClick = (e: React.MouseEvent) => {
       e.stopPropagation();
-      navigate(`/author/${authorId}`);
+      navigate(`/author/${authorAddress}`);
     };
   
     return (

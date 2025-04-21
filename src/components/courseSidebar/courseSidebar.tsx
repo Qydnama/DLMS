@@ -50,8 +50,8 @@ const data = [
 
 
 interface CourseData {
-  logo: string;
-  title: string;
+  image: string;
+  name: string;
 }
 
 export function CourseSidebar({ courseData, ...props }: { courseData: CourseData }) {
@@ -64,11 +64,11 @@ export function CourseSidebar({ courseData, ...props }: { courseData: CourseData
             <Sidebar collapsible={isMobile ? "icon" : "none"} {...props} className="bg-white rounded-l-2xl h-[calc(100vh-64px)] sticky top-[64px] left-0">
                 <SidebarHeader className="flex p-4">
                     <Avatar className="w-24 h-24 rounded-lg overflow-hidden">
-                        <AvatarImage src={courseData.logo} alt={courseData.title} />
+                        <AvatarImage src={`https://ipfs.io/ipfs/${courseData.image.substring(7)}`} alt={courseData.name} />
                         <AvatarFallback>EC</AvatarFallback>
                     </Avatar>
                     <div>
-                        <p className="line-clamp-5 text-md font-semibold break-words">{courseData.title}</p>
+                        <p className="line-clamp-5 text-md font-semibold break-words">{courseData.name}</p>
                     </div>
                 </SidebarHeader>
                 <SidebarContent>

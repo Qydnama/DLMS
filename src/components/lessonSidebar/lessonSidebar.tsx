@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
-import { LessonInterface } from "@/lib/courseService";
+import { LessonInterface } from "@/types/courseData";
 
 
 interface LessonSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -28,7 +28,7 @@ export function LessonSidebar({ data, activeLessonId, ...props }: LessonSidebarP
     const { isMobile } = useSidebar();
 
     const handleTitleClick = () => {
-        navigate(`/course/${data.course.courseId}`);
+        navigate(`../syllabus`);
     }
 
 

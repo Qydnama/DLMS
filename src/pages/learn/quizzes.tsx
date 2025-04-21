@@ -2,25 +2,22 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Check, ListOrdered } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { CourseSidebar } from "@/components/courseSidebar/courseSidebar";
-
-import useSWR from "swr";
 import { QuizzesSkeleton } from "@/components/quizzes/quizzesSkeleton";
-import { fetchCourseData, CourseDataInterface } from "@/lib/courseService";
 import { ErrorPage } from "@/pages/error/error";
+import { useCourseDataIfEnrolled } from "@/hooks/useCourseDataIfEnrolled";
 
 export function Quizzes() {
     const navigate = useNavigate();
 
+    const { courseAddress } = useParams();
     const {
         data: course,
         error,
         isLoading,
-    } = useSWR<CourseDataInterface>("course-data", fetchCourseData, {
-        shouldRetryOnError: false,
-    });
+    } = useCourseDataIfEnrolled(courseAddress)
 
     const handleQuizClick = (quizId: string) => {
         navigate(`../quiz/${quizId}`);
@@ -45,8 +42,10 @@ export function Quizzes() {
         return {
             id: `${index + 1}`,
             title: `${mod.title}`,
-            completed: mod.completed,
-            score: mod.completed ? mod.score : null, // example
+            // completed: mod.completed,
+            completed: false,
+            // score: mod.completed ? mod.score : null,
+            score: null,
             totalQuestions: mod.quiz.questions.length,
         };
     });

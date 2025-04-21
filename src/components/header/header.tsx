@@ -21,7 +21,6 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
     const { t } = useTranslation();
     const [hideBorder, setHideBorder] = useState(false);
     const { network } = useTonConnect();
-    console.log("network", network);
     // TESTNET = -3, MAINNET = -239
 
     useEffect(() => {
