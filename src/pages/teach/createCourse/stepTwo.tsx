@@ -6,21 +6,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { X, CirclePlus } from "lucide-react";
+import { CourseDataInterface } from "@/types/courseData";
+import { extractYoutubeVideoId } from "@/components/createCourse/youtubeIdExtract";
 
 // 1) Валидация урока
 const lessonSchema = z.object({
     title: z.string().min(5, "Lesson title must be at least 5 characters"),
-    videoUrl: z
-        .string()
-        .regex(
-            /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/,
-            "Enter a valid YouTube URL"
-        ),
-});
+    videoId: z
+      .string()
+      .url()
+      .refine((url) => {
+        const videoId = extractYoutubeVideoId(url);
+        return !!videoId;
+      }, {
+        message: "Enter a valid YouTube URL with a video ID",
+      }),
+  });
 
 // 2) Валидация модуля
 const moduleSchema = z.object({
-    moduleTitle: z
+    title: z
         .string()
         .min(5, "Module title must be at least 5 characters"),
     lessons: z
@@ -39,64 +44,9 @@ const stepTwoSchema = z.object({
 
 // Типы пропсов
 interface StepTwoProps {
-    courseData: {
-        logo: string;
-        title: string;
-        summary: string;
-        recommendedWorkload: string;
-        whatYouWillLearn: string;
-        about: string;
-        whatYouWillGain: string;
-        initialRequirements: string;
-        price: number;
-        level: string;
-        language: string;
-        modules: {
-            moduleTitle: string;
-            quiz: {
-                questions: {
-                    questionText: string;
-                    options: string[];
-                    correctAnswer: number;
-                }[];
-            };
-            lessons: {
-                title: string;
-                videoUrl: string;
-            }[];
-        }[];
-    };
+    courseData: CourseDataInterface;
     setCourseData: React.Dispatch<
-        React.SetStateAction<{
-            logo: string;
-            title: string;
-            summary: string;
-            recommendedWorkload: string;
-            whatYouWillLearn: string;
-            about: string;
-            whatYouWillGain: string;
-            initialRequirements: string;
-            price: number;
-            level: string;
-            language: string;
-            certificate: {
-                image: string;       
-            };
-            modules: {
-                moduleTitle: string;
-                quiz: {
-                    questions: {
-                        questionText: string;
-                        options: string[];
-                        correctAnswer: number;
-                    }[];
-                };
-                lessons: {
-                    title: string;
-                    videoUrl: string;
-                }[];
-            }[];
-        }>
+        React.SetStateAction<CourseDataInterface>
     >;
     setValidationStatus: React.Dispatch<
         React.SetStateAction<{
@@ -112,6 +62,9 @@ interface StepTwoProps {
     activeModuleIndex: number;
     setActiveModuleIndex: (index: number) => void;
 }
+
+
+  
 
 export function StepTwo({
     courseData,
@@ -167,7 +120,7 @@ export function StepTwo({
     
                             if (issue.path[4] === "title") {
                                 tempErrors[moduleIndex].lessons![lessonIndex].title = issue.message;
-                            } else if (issue.path[4] === "videoUrl") {
+                            } else if (issue.path[4] === "videoId") {
                                 tempErrors[moduleIndex].lessons![lessonIndex].videoUrl = issue.message;
                             }
                         }
@@ -195,22 +148,23 @@ export function StepTwo({
             modules: [
                 ...prev.modules,
                 {
-                    moduleTitle: `Module ${prev.modules.length + 1}`,
-                    hasQuiz: true,
-                    lessons: [{ title: "", videoUrl: "" }],
+                    id: "",
+                    title: `Module ${prev.modules.length + 1}`,
+                    lessons: [{ id: "",title: "", videoId: "" }],
                     quiz: {
+                        correct_answers: "",
                         questions:
                             (Array(5)
                                 .fill(null)
                                 .map(() => ({
-                                    questionText: "",
+                                    id: "",
+                                    text: "",
                                     options: ["", ""],
-                                    correctAnswer: 0,
                                 })) as Array<{
-                                questionText: string;
+                                id: string;
+                                text: string;
                                 options: string[];
-                                correctAnswer: number;
-                            }>) || undefined,
+                            }>),
                     },
                 },
             ],
@@ -230,7 +184,7 @@ export function StepTwo({
 
     const handleModuleTitleChange = (index: number, value: string) => {
         const updated = [...courseData.modules];
-        updated[index].moduleTitle = value;
+        updated[index].title = value;
         setCourseData((prev) => ({ ...prev, modules: updated }));
     };
 
@@ -238,7 +192,7 @@ export function StepTwo({
     const handleAddLesson = (moduleIndex: number) => {
         const updated = [...courseData.modules];
         if (updated[moduleIndex].lessons.length >= 10) return;
-        updated[moduleIndex].lessons.push({ title: "", videoUrl: "" });
+        updated[moduleIndex].lessons.push({ id: "",title: "", videoId: "" });
         setCourseData((prev) => ({ ...prev, modules: updated }));
     };
 
@@ -253,7 +207,7 @@ export function StepTwo({
     const handleLessonFieldChange = (
         moduleIndex: number,
         lessonIndex: number,
-        field: "title" | "videoUrl",
+        field: "title" | "videoId",
         value: string
     ) => {
         const updated = [...courseData.modules];
@@ -344,7 +298,7 @@ export function StepTwo({
                             <div className="mb-2">
                                 <Label>Module Title</Label>
                                 <Input
-                                    value={mod.moduleTitle}
+                                    value={mod.title}
                                     onChange={(e) => handleModuleTitleChange(modIndex, e.target.value)}
                                     maxLength={64}
                                     className={`rounded-2xl mt-1 ${showErrors && errors[modIndex]?.moduleTitle ? "border-red-500" : ""}`}
@@ -353,7 +307,7 @@ export function StepTwo({
                                     <p className="text-red-500 text-xs mt-1">{errors[modIndex]?.moduleTitle}</p>
                                 )}
                                 <div className="text-right text-gray-400 text-xs">
-                                    {mod.moduleTitle.length}/64
+                                    {mod.title.length}/64
                                 </div>
                             </div>
 
@@ -417,12 +371,12 @@ export function StepTwo({
                                         <div>
                                             <Label>YouTube URL</Label>
                                             <Input
-                                                value={lesson.videoUrl}
+                                                value={lesson.videoId}
                                                 onChange={(e) =>
                                                     handleLessonFieldChange(
                                                         modIndex,
                                                         lessonIndex,
-                                                        "videoUrl",
+                                                        "videoId",
                                                         e.target.value
                                                     )
                                                 }

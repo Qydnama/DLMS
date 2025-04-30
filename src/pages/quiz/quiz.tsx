@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { QuizSkeleton } from "@/components/quiz/quizSkeleton";
 import { useCourseDataIfEnrolled } from "@/hooks/useCourseDataIfEnrolled";
 import { ModuleInterface } from "@/types/courseData";
+import { ErrorPage } from "@/pages/error/error";
 
 export function Quiz() {
     const { quizId } = useParams<{ quizId: string }>();
@@ -16,16 +17,30 @@ export function Quiz() {
         data: course,
         error,
         isLoading,
-    } = useCourseDataIfEnrolled(courseAddress)
+    } = useCourseDataIfEnrolled(courseAddress);
 
-
-    if (isLoading || !course) return <QuizSkeleton />;
     if (error) {
-      return (
-        <div className="p-6 text-center text-red-600">
-          Failed to load course data: {String(error)}
-        </div>
-      );
+        if (error.message === "Access denied") {
+            return (
+                <ErrorPage
+                    first={"Access Denied"}
+                    second={"You are not enrolled in this course."}
+                    third={"Please check your course list."}
+                />
+            );
+        } else {
+            return (
+                <ErrorPage
+                    first={"Courses Not Found"}
+                    second={"We couldn't find your courses."}
+                    third={"Please try again later."}
+                />
+            );
+        }
+    }
+
+    if (isLoading || !course) {
+        return <QuizSkeleton />;
     }
 
     type QuizItem = {
@@ -49,28 +64,28 @@ export function Quiz() {
     const currentQuizIndex = quizzes.findIndex((q) => q.id === quizId);
     const currentQuiz = quizzes[currentQuizIndex];
 
-
-    const goQuiz = (index: number) =>
-        navigate(`../quiz/${quizzes[index].id}`);
+    const goQuiz = (index: number) => navigate(`../quiz/${quizzes[index].id}`);
 
     // Next/Prev quiz logic
     const isFirstQuiz = currentQuizIndex === 0;
     const isLastQuiz = currentQuizIndex === quizzes.length - 1;
 
-  const handlePrevQuiz = () => !isFirstQuiz && goQuiz(currentQuizIndex - 1);
-  const handleNextQuiz = () => !isLastQuiz && goQuiz(currentQuizIndex + 1);
+    const handlePrevQuiz = () => !isFirstQuiz && goQuiz(currentQuizIndex - 1);
+    const handleNextQuiz = () => !isLastQuiz && goQuiz(currentQuizIndex + 1);
 
-  const handleQuizButtonClick = () => {
-    navigate(currentQuiz.completed ? `review` : `attempt`);
-  };
+    const handleQuizButtonClick = () => {
+        navigate(currentQuiz.completed ? `review` : `attempt`);
+    };
 
-  const sidebarPayload = {
-    course: { courseId: 
-        // course.id,
-        "1",
-         courseTitle: course.name },
-    quizzes,
-  };
+    const sidebarPayload = {
+        course: {
+            courseId:
+                // course.id,
+                "1",
+            courseTitle: course.name,
+        },
+        quizzes,
+    };
 
     return (
         <SidebarProvider>

@@ -27,7 +27,6 @@ export const CourseCard: React.FC<CourseCardProps> = ({
     users,
   }) => {
     const navigate = useNavigate();
-    console.log(courseAddress);
     const handleCardClick = () => {
       navigate(`/course/${courseAddress}/promo`);
     };

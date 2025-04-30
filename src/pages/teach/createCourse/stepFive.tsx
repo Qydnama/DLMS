@@ -5,38 +5,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { checkPinataConnection } from "@/lib/pinata";
+import { CourseDataInterface } from "@/types/courseData";
 
 interface StepFiveProps {
-    courseData: {
-        logo: string;
-        title: string;
-        summary: string;
-        recommendedWorkload: string;
-        whatYouWillLearn: string;
-        about: string;
-        whatYouWillGain: string;
-        initialRequirements: string;
-        price: number;
-        level: string;
-        language: string;
-        certificate: {
-            image: string;
-        };
-        modules: {
-            moduleTitle: string;
-            quiz: {
-                questions: {
-                    questionText: string;
-                    options: string[];
-                    correctAnswer: number;
-                }[];
-            };
-            lessons: {
-                title: string;
-                videoUrl: string;
-            }[];
-        }[];
-    };
+    courseData: CourseDataInterface;
     validationStatus: {
         stepOne: boolean;
         stepTwo: boolean;
@@ -48,6 +20,7 @@ interface StepFiveProps {
     setJwt: React.Dispatch<React.SetStateAction<string>>;
     setIsValidJwt: React.Dispatch<React.SetStateAction<boolean>>;
     isValidJwt: boolean;
+    coursePrice: number;
 }
 
 export function StepFive({
@@ -58,6 +31,7 @@ export function StepFive({
     setJwt,
     setIsValidJwt,
     isValidJwt,
+    coursePrice
 }: StepFiveProps) {
 
     const jwtSchema = z.string().min(10, "JWT слишком короткий");
@@ -68,9 +42,10 @@ export function StepFive({
     const handlePromoPage = () => {
         // 1) Сохраняем courseData (например, в sessionStorage)
         sessionStorage.setItem("promoData", JSON.stringify(courseData));
+        sessionStorage.setItem("priceData", JSON.stringify(coursePrice));
 
         // 2) Открываем новую вкладку на URL /teach/courses/create/coursePromo
-        window.open("/teach/courses/create/coursePromo", "_blank");
+        window.open("/teach/create/coursePromo", "_blank");
     };
 
     const handlePinataConnection = async () => {

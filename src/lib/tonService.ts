@@ -31,16 +31,24 @@ export async function fetchEnrolledCourseAddresses(
 export async function fetchIfEnrolled(
     userAddress: string,
     contractAddress: string
-): Promise<CourseDataInterface | null> {
+  ): Promise<CourseDataInterface> {
     const enrolledCourses = await fetchEnrolledCourseAddresses(userAddress);
-
     if (!enrolledCourses.includes(contractAddress)) {
-        return null;
+        throw new Error("Access denied");
     }
+    const { collectionContent } = await getCollectionData(contractAddress);
+    const data = await fetch(collectionContent).then((res) => res.json());
+  
+    return data as CourseDataInterface;
+}
+
+export async function fetchPromo(
+    contractAddress: string
+  ): Promise<CourseDataInterface> {
 
     const { collectionContent } = await getCollectionData(contractAddress);
     const data = await fetch(collectionContent).then((res) => res.json());
-
+  
     return data as CourseDataInterface;
 }
 

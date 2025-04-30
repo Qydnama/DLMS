@@ -1,5 +1,5 @@
 export interface QuestionInterface {
-    id: number;
+    id: string;
     text: string;
     options: string[];
 }
@@ -28,7 +28,7 @@ export interface CertificateByGrade {
 }
 
 export interface CourseAttributesInterface {
-    category: string;
+    category: Array<string>;
     duration: string;
     level: string;
     lessons: number;
@@ -57,6 +57,8 @@ export interface CourseDataInterface {
     modules: ModuleInterface[];
     courseCompletion: CertificateByGrade[];
 }
+
+
 
 export interface EnrolledCoursePreview {
     courseAddress: string;

@@ -10,7 +10,9 @@ import { BuyPanel } from "@/components/coursePromo/buyPanel";
 import { CoursePromoSkeleton } from "@/components/coursePromo/coursePromoSkeleton";
 import { ErrorPage } from "@/pages/error/error";
 import { useParams } from "react-router-dom";
-import { useCourseDataIfEnrolled } from "@/hooks/useCourseDataIfEnrolled";
+import { useCourseDataPromo } from "@/hooks/useCourseDataPromo";
+import { StatBadge } from "@/components/coursePromo/statBadge";
+import { useCategoryNames } from "@/hooks/useCategoryNames";
 
 // Example course object with the required fields
 
@@ -20,7 +22,8 @@ export function CoursePromo() {
         data: course,
         error,
         isLoading,
-    } = useCourseDataIfEnrolled(courseAddress)
+    } = useCourseDataPromo(courseAddress);
+    const categoryNames = useCategoryNames(course?.attributes?.category ?? []);
 
     // 1) If error
     if (error) {
@@ -37,6 +40,8 @@ export function CoursePromo() {
     if (isLoading || !course) {
         return <CoursePromoSkeleton />;
     }
+
+
 
     return (
         <div className="w-full bg-white rounded-[2vw] sm:pt-4 md:pt-6 pb-10">
@@ -55,7 +60,9 @@ export function CoursePromo() {
                     {/* Course Image */}
                     <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 bg-white-900 shadow-md rounded-xl overflow-hidden border border-[3px]">
                         <img
-                            src={`https://ipfs.io/ipfs/${course.image.substring(7)}`}
+                            src={`https://ipfs.io/ipfs/${course.image.substring(
+                                7
+                            )}`}
                             alt="Course"
                             className="w-full h-full object-cover"
                         />
@@ -82,23 +89,25 @@ export function CoursePromo() {
                         </p>
 
                         {/* stats area */}
-                        <div className="flex flex-col sm:flex-row mt-4 space-y-2 sm:space-y-0 sm:space-x-10 text-sm">
-                            <div>
-                                <LevelIndicator level={course.attributes.level} />
+                        <div className="mt-4 space-y-2">
+                            <div className="flex flex-wrap gap-2">
+                                <StatBadge>Students: 4566</StatBadge>
+                                <StatBadge>
+                                    Language: {course.attributes.language}
+                                </StatBadge>
+                                <StatBadge>Rating: 4</StatBadge>
+                                <StatBadge>
+                                    <LevelIndicator
+                                        level={course.attributes.level}
+                                    />
+                                </StatBadge>
                             </div>
-                            <div>
-                                <span className="font-semibold">
-                                    Students:{"0"}
-                                </span>
-                                {/* <span>{course.students}</span> */}
-                            </div>
-                            <div>
-                                <span className="font-semibold">Language:</span>{" "}
-                                {course.attributes.language}
-                            </div>
-                            <div>
-                                <span className="font-semibold">Rating:</span>{"0"}
-                                {/* {course.rating} */}
+                            <div className="flex flex-wrap gap-2">
+                                {categoryNames.map((catName, index) => (
+                                    <StatBadge key={index} filled>
+                                        {catName}
+                                    </StatBadge>
+                                ))}
                             </div>
                         </div>
                         <Separator className="mt-2 mb-3" />

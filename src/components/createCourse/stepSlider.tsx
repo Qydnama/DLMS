@@ -4,9 +4,10 @@ import { Progress } from "@/components/ui/progress";
 interface StepSliderProps {
   currentStep: number;
   totalSteps: number;
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export const StepSlider: React.FC<StepSliderProps> = ({ currentStep, totalSteps }) => {
+export const StepSlider: React.FC<StepSliderProps> = ({ currentStep, totalSteps, setCurrentStep }) => {
   const progressPercentage = (currentStep / totalSteps) * 100;
 
   return (
@@ -19,11 +20,12 @@ export const StepSlider: React.FC<StepSliderProps> = ({ currentStep, totalSteps 
         {[...Array(totalSteps)].map((_, index) => (
           <div
             key={index}
-            className={`w-8 h-8 flex items-center justify-center rounded-full border-2 ${
+            className={`w-8 h-8 flex items-center justify-center rounded-full border-2 cursor-pointer ${
               currentStep === index + 1
                 ? "bg-stone-900 text-white border-dark-500"
                 : "bg-white text-gray-500 border-gray-300"
             }`}
+            onClick={() => setCurrentStep(index+1)}
           >
             {index + 1}
           </div>

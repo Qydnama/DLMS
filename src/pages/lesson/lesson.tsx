@@ -24,19 +24,31 @@ export function Lesson() {
         isLoading,
     } = useCourseDataIfEnrolled(courseAddress)
 
+    if (error) {
+        if (error.message === "Access denied") {
+            return (
+                <ErrorPage
+                    first={"Access Denied"}
+                    second={"You are not enrolled in this course."}
+                    third={"Please check your course list."}
+                />
+            );
+        } else {
+            return (
+                <ErrorPage
+                    first={"Courses Not Found"}
+                    second={"We couldn't find your courses."}
+                    third={"Please try again later."}
+                />
+            );
+        }
+    }
+
     if (isLoading || !course) {
         return <LessonSkeleton />;
     }
 
-    if (error) {
-        return (
-            <ErrorPage
-                first={"Lesson Not Found"}
-                second={"We couldn't find this lesson."}
-                third={"Please try again later."}
-            />
-        );
-    }
+
 
     const allModules = course.modules;
     const currentModule: ModuleInterface | undefined = allModules.find((m) =>

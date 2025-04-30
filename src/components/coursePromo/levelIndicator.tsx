@@ -27,7 +27,7 @@ export const LevelIndicator = ({ level }: { level: string }) => {
             />
           ))}
         </div>
-        <span><span className="font-semibold">{level}</span> Level</span>
+        <span className="text-goluboy"><span className="font-semibold">{level}</span> Level</span>
       </div>
     );
 };

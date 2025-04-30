@@ -24,13 +24,23 @@ export function Quizzes() {
     };
 
     if (error) {
-        return (
-            <ErrorPage
-                first={"Courses Not Found"}
-                second={"We couldn't find your courses."}
-                third={"Please try again later."}
-            />
-        );
+        if (error.message === "Access denied") {
+            return (
+                <ErrorPage
+                    first={"Access Denied"}
+                    second={"You are not enrolled in this course."}
+                    third={"Please check your course list."}
+                />
+            );
+        } else {
+            return (
+                <ErrorPage
+                    first={"Courses Not Found"}
+                    second={"We couldn't find your courses."}
+                    third={"Please try again later."}
+                />
+            );
+        }
     }
 
     if (isLoading || !course) {

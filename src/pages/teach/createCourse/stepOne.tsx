@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Image } from "lucide-react";
 import { z } from "zod";
 import {
     Select,
@@ -12,52 +10,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { CourseDataInterface } from "@/types/courseData";
+import { CategorySelect } from "@/components/createCourse/categorySelect";
+import { ImageDropzone } from "@/components/createCourse/imageDropzone";
+import { extractYoutubeVideoId } from "@/components/createCourse/youtubeIdExtract";
 
 interface StepOneProps {
-    courseData: {
-        logo: string;
-        title: string;
-        summary: string;
-        recommendedWorkload: string;
-        whatYouWillLearn: string;
-        about: string;
-        level: string;
-        language: string;
-        whatYouWillGain: string;
-        initialRequirements: string;
-    };
-    setCourseData: React.Dispatch<
-        React.SetStateAction<{
-            logo: string;
-            title: string;
-            summary: string;
-            recommendedWorkload: string;
-            whatYouWillLearn: string;
-            about: string;
-            whatYouWillGain: string;
-            initialRequirements: string;
-            price: number;
-            level: string;
-            language: string;
-            certificate: {
-                image: string;
-            };
-            modules: {
-                moduleTitle: string;
-                quiz: {
-                    questions: {
-                        questionText: string;
-                        options: string[];
-                        correctAnswer: number;
-                    }[];
-                };
-                lessons: {
-                    title: string;
-                    videoUrl: string;
-                }[];
-            }[];
-        }>
-    >;
+    courseData: CourseDataInterface;
+    setCourseData: React.Dispatch<React.SetStateAction<CourseDataInterface>>;
     setValidationStatus: React.Dispatch<
         React.SetStateAction<{
             stepOne: boolean;
@@ -70,37 +30,60 @@ interface StepOneProps {
 }
 
 const schema = z.object({
-    logo: z.string().min(1, "Logo is required"),
-    title: z.string().min(5, "Title must be at least 5 characters"),
-    summary: z.string().min(5, "Summary must be at least 5 characters"),
-    recommendedWorkload: z.string().min(5, "Workload description required"),
-    whatYouWillLearn: z.string().min(5, "This field is required"),
-    about: z.string().min(5, "About section must have details"),
-    whatYouWillGain: z.string().min(5, "This field is required"),
-    initialRequirements: z.string().min(5, "Specify any requirements"),
-    level: z.enum(["Beginner", "Intermediate", "Expert"], {
-        errorMap: () => ({ message: "Please select a valid level" }),
+    image: z.string().min(1, "Logo is required"),
+    name: z.string().min(5, "Title must be at least 5 characters"),
+    video: z
+        .string()
+        .optional()
+        .refine(
+            (val) => {
+                if (!val) return true; // Пусто — значит пропускаем
+                try {
+                    new URL(val); // Проверка что это URL
+                } catch {
+                    return false;
+                }
+
+                const videoId = extractYoutubeVideoId(val);
+                return !!videoId;
+            },
+            {
+                message: "Enter a valid YouTube URL with a video ID",
+            }
+        ),
+
+    attributes: z.object({
+        summary: z.string().min(5, "Summary must be at least 5 characters"),
+        workload: z.string().min(5, "Workload description required"),
+        learn: z.string().min(5, "This field is required"),
+        about: z.string().min(5, "About section must have details"),
+        gains: z.string().min(5, "This field is required"),
+        requirements: z.string().min(5, "Specify any requirements"),
+        category: z.array(z.string()).min(1, "Select at least one category"),
+        level: z.enum(["Beginner", "Intermediate", "Expert"], {
+            errorMap: () => ({ message: "Please select a valid level" }),
+        }),
+        language: z.enum(
+            [
+                "English",
+                "Russian",
+                "Kazakh",
+                "Spanish",
+                "German",
+                "French",
+                "Chinese",
+                "Japanese",
+                "Arabic",
+                "Turkish",
+                "Hindi",
+                "Portuguese",
+                "Italian",
+            ],
+            {
+                errorMap: () => ({ message: "Please select a language" }),
+            }
+        ),
     }),
-    language: z.enum(
-        [
-            "English",
-            "Russian",
-            "Kazakh",
-            "Spanish",
-            "German",
-            "French",
-            "Chinese",
-            "Japanese",
-            "Arabic",
-            "Turkish",
-            "Hindi",
-            "Portuguese",
-            "Italian",
-        ],
-        {
-            errorMap: () => ({ message: "Please select a language" }),
-        }
-    ),
 });
 
 export function StepOne({
@@ -116,9 +99,20 @@ export function StepOne({
             const result = schema.safeParse(courseData);
             if (!result.success) {
                 const errorMessages: Record<string, string> = {};
+
                 result.error.issues.forEach((issue) => {
-                    errorMessages[issue.path[0]] = issue.message;
+                    if (
+                        issue.path[0] === "attributes" &&
+                        typeof issue.path[1] === "string"
+                    ) {
+                        // Ошибки внутри attributes
+                        errorMessages[issue.path[1]] = issue.message;
+                    } else if (typeof issue.path[0] === "string") {
+                        // Ошибки на первом уровне
+                        errorMessages[issue.path[0]] = issue.message;
+                    }
                 });
+
                 setErrors(errorMessages);
                 setValidationStatus((prev) => ({ ...prev, stepOne: false }));
             } else {
@@ -133,18 +127,14 @@ export function StepOne({
         setCourseData((prev) => ({ ...prev, [field]: value }));
     };
 
-    const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                setCourseData((prev) => ({
-                    ...prev,
-                    logo: reader.result as string,
-                }));
-            };
-            reader.readAsDataURL(file);
-        }
+    const handleAttributeInputChange = (field: string, value: string) => {
+        setCourseData((prev) => ({
+            ...prev,
+            attributes: {
+                ...prev.attributes,
+                [field]: value,
+            },
+        }));
     };
 
     return (
@@ -160,31 +150,14 @@ export function StepOne({
                 >
                     Course Logo
                 </Label>
-                <Card className="w-[180px] h-[180px] p-4 flex flex-col items-center justify-center border-dashed border-2 border-gray-300 rounded-lg relative">
-                    {courseData.logo ? (
-                        <img
-                            src={courseData.logo}
-                            alt="Course Logo"
-                            className="w-full h-full object-cover rounded-lg"
-                        />
-                    ) : (
-                        <div>
-                            <Image className="text-gray-500" />
-                            <p className="text-gray-500">Logo</p>
-                            <p className="text-xs text-gray-400">
-                                PNG file with transparency, 230×230px
-                            </p>
-                        </div>
-                    )}
-                    <input
-                        type="file"
-                        accept="image/png"
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        onChange={handleLogoUpload}
-                    />
-                </Card>
-                {showErrors && errors.logo && (
-                    <p className="text-red-500 text-xs mt-1">{errors.logo}</p>
+                <ImageDropzone
+                    value={courseData.image}
+                    onChange={(base64) =>
+                        setCourseData((prev) => ({ ...prev, image: base64 }))
+                    }
+                />
+                {showErrors && errors.image && (
+                    <p className="text-red-500 text-xs mt-1">{errors.image}</p>
                 )}
             </div>
 
@@ -200,20 +173,20 @@ export function StepOne({
                     id="title"
                     className="w-full rounded-2xl"
                     placeholder="Enter course title"
-                    value={courseData.title}
-                    onChange={(e) => handleInputChange("title", e.target.value)}
+                    value={courseData.name}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
                     maxLength={64}
                 />
                 <div className="flex justify-between">
                     <div>
-                        {showErrors && errors.title && (
+                        {showErrors && errors.name && (
                             <p className="text-red-500 text-xs">
-                                {errors.title}
+                                {errors.name}
                             </p>
                         )}
                     </div>
                     <div className="text-gray-500 text-xs mt-1 text-right">
-                        <span>{courseData.title.length}/64</span>
+                        <span>{courseData.name.length}/64</span>
                     </div>
                 </div>
             </div>
@@ -230,9 +203,9 @@ export function StepOne({
                     id="summary"
                     className="w-full rounded-2xl"
                     placeholder="Enter a short summary of the course"
-                    value={courseData.summary}
+                    value={courseData.attributes.summary}
                     onChange={(e) =>
-                        handleInputChange("summary", e.target.value)
+                        handleAttributeInputChange("summary", e.target.value)
                     }
                     maxLength={512}
                 />
@@ -245,17 +218,53 @@ export function StepOne({
                         )}
                     </div>
                     <div className="text-gray-500 text-xs mt-1 text-right">
-                        <span>{courseData.summary.length}/512</span>
+                        <span>{courseData.attributes.summary.length}/512</span>
                     </div>
                 </div>
+            </div>
+            <div>
+                <Label
+                    htmlFor="promo-video"
+                    className="mb-2 block text-sm font-medium"
+                >
+                    Promo Video URL(optional)
+                </Label>
+                <Input
+                    value={courseData.video}
+                    onChange={(e) => handleInputChange("video", e.target.value)}
+                    placeholder="https://youtube.com/..."
+                    className="rounded-2xl mt-1"
+                />
+                {showErrors && errors.video && (
+                    <p className="text-red-500 text-xs">{errors.video}</p>
+                )}
+            </div>
+            {/* Course Category */}
+            <div className="pb-4 space-y-1">
+                <Label>Course Category</Label>
+                <CategorySelect
+                    selected={courseData.attributes.category}
+                    setSelected={(newCategories) =>
+                        setCourseData((prev) => ({
+                            ...prev,
+                            attributes: {
+                                ...prev.attributes,
+                                category: newCategories,
+                            },
+                        }))
+                    }
+                />
+                {showErrors && errors.category && (
+                    <p className="text-red-500 text-xs">{errors.category}</p>
+                )}
             </div>
             {/* Course Level */}
             <div className="pb-4 w-[80%] sm:w-[30%] md:w-[20%]">
                 <Label>Course Level</Label>
                 <Select
-                    value={courseData.level}
+                    value={courseData.attributes.level}
                     onValueChange={(val) =>
-                        setCourseData((prev) => ({ ...prev, level: val }))
+                        handleAttributeInputChange("level", val)
                     }
                 >
                     <SelectTrigger className="mt-1 rounded-2xl">
@@ -269,7 +278,7 @@ export function StepOne({
                         <SelectItem value="Expert">Expert</SelectItem>
                     </SelectContent>
                 </Select>
-                {showErrors && !courseData.level && (
+                {showErrors && !courseData.attributes.level && (
                     <p className="text-red-500 text-sm mt-1">
                         Level is required
                     </p>
@@ -280,9 +289,9 @@ export function StepOne({
             <div className="pb-4 w-[80%] sm:w-[30%] md:w-[20%]">
                 <Label>Course Language</Label>
                 <Select
-                    value={courseData.language}
+                    value={courseData.attributes.language}
                     onValueChange={(val) =>
-                        setCourseData((prev) => ({ ...prev, language: val }))
+                        handleAttributeInputChange("language", val)
                     }
                 >
                     <SelectTrigger className="mt-1 rounded-2xl">
@@ -310,7 +319,7 @@ export function StepOne({
                         ))}
                     </SelectContent>
                 </Select>
-                {showErrors && !courseData.language && (
+                {showErrors && !courseData.attributes.language && (
                     <p className="text-red-500 text-sm mt-1">
                         Language is required
                     </p>
@@ -328,22 +337,22 @@ export function StepOne({
                     id="workload"
                     className="w-full rounded-2xl"
                     placeholder="e.g., 10 hours per week"
-                    value={courseData.recommendedWorkload}
+                    value={courseData.attributes.workload}
                     onChange={(e) =>
-                        handleInputChange("recommendedWorkload", e.target.value)
+                        handleAttributeInputChange("workload", e.target.value)
                     }
                     maxLength={24}
                 />
                 <div className="flex justify-between">
                     <div>
-                        {showErrors && errors.recommendedWorkload && (
+                        {showErrors && errors.workload && (
                             <p className="text-red-500 text-xs">
-                                {errors.recommendedWorkload}
+                                {errors.workload}
                             </p>
                         )}
                     </div>
                     <div className="text-gray-500 text-xs mt-1 text-right">
-                        <span>{courseData.recommendedWorkload.length}/24</span>
+                        <span>{courseData.attributes.workload.length}/24</span>
                     </div>
                 </div>
             </div>
@@ -360,22 +369,22 @@ export function StepOne({
                     id="learning"
                     className="w-full rounded-2xl"
                     placeholder="List key learnings from this course"
-                    value={courseData.whatYouWillLearn}
+                    value={courseData.attributes.learn}
                     onChange={(e) =>
-                        handleInputChange("whatYouWillLearn", e.target.value)
+                        handleAttributeInputChange("learn", e.target.value)
                     }
                     maxLength={512}
                 />
                 <div className="flex justify-between">
                     <div>
-                        {showErrors && errors.whatYouWillLearn && (
+                        {showErrors && errors.learn && (
                             <p className="text-red-500 text-xs">
-                                {errors.whatYouWillLearn}
+                                {errors.learn}
                             </p>
                         )}
                     </div>
                     <div className="text-gray-500 text-xs mt-1 text-right">
-                        <span>{courseData.whatYouWillLearn.length}/512</span>
+                        <span>{courseData.attributes.learn.length}/512</span>
                     </div>
                 </div>
             </div>
@@ -392,8 +401,10 @@ export function StepOne({
                     id="about"
                     className="w-full rounded-2xl"
                     placeholder="Enter detailed information about the course"
-                    value={courseData.about}
-                    onChange={(e) => handleInputChange("about", e.target.value)}
+                    value={courseData.attributes.about}
+                    onChange={(e) =>
+                        handleAttributeInputChange("about", e.target.value)
+                    }
                     maxLength={512}
                 />
                 <div className="flex justify-between">
@@ -405,7 +416,7 @@ export function StepOne({
                         )}
                     </div>
                     <div className="text-gray-500 text-xs mt-1 text-right">
-                        <span>{courseData.about.length}/512</span>
+                        <span>{courseData.attributes.about.length}/512</span>
                     </div>
                 </div>
             </div>
@@ -413,31 +424,31 @@ export function StepOne({
             {/* What You Will Gain */}
             <div>
                 <Label
-                    htmlFor="gain"
+                    htmlFor="gains"
                     className="mb-2 block text-sm font-medium"
                 >
                     What You Will Gain
                 </Label>
                 <Textarea
-                    id="gain"
+                    id="gains"
                     className="w-full rounded-2xl"
                     placeholder="List benefits and skills gained from this course"
-                    value={courseData.whatYouWillGain}
+                    value={courseData.attributes.gains}
                     onChange={(e) =>
-                        handleInputChange("whatYouWillGain", e.target.value)
+                        handleAttributeInputChange("gains", e.target.value)
                     }
                     maxLength={512}
                 />
                 <div className="flex justify-between">
                     <div>
-                        {showErrors && errors.whatYouWillGain && (
+                        {showErrors && errors.gains && (
                             <p className="text-red-500 text-xs">
-                                {errors.whatYouWillGain}
+                                {errors.gains}
                             </p>
                         )}
                     </div>
                     <div className="text-gray-500 text-xs mt-1 text-right">
-                        <span>{courseData.whatYouWillGain.length}/512</span>
+                        <span>{courseData.attributes.gains.length}/512</span>
                     </div>
                 </div>
             </div>
@@ -454,22 +465,27 @@ export function StepOne({
                     id="requirements"
                     className="w-full rounded-2xl"
                     placeholder="Specify prerequisites for enrolling in this course"
-                    value={courseData.initialRequirements}
+                    value={courseData.attributes.requirements}
                     onChange={(e) =>
-                        handleInputChange("initialRequirements", e.target.value)
+                        handleAttributeInputChange(
+                            "requirements",
+                            e.target.value
+                        )
                     }
                     maxLength={512}
                 />
                 <div className="flex justify-between">
                     <div>
-                        {showErrors && errors.initialRequirements && (
+                        {showErrors && errors.requirements && (
                             <p className="text-red-500 text-xs">
-                                {errors.initialRequirements}
+                                {errors.requirements}
                             </p>
                         )}
                     </div>
                     <div className="text-gray-500 text-xs mt-1 text-right">
-                        <span>{courseData.initialRequirements.length}/512</span>
+                        <span>
+                            {courseData.attributes.requirements.length}/512
+                        </span>
                     </div>
                 </div>
             </div>

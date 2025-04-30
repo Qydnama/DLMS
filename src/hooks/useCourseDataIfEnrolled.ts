@@ -7,18 +7,17 @@ import { useTonConnect } from "@/hooks/useTonConnect";
  * Проверяет, заэнроллен ли пользователь и, если да — возвращает данные курса.
  */
 export function useCourseDataIfEnrolled(contractAddress?: string) {
-  const { address: userAddress } = useTonConnect();
+    const { address: userAddress } = useTonConnect();
 
-  const fetcher = async (): Promise<CourseDataInterface | null> => {
-    if (!userAddress || !contractAddress) return null;
-    return await fetchIfEnrolled(userAddress, contractAddress);
-  };
-
-  return useSWR<CourseDataInterface | null>(
-    userAddress && contractAddress
-      ? ["enrolled-course", userAddress, contractAddress]
-      : null,
-    fetcher,
-    { shouldRetryOnError: false }
-  );
+    const fetcher = async (): Promise<CourseDataInterface | null> => {
+        if (!userAddress || !contractAddress) return null;
+        return await fetchIfEnrolled(userAddress, contractAddress);
+    };
+    return useSWR<CourseDataInterface | null>(
+        userAddress && contractAddress
+            ? ["enrolled-course", userAddress, contractAddress]
+            : null,
+        fetcher,
+        { shouldRetryOnError: false }
+    );
 }

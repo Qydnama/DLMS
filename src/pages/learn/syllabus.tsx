@@ -6,6 +6,8 @@ import { CourseSidebar } from "@/components/courseSidebar/courseSidebar";
 import { SyllabusSkeleton } from "@/components/syllabus/syllabusSkeleton";
 import { ErrorPage } from "@/pages/error/error";
 import { useCourseDataIfEnrolled } from "@/hooks/useCourseDataIfEnrolled";
+import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 export function Syllabus() {
     const navigate = useNavigate();
@@ -14,21 +16,35 @@ export function Syllabus() {
         data: course,
         error,
         isLoading,
-    } = useCourseDataIfEnrolled(courseAddress)
+    } = useCourseDataIfEnrolled(courseAddress);
 
     // Функция перехода к конкретному уроку
     const handleLessonClick = (lessonId: string) => {
         navigate(`../lesson/${lessonId}`);
     };
 
+    const handleModuleClick = (firstLessonId: string) => {
+        navigate(`../lesson/${firstLessonId}`);
+    };
+
     if (error) {
-        return (
-            <ErrorPage
-                first={"Courses Not Found"}
-                second={"We couldn't find your courses."}
-                third={"Please try again later."}
-            />
-        );
+        if (error.message === "Access denied") {
+            return (
+                <ErrorPage
+                    first={"Access Denied"}
+                    second={"You are not enrolled in this course."}
+                    third={"Please check your course list."}
+                />
+            );
+        } else {
+            return (
+                <ErrorPage
+                    first={"Courses Not Found"}
+                    second={"We couldn't find your courses."}
+                    third={"Please try again later."}
+                />
+            );
+        }
     }
 
     // 3) If loading or no data => skeleton
@@ -39,71 +55,68 @@ export function Syllabus() {
     return (
         <SidebarProvider>
             <div className="flex w-full mx-auto bg-white rounded-[2vw] shadow-md">
-                {/* Sidebar */}
                 <CourseSidebar courseData={course} />
 
                 <div className="max-w-4xl flex-grow mx-auto p-0 pt-6 md:pr-6 md:p-6">
                     <div className="flex items-center gap-2 mb-4">
-                        <SidebarTrigger className="block min-[1000px]:hidden pl-3" />{" "}
-                        {/* Sidebar button before Syllabus text */}
+                        <SidebarTrigger className="block min-[1000px]:hidden pl-3" />
                         <h2 className="text-xl sm:text-2xl font-bold">
                             Syllabus
                         </h2>
                     </div>
+
                     <Separator className="mb-4" />
 
-                    <div className="space-y-4">
+                    <div className="w-full space-y-4">
                         {course.modules.map((mod, mIndex) => {
-                            return (
-                                <div
-                                    key={mIndex}
-                                    className="p-4 border rounded-lg bg-white"
-                                >
-                                    {/* Заголовок модуля с прогрессом */}
-                                    <div className="flex items-center justify-between">
-                                        <h3 className="font-medium text-base sm:text-lg">
-                                            {mIndex + 1}. {mod.title}
-                                        </h3>
-                                        <div className="flex items-center text-sm">
-                                            {/* {mod.completed ? (
-                                                <div className="flex items-center text-green-600">
-                                                    <Check className="w-4 h-4 mr-1" />
-                                                    <span>Done</span>
-                                                </div>
-                                            ) : (
-                                                <span className="text-gray-500"></span>
-                                            )} */}
-                                            <span className="text-gray-500"></span>
-                                        </div>
-                                    </div>
+                            const firstLessonId = mod.lessons[0]?.id;
 
-                                    {/* Список уроков */}
-                                    <div className="mt-3 space-y-2 ml-4 pl-4 border-l border-gray-200">
-                                        {mod.lessons.map((lesson, lIndex) => (
-                                            <div
+                            return (
+                                <div key={mIndex}>
+                                    {/* Module Card (Clickable) */}
+                                    <Card
+                                        onClick={() =>
+                                            handleModuleClick(firstLessonId)
+                                        }
+                                        className="p-3 border bg-white cursor-pointer hover:bg-gray-50 transition"
+                                    >
+                                        <div className="flex justify-between items-center">
+                                            <Label className="cursor-pointer text-sm sm:text-base font-semibold ml-2 hover:underline">
+                                                {mIndex + 1}. {mod.title}
+                                            </Label>
+                                            <span className="text-gray-400 text-xs sm:text-sm mr-2">
+                                                Not completed
+                                            </span>
+                                        </div>
+                                    </Card>
+
+                                    {/* Lessons */}
+                                    {mod.lessons.map((lesson, lIndex) => {
+                                        const isLast =
+                                            lIndex === mod.lessons.length - 1;
+
+                                        return (
+                                            <Card
                                                 key={lesson.id}
-                                                className="flex items-center gap-2 cursor-pointer"
                                                 onClick={() =>
                                                     handleLessonClick(lesson.id)
                                                 }
+                                                className={`flex rounded-none items-center p-2 sm:p-3 md:p-4 border cursor-pointer hover:bg-gray-50 transition ml-4 ${
+                                                    isLast
+                                                        ? "rounded-b-lg"
+                                                        : "rounded-none"
+                                                }`}
                                             >
-                                                {/* Картинка урока */}
-                                                {/* <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-md overflow-hidden bg-gray-200 flex-shrink-0">
-                                                    <img
-                                                        src={lesson.thumbnail}
-                                                        alt={lesson.title}
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                </div> */}
-
-                                                {/* Название урока */}
-                                                <span className="flex-1 text-sm font-semibold break-all sm:break-words">
-                                                    {mIndex + 1}.{lIndex + 1}{" "}
-                                                    {lesson.title}
-                                                </span>
-                                            </div>
-                                        ))}
-                                    </div>
+                                                <div className="ml-2 sm:ml-4 flex-1 min-w-0">
+                                                    <Label className="cursor-pointer break-all sm:break-words text-xs md:text-sm lg:text-base font-medium line-clamp-2">
+                                                        {mIndex + 1}.
+                                                        {lIndex + 1}{" "}
+                                                        {lesson.title}
+                                                    </Label>
+                                                </div>
+                                            </Card>
+                                        );
+                                    })}
                                 </div>
                             );
                         })}
