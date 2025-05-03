@@ -55,6 +55,7 @@ const schema = z.object({
     attributes: z.object({
         summary: z.string().min(5, "Summary must be at least 5 characters"),
         workload: z.string().min(5, "Workload description required"),
+        duration: z.string().min(5, "Duration description required"),
         learn: z.string().min(5, "This field is required"),
         about: z.string().min(5, "About section must have details"),
         gains: z.string().min(5, "This field is required"),
@@ -171,7 +172,7 @@ export function StepOne({
                 </Label>
                 <Input
                     id="title"
-                    className="w-full rounded-2xl"
+                    className="w-full rounded-2xl border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                     placeholder="Enter course title"
                     value={courseData.name}
                     onChange={(e) => handleInputChange("name", e.target.value)}
@@ -201,7 +202,7 @@ export function StepOne({
                 </Label>
                 <Textarea
                     id="summary"
-                    className="w-full rounded-2xl"
+                    className="w-full rounded-2xl border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                     placeholder="Enter a short summary of the course"
                     value={courseData.attributes.summary}
                     onChange={(e) =>
@@ -353,6 +354,37 @@ export function StepOne({
                     </div>
                     <div className="text-gray-500 text-xs mt-1 text-right">
                         <span>{courseData.attributes.workload.length}/24</span>
+                    </div>
+                </div>
+            </div>
+            {/* Duration */}
+            <div>
+                <Label
+                    htmlFor="workload"
+                    className="mb-2 block text-sm font-medium"
+                >
+                    Duration
+                </Label>
+                <Input
+                    id="duration"
+                    className="w-full rounded-2xl"
+                    placeholder="e.g., 56 hours"
+                    value={courseData.attributes.duration}
+                    onChange={(e) =>
+                        handleAttributeInputChange("duration", e.target.value)
+                    }
+                    maxLength={24}
+                />
+                <div className="flex justify-between">
+                    <div>
+                        {showErrors && errors.duration && (
+                            <p className="text-red-500 text-xs">
+                                {errors.duration}
+                            </p>
+                        )}
+                    </div>
+                    <div className="text-gray-500 text-xs mt-1 text-right">
+                        <span>{courseData.attributes.duration.length}/24</span>
                     </div>
                 </div>
             </div>

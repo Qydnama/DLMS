@@ -12,7 +12,8 @@ export interface CourseInterface {
 
 const mockData: CourseInterface[] = [
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a1",
         title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
         author: "Андрей Сумин",
@@ -23,7 +24,8 @@ const mockData: CourseInterface[] = [
         users: 41,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a2",
         title: "Лучший по Python. Для всех начинающих!",
         author: "Сергей Балакрев",
@@ -34,7 +36,8 @@ const mockData: CourseInterface[] = [
         users: 6328,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a3",
         title: "Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024",
         author: "Илья Перминов",
@@ -45,7 +48,8 @@ const mockData: CourseInterface[] = [
         users: 11467,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a1",
         title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
         author: "Андрей Сумин",
@@ -56,7 +60,8 @@ const mockData: CourseInterface[] = [
         users: 41,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a2",
         title: "Лучший по Python. Для всех начинающих!",
         author: "Сергей Балакрев",
@@ -67,7 +72,8 @@ const mockData: CourseInterface[] = [
         users: 6328,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a3",
         title: "Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024",
         author: "Илья Перминов",
@@ -78,7 +84,8 @@ const mockData: CourseInterface[] = [
         users: 11467,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a1",
         title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
         author: "Андрей Сумин",
@@ -89,7 +96,8 @@ const mockData: CourseInterface[] = [
         users: 41,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a2",
         title: "Лучший по Python. Для всех начинающих!",
         author: "Сергей Балакрев",
@@ -100,7 +108,8 @@ const mockData: CourseInterface[] = [
         users: 6328,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a3",
         title: "Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024",
         author: "Илья Перминов",
@@ -111,7 +120,8 @@ const mockData: CourseInterface[] = [
         users: 11467,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a1",
         title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
         author: "Андрей Сумин",
@@ -122,7 +132,8 @@ const mockData: CourseInterface[] = [
         users: 41,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a2",
         title: "Лучший по Python. Для всех начинающих!",
         author: "Сергей Балакрев",
@@ -133,7 +144,8 @@ const mockData: CourseInterface[] = [
         users: 6328,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a3",
         title: "Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024",
         author: "Илья Перминов",
@@ -144,7 +156,8 @@ const mockData: CourseInterface[] = [
         users: 11467,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a1",
         title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
         author: "Андрей Сумин",
@@ -155,7 +168,8 @@ const mockData: CourseInterface[] = [
         users: 41,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a2",
         title: "Лучший по Python. Для всех начинающих!",
         author: "Сергей Балакрев",
@@ -166,7 +180,8 @@ const mockData: CourseInterface[] = [
         users: 6328,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a3",
         title: "Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024",
         author: "Илья Перминов",
@@ -177,7 +192,8 @@ const mockData: CourseInterface[] = [
         users: 11467,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a1",
         title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
         author: "Андрей Сумин",
@@ -188,7 +204,8 @@ const mockData: CourseInterface[] = [
         users: 41,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a2",
         title: "Лучший по Python. Для всех начинающих!",
         author: "Сергей Балакрев",
@@ -199,7 +216,8 @@ const mockData: CourseInterface[] = [
         users: 6328,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a3",
         title: "Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024",
         author: "Илья Перминов",
@@ -210,7 +228,8 @@ const mockData: CourseInterface[] = [
         users: 11467,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a1",
         title: 'Буткемп "Java: написание веб-сервисов для начинающих"',
         author: "Андрей Сумин",
@@ -221,7 +240,8 @@ const mockData: CourseInterface[] = [
         users: 41,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a2",
         title: "Лучший по Python. Для всех начинающих!",
         author: "Сергей Балакрев",
@@ -232,7 +252,8 @@ const mockData: CourseInterface[] = [
         users: 6328,
     },
     {
-        courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+        courseAddress:
+            "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
         authorAddress: "a3",
         title: "Полный курс по UI/UX и веб-дизайну в Figma Полякова Алексея 2024",
         author: "Илья Перминов",

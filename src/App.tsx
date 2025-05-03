@@ -59,6 +59,7 @@ export default function App() {
 
                         <Route path="users/:walletAddr">
                             <Route index element={<MainLayout><UserProfile /></MainLayout>} />
+                            <Route path=":section" element={<MainLayout><UserProfile /></MainLayout>} />
                         </Route>
 
                         <Route path="/unauthorized" element={<MainLayout><UserNotAuthorized /></MainLayout>} />

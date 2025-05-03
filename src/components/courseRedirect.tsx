@@ -10,4 +10,3 @@ export const CourseRedirect: React.FC = () => {
 
     return <Navigate to={`/course/${courseId}/info`} replace />;
 };
-

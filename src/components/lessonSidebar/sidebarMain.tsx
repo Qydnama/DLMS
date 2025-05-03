@@ -58,7 +58,7 @@ export function SidebarMain({
                                     >
                                         <SidebarMenuButton asChild>
                                             <Link
-                                                to={`../lesson/${lesson.id}`} 
+                                                to={`../lesson/${lesson.id}`}
                                                 className="flex items-center w-full py-2 px-3 truncate"
                                                 replace // опционально: не засорять history
                                             >

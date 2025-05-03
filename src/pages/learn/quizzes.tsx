@@ -17,7 +17,7 @@ export function Quizzes() {
         data: course,
         error,
         isLoading,
-    } = useCourseDataIfEnrolled(courseAddress)
+    } = useCourseDataIfEnrolled(courseAddress);
 
     const handleQuizClick = (quizId: string) => {
         navigate(`../quiz/${quizId}`);

@@ -9,17 +9,20 @@ export const createPinataInstance = (jwt: string, gateway: string) => {
 
 export const checkPinataConnection = async (jwt: string): Promise<boolean> => {
     try {
-      const res = await fetch("https://api.pinata.cloud/data/testAuthentication", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
-  
-      return res.ok;
+        const res = await fetch(
+            "https://api.pinata.cloud/data/testAuthentication",
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            }
+        );
+
+        return res.ok;
     } catch (error) {
-      console.error("Ошибка при проверке Pinata:", error);
-      return false;
+        console.error("Ошибка при проверке Pinata:", error);
+        return false;
     }
 };
 

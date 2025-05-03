@@ -7,16 +7,16 @@ import { EnrolledCoursePreview } from "@/types/courseData";
  * Hook to get enrolled course previews (address, title, image).
  */
 export function useEnrolledCourses() {
-  const { address } = useTonConnect();
+    const { address } = useTonConnect();
 
-  const fetcher = () => {
-    if (!address) return Promise.resolve([]);
-    return listEnrolledCourses(address);
-  };
+    const fetcher = () => {
+        if (!address) return Promise.resolve([]);
+        return listEnrolledCourses(address);
+    };
 
-  return useSWR<EnrolledCoursePreview[]>(
-    address ? ["enrolled-courses", address] : null,
-    fetcher,
-    { shouldRetryOnError: false }
-  );
+    return useSWR<EnrolledCoursePreview[]>(
+        address ? ["enrolled-courses", address] : null,
+        fetcher,
+        { shouldRetryOnError: false }
+    );
 }

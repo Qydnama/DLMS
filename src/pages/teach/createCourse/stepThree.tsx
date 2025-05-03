@@ -205,33 +205,33 @@ export function StepThree({
     const handleAddQuestion = () => {
         const updated = { ...courseData };
         const quiz = updated.modules[currentModuleIndex].quiz;
-      
+
         if (!quiz) {
-          // Если квиза еще нет — создаём новый пустой квиз
-          updated.modules[currentModuleIndex].quiz = {
-            correct_answers: "a", // новый квиз — первый вопрос сразу с правильным "a"
-            questions: [
-              {
-                id: "1", // Поскольку теперь id — number
+            // Если квиза еще нет — создаём новый пустой квиз
+            updated.modules[currentModuleIndex].quiz = {
+                correct_answers: "a", // новый квиз — первый вопрос сразу с правильным "a"
+                questions: [
+                    {
+                        id: "1", // Поскольку теперь id — number
+                        text: "",
+                        options: ["", ""],
+                    },
+                ],
+            };
+        } else {
+            // Добавляем новый вопрос
+            quiz.questions.push({
+                id: quiz.questions.length.toString(), // id должен быть уникальным числом
                 text: "",
                 options: ["", ""],
-              },
-            ],
-          };
-        } else {
-          // Добавляем новый вопрос
-          quiz.questions.push({
-            id: quiz.questions.length.toString(), // id должен быть уникальным числом
-            text: "",
-            options: ["", ""],
-          });
-      
-          // Добавляем "a" в строку правильных ответов
-          quiz.correct_answers += "a";
+            });
+
+            // Добавляем "a" в строку правильных ответов
+            quiz.correct_answers += "a";
         }
-      
+
         setCourseData(updated);
-      };
+    };
 
     const handleRemoveQuestion = (qIndex: number) => {
         const updated = { ...courseData };

@@ -31,24 +31,23 @@ export async function fetchEnrolledCourseAddresses(
 export async function fetchIfEnrolled(
     userAddress: string,
     contractAddress: string
-  ): Promise<CourseDataInterface> {
+): Promise<CourseDataInterface> {
     const enrolledCourses = await fetchEnrolledCourseAddresses(userAddress);
     if (!enrolledCourses.includes(contractAddress)) {
         throw new Error("Access denied");
     }
     const { collectionContent } = await getCollectionData(contractAddress);
     const data = await fetch(collectionContent).then((res) => res.json());
-  
+
     return data as CourseDataInterface;
 }
 
 export async function fetchPromo(
     contractAddress: string
-  ): Promise<CourseDataInterface> {
-
+): Promise<CourseDataInterface> {
     const { collectionContent } = await getCollectionData(contractAddress);
     const data = await fetch(collectionContent).then((res) => res.json());
-  
+
     return data as CourseDataInterface;
 }
 
@@ -61,6 +60,10 @@ export async function listEnrolledCourses(
         courseAddrs.map(async (addr): Promise<EnrolledCoursePreview | null> => {
             try {
                 const { collectionContent } = await getCollectionData(addr);
+                if (collectionContent == undefined || collectionContent == null || collectionContent === "" || !collectionContent) {
+                    console.warn("No collection content found for course:", addr);
+                    return null;
+                }
                 const course: CourseDataInterface = await fetch(
                     collectionContent
                 ).then((res) => res.json());

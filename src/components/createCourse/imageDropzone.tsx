@@ -10,7 +10,6 @@ interface ImageDropzoneProps {
     maxHeight?: string;
     maxSizeMb?: number;
     aspectHint?: string;
-    
 }
 
 const DEFAULT_ACCEPTED_IMAGE_TYPES = ["image/png", "image/jpeg", "image/webp"];
@@ -91,7 +90,12 @@ export const ImageDropzone = ({
                 <div className="text-center">
                     <ImageIcon className="mx-auto text-gray-500" />
                     <p className="text-gray-500">Upload Image</p>
-                    <p className={cn("text-xs mt-1", error ? "text-red-500" : "text-gray-400")}>
+                    <p
+                        className={cn(
+                            "text-xs mt-1",
+                            error ? "text-red-500" : "text-gray-400"
+                        )}
+                    >
                         {error || aspectHint}
                     </p>
                 </div>

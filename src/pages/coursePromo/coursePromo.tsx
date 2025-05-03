@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import { useCourseDataPromo } from "@/hooks/useCourseDataPromo";
 import { StatBadge } from "@/components/coursePromo/statBadge";
 import { useCategoryNames } from "@/hooks/useCategoryNames";
+import { LessonVideo } from "@/components/lessonVideo/lessonVideo";
 
 // Example course object with the required fields
 
@@ -40,8 +41,6 @@ export function CoursePromo() {
     if (isLoading || !course) {
         return <CoursePromoSkeleton />;
     }
-
-
 
     return (
         <div className="w-full bg-white rounded-[2vw] sm:pt-4 md:pt-6 pb-10">
@@ -91,16 +90,17 @@ export function CoursePromo() {
                         {/* stats area */}
                         <div className="mt-4 space-y-2">
                             <div className="flex flex-wrap gap-2">
-                                <StatBadge>Students: 4566</StatBadge>
-                                <StatBadge>
-                                    Language: {course.attributes.language}
-                                </StatBadge>
-                                <StatBadge>Rating: 4</StatBadge>
                                 <StatBadge>
                                     <LevelIndicator
                                         level={course.attributes.level}
                                     />
                                 </StatBadge>
+                                <StatBadge>
+                                    Language: {course.attributes.language}
+                                </StatBadge>
+                                <StatBadge>Rating: 4</StatBadge>
+
+                                <StatBadge>Students: 4566</StatBadge>
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {categoryNames.map((catName, index) => (
@@ -114,6 +114,25 @@ export function CoursePromo() {
                     </div>
                     <div className="flex justify-between mt-4">
                         <div className="md:pl-5 md:w-[60%] space-y-7">
+                            {course.video && (
+                                <div className="w-full">
+                                    <LessonVideo
+                                        video_id={course.video}
+                                        opts={{
+                                            width: "100%", // Делаем видео адаптивным
+                                            height: "100%", // Делаем видео адаптивным
+                                            playerVars: {
+                                                modestbranding: 1, // Убираем логотип YouTube
+                                                rel: 0, // Убираем рекомендации в конце видео
+                                                showinfo: 0, // Убираем заголовок видео
+                                                controls: 1, // Показываем только минимальные контроллы
+                                                autoplay: 1,
+                                            },
+                                        }}
+                                    />
+                                </div>
+                            )}
+                            {/* Course Duration */}
                             {/* What You Will Learn */}
                             <div>
                                 <h2 className="text-2xl font-normal">

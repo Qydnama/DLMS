@@ -5,10 +5,7 @@ import { LessonVideo } from "@/components/lessonVideo/lessonVideo";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-    ModuleInterface,
-    LessonInterface,
-} from "@/types/courseData";
+import { ModuleInterface, LessonInterface } from "@/types/courseData";
 import { LessonSkeleton } from "@/components/lesson/lessonSkeleton";
 import { ErrorPage } from "@/pages/error/error";
 import { useCourseDataIfEnrolled } from "@/hooks/useCourseDataIfEnrolled";
@@ -22,7 +19,7 @@ export function Lesson() {
         data: course,
         error,
         isLoading,
-    } = useCourseDataIfEnrolled(courseAddress)
+    } = useCourseDataIfEnrolled(courseAddress);
 
     if (error) {
         if (error.message === "Access denied") {
@@ -47,8 +44,6 @@ export function Lesson() {
     if (isLoading || !course) {
         return <LessonSkeleton />;
     }
-
-
 
     const allModules = course.modules;
     const currentModule: ModuleInterface | undefined = allModules.find((m) =>
@@ -116,7 +111,20 @@ export function Lesson() {
 
                     {/* Lesson Video */}
                     <div className="w-full p-2">
-                        <LessonVideo video_id={currentLesson.videoId} />
+                        <LessonVideo
+                            video_id={currentLesson.videoId}
+                            opts={{
+                                width: "100%", // Делаем видео адаптивным
+                                height: "100%", // Делаем видео адаптивным
+                                playerVars: {
+                                    modestbranding: 1, // Убираем логотип YouTube
+                                    rel: 0, // Убираем рекомендации в конце видео
+                                    showinfo: 0, // Убираем заголовок видео
+                                    controls: 1, // Показываем только минимальные контроллы
+                                    autoplay: 1,
+                                },
+                            }}
+                        />
                     </div>
                     <Separator className="mt-2" />
                     {/* Navigation Buttons */}

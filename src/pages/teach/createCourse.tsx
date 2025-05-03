@@ -10,10 +10,13 @@ import { StepThree } from "@/pages/teach/createCourse/stepThree";
 import { StepFour } from "@/pages/teach/createCourse/stepFour";
 import { StepFive } from "@/pages/teach/createCourse/stepFive";
 import { CourseDataInterface } from "@/types/courseData";
+import { CreateCourseLogic } from "@/components/createCourse/createCourseLogic";
 
 export function CreateCourse({ children }: { children: React.ReactNode }) {
     const [isDirty, setIsDirty] = useState(false);
     const [currentStep, setCurrentStep] = useState(1);
+    const [showDialog, setShowDialog] = useState(false);
+
     const totalSteps = 5;
 
     const [showErrors, setShowErrors] = useState({
@@ -32,87 +35,55 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
     const [activeModuleIndex, setActiveModuleIndex] = useState(0);
     const [activeQuizIndex, setActiveQuizIndex] = useState(0);
 
-    // interface courseDataInterface {
-    //     logo: string;
-    //     title: string;
-    //     summary: string;
-    //     recommendedWorkload: string;
-    //     whatYouWillLearn: string;
-    //     about: string;
-    //     whatYouWillGain: string;
-    //     initialRequirements: string;
-    //     price: number;
-    //     level: string;
-    //     language: string;
-    //     certificate: {
-    //         image: string;
-    //     };
-    //     modules: {
-    //         moduleTitle: string;
-    //         quiz: {
-    //             questions: {
-    //                 questionText: string;
-    //                 options: string[];
-    //                 correctAnswer: number;
-    //             }[];
-    //         };
-    //         lessons: {
-    //             title: string;
-    //             videoUrl: string;
-    //         }[];
-    //     }[];
-    // }
-
     // Единое состояние courseData
     const [courseData, setCourseData] = useState<CourseDataInterface>({
         name: "",
         description: "",
         image: "",
         cover_image: "",
-        video: "",
         social_links: [],
         attributes: {
-          category: [],
-          duration: "",
-          level: "Beginner",
-          lessons: 0,
-          language: "English",
-          summary: "",
-          workload: "",
-          learn: "",
-          about: "",
-          gains: "",
-          requirements: "",
+            category: [],
+            duration: "",
+            level: "Beginner",
+            lessons: 0,
+            language: "English",
+            summary: "",
+            workload: "",
+            learn: "",
+            about: "",
+            gains: "",
+            requirements: "",
         },
         modules: [
             {
-              id: "1",
-              title: "Module 1",
-              lessons: [
-                {
-                  id: "m1-l1",
-                  title: "",
-                  videoId: "",
+                id: "1",
+                title: "Module 1",
+                lessons: [
+                    {
+                        id: "m1-l1",
+                        title: "",
+                        videoId: "",
+                    },
+                ],
+                quiz: {
+                    correct_answers: "aaaaa",
+                    questions: Array(5)
+                        .fill(null)
+                        .map((_, index) => ({
+                            id: index.toString(),
+                            text: "",
+                            options: ["", ""],
+                        })),
                 },
-              ],
-              quiz: {
-                correct_answers: "aaaaa",
-                questions: Array(5)
-                  .fill(null)
-                  .map((_, index) => ({
-                    id: index.toString(),
-                    text: "",
-                    options: ["", ""],
-                  })),
-              },
             },
-          ],
-          courseCompletion: [
+        ],
+        courseCompletion: [
             {
-              gradeHighThan: "90",
-              certificate: "/images/nfts/nft_sample.png",
+                gradeHighThan: "90",
+                certificate: "/images/nfts/nft_sample.png",
             },
-          ],
+        ],
     });
     const [coursePrice, setcoursePrice] = useState(1);
 
@@ -158,7 +129,7 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
         if (currentStep > 1) setCurrentStep((prev) => prev - 1);
     };
 
-    const [jwt, setJwt] = useState('');
+    const [jwt, setJwt] = useState("");
     const [isValidJwt, setIsValidJwt] = useState(false);
 
     const isFormValid =
@@ -168,16 +139,20 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
         validationStatus.stepFour &&
         isValidJwt;
 
-
-    const handleCreateCourse = async () => {
+    const handleCreateCourse = () => {
         
+        setShowDialog(true);
     };
 
     return (
         <div className="p-6 max-w-4xl mx-auto bg-white rounded-3xl shadow-md">
             {children}
 
-            <StepSlider currentStep={currentStep} totalSteps={totalSteps} setCurrentStep={setCurrentStep}/>
+            <StepSlider
+                currentStep={currentStep}
+                totalSteps={totalSteps}
+                setCurrentStep={setCurrentStep}
+            />
             <Separator className="mt-3 mb-6" />
 
             <form className="space-y-5 w-full">
@@ -223,7 +198,6 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
                         setValidationStatus={setValidationStatus}
                         coursePrice={coursePrice}
                         setCoursePrice={setcoursePrice}
-
                     />
                 )}
 
@@ -260,7 +234,11 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
                     </Button>
 
                     <Button
-                        onClick={currentStep !== totalSteps ? handleNextStep : handleCreateCourse}
+                        onClick={
+                            currentStep !== totalSteps
+                                ? handleNextStep
+                                : handleCreateCourse
+                        }
                         type="button"
                         className={`rounded-2xl bg-goluboy p-2.5 gap-0 flex justify-center items-center ${
                             !isFormValid && currentStep === totalSteps
@@ -281,6 +259,11 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
                     </Button>
                 </div>
             </form>
+            <CreateCourseLogic
+                course={courseData}
+                open={showDialog}
+                onOpenChange={setShowDialog}
+            />
         </div>
     );
 }

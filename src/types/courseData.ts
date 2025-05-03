@@ -50,7 +50,7 @@ export interface CourseDataInterface {
     description: string;
     image: string;
     cover_image: string;
-    video: string;
+    video?: string;
     social_links: string[];
 
     attributes: CourseAttributesInterface;
@@ -58,10 +58,14 @@ export interface CourseDataInterface {
     courseCompletion: CertificateByGrade[];
 }
 
-
-
 export interface EnrolledCoursePreview {
     courseAddress: string;
     title: string;
     image: string;
-  }
+}
+
+export interface CertificateInterface {
+    certificateAddress: string;
+    title: string;
+    image: string;
+}

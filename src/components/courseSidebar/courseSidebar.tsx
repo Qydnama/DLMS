@@ -1,32 +1,31 @@
-import { BookOpenText } from "lucide-react"
-import { SidebarMain } from "@/components/courseSidebar/sidebarMain"
+import { BookOpenText } from "lucide-react";
+import { SidebarMain } from "@/components/courseSidebar/sidebarMain";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  useSidebar,
-} from "@/components/ui/sidebar"
-
+    Sidebar,
+    SidebarContent,
+    SidebarHeader,
+    useSidebar,
+} from "@/components/ui/sidebar";
 
 const data = [
-      {
+    {
         title: "Content",
         url: "#",
         icon: BookOpenText,
         isActive: true,
         items: [
-          {
-            title: "Syllabus",
-            url: "../syllabus",
-          },
-          {
-            title: "Quizzes",
-            url: "../quizzes",
-          },
+            {
+                title: "Syllabus",
+                url: "../syllabus",
+            },
+            {
+                title: "Quizzes",
+                url: "../quizzes",
+            },
         ],
-      },
+    },
     //   {
     //     title: "Settings",
     //     url: "#",
@@ -46,29 +45,44 @@ const data = [
     //       },
     //     ],
     // }
-]
-
+];
 
 interface CourseData {
-  image: string;
-  name: string;
+    image: string;
+    name: string;
 }
 
-export function CourseSidebar({ courseData, ...props }: { courseData: CourseData }) {
+export function CourseSidebar({
+    courseData,
+    ...props
+}: {
+    courseData: CourseData;
+}) {
     const { isMobile } = useSidebar();
-
 
     return (
         <div className="bg-white rounded-l-2xl m-0 sm:mt-5 sm:ml-5">
             {isMobile}
-            <Sidebar collapsible={isMobile ? "icon" : "none"} {...props} className="bg-white rounded-l-2xl h-[calc(100vh-64px)] sticky top-[64px] left-0">
+            <Sidebar
+                collapsible={isMobile ? "icon" : "none"}
+                {...props}
+                className="bg-white rounded-l-2xl h-[calc(100vh-64px)] sticky top-[64px] left-0"
+            >
                 <SidebarHeader className="flex p-4">
                     <Avatar className="w-24 h-24 rounded-lg overflow-hidden">
-                        <AvatarImage className="w-full h-full object-cover" src={`https://ipfs.io/ipfs/${courseData.image.substring(7)}`} alt={courseData.name} />
+                        <AvatarImage
+                            className="w-full h-full object-cover"
+                            src={`https://ipfs.io/ipfs/${courseData.image.substring(
+                                7
+                            )}`}
+                            alt={courseData.name}
+                        />
                         <AvatarFallback>EC</AvatarFallback>
                     </Avatar>
                     <div>
-                        <p className="line-clamp-5 text-md font-semibold break-words">{courseData.name}</p>
+                        <p className="line-clamp-5 text-md font-semibold break-words">
+                            {courseData.name}
+                        </p>
                     </div>
                 </SidebarHeader>
                 <SidebarContent>
@@ -77,8 +91,7 @@ export function CourseSidebar({ courseData, ...props }: { courseData: CourseData
                 {/* <SidebarFooter>
                 <NavUser user={data.user} />
                 </SidebarFooter> */}
-                
             </Sidebar>
-      </div>
-    )
-  }
+        </div>
+    );
+}

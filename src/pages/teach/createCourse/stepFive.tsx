@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { checkPinataConnection } from "@/lib/pinata";
 import { CourseDataInterface } from "@/types/courseData";
+import { extractYoutubeVideoId } from "@/components/createCourse/youtubeIdExtract";
+import { Spinner } from "../../../components/ui/kibo-ui/spinner";
 
 interface StepFiveProps {
     courseData: CourseDataInterface;
@@ -31,17 +33,24 @@ export function StepFive({
     setJwt,
     setIsValidJwt,
     isValidJwt,
-    coursePrice
+    coursePrice,
 }: StepFiveProps) {
-
     const jwtSchema = z.string().min(10, "JWT слишком короткий");
     const [jwtError, setJwtError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    
 
     const handlePromoPage = () => {
+        const videoUrl = courseData.video;
+        const courseDataTemp = { ...courseData };
+
+        if (videoUrl) {
+            const extractedVideoId = extractYoutubeVideoId(videoUrl);
+            if (extractedVideoId) {
+                courseDataTemp.video = extractedVideoId;
+            }
+        }
         // 1) Сохраняем courseData (например, в sessionStorage)
-        sessionStorage.setItem("promoData", JSON.stringify(courseData));
+        sessionStorage.setItem("promoData", JSON.stringify(courseDataTemp));
         sessionStorage.setItem("priceData", JSON.stringify(coursePrice));
 
         // 2) Открываем новую вкладку на URL /teach/courses/create/coursePromo
@@ -52,25 +61,26 @@ export function StepFive({
         setIsLoading(true);
         setJwtError(null);
         setIsValidJwt(false);
-      
+
         const validation = jwtSchema.safeParse(jwt);
         if (!validation.success) {
-          setJwtError(validation.error.errors[0].message);
-          setIsLoading(false);
-          return;
+            setJwtError(validation.error.errors[0].message);
+            setIsLoading(false);
+            return;
         }
-      
+
         const isConnected = await checkPinataConnection(jwt);
         if (!isConnected) {
-          setJwtError("Ошибка: JWT недействителен или нет соединения с Pinata");
-          setIsLoading(false);
-          return;
+            setJwtError(
+                "Ошибка: JWT недействителен или нет соединения с Pinata"
+            );
+            setIsLoading(false);
+            return;
         }
-      
+
         setIsValidJwt(true);
         setIsLoading(false);
-      };
-    
+    };
 
     return (
         <div className="space-y-2">
@@ -154,7 +164,10 @@ export function StepFive({
                 <div className="space-y-4">
                     {/* JWT */}
                     <div>
-                        <Label htmlFor="jwt" className="block text-sm font-medium text-gray-700">
+                        <Label
+                            htmlFor="jwt"
+                            className="block text-sm font-medium text-gray-700"
+                        >
                             JWT
                         </Label>
                         <Input
@@ -164,41 +177,42 @@ export function StepFive({
                             required
                             value={jwt}
                             onChange={(e) => {
-                            setJwt(e.target.value);
-                            setJwtError(null);
-                            setIsValidJwt(false);
+                                setJwt(e.target.value);
+                                setJwtError(null);
+                                setIsValidJwt(false);
                             }}
                             className={`mt-1 block w-full rounded-2xl border p-2 shadow-sm sm:text-sm ${
-                            jwtError ? "border-red-500" : "border-gray-300"
+                                jwtError ? "border-red-500" : "border-gray-300"
                             }`}
                             placeholder="Введите ваш JWT"
                         />
                         {jwtError && (
-                            <p className="text-red-500 text-xs mt-1">{jwtError}</p>
+                            <p className="text-red-500 text-xs mt-1">
+                                {jwtError}
+                            </p>
                         )}
                         <div>
                             <Button
-                            type="button"
-                            variant="outline"
-                            onClick={handlePinataConnection}
-                            className="p-2.5 mt-4 gap-1.5 flex items-center border-blue-500 text-blue-500 
+                                type="button"
+                                variant="outline"
+                                onClick={handlePinataConnection}
+                                className="p-2.5 mt-4 gap-1.5 flex items-center border-blue-500 text-blue-500 
                                 hover:border-blue-700 hover:text-blue-700 transition-colors duration-200 rounded-2xl"
-                            disabled={jwt === ""}
+                                disabled={jwt === ""}
                             >
-                            <span className="m-0 p-0 font-semibold text-xs sm:text-sm flex items-center gap-2">
-                                Check JWT
-                                {isLoading ? (
-                                <span className="animate-spin w-4 h-4 border-t-2 border-blue-500 rounded-full"></span>
-                                ) : isValidJwt ? (
-                                <Check className="w-4 h-4 text-blue-500" />
-                                ) : (
-                                <Search className="w-4 h-4" />
-                                )}
-                            </span>
+                                <span className="m-0 p-0 font-semibold text-xs sm:text-sm flex items-center gap-2">
+                                    Check JWT
+                                    {isLoading ? (
+                                        <Spinner className="w-4 h-4 text-blue-500"/>
+                                    ) : isValidJwt ? (
+                                        <Check className="w-4 h-4 text-blue-500" />
+                                    ) : (
+                                        <Search className="w-4 h-4" />
+                                    )}
+                                </span>
                             </Button>
                         </div>
                     </div>
-
                 </div>
 
                 <div className="flex justify-between text-gray-500 text-xs mt-4">

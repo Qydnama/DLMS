@@ -48,17 +48,17 @@ export const SettingsPopover: React.FC = () => {
                 <div>
                     <div className="space-y-1">
                         <div className="mb-2">
-                            { isConnected &&
-                            <div>
-                            <Link
-                                to={profileLink}
-                                className="flex items-center space-x-2 text-center text-base p-2 block w-full text-gray-900 hover:text-blue-500 hover:bg-gray-100 rounded-md transition duration-200"
-                            >
-                                <span>{t("profile")}</span>
-                            </Link>
-                            <Separator className="bg-gray-200" />
-                            </div>
-                            }
+                            {isConnected && (
+                                <div>
+                                    <Link
+                                        to={profileLink}
+                                        className="flex items-center space-x-2 text-center text-base p-2 block w-full text-gray-900 hover:text-blue-500 hover:bg-gray-100 rounded-md transition duration-200"
+                                    >
+                                        <span>{t("profile")}</span>
+                                    </Link>
+                                    <Separator className="bg-gray-200" />
+                                </div>
+                            )}
                             <div className="md:hidden">
                                 <Link
                                     to="/catalog"

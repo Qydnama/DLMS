@@ -10,6 +10,7 @@ import {
 import { CourseDataInterface } from "@/types/courseData";
 import { StatBadge } from "@/components/coursePromo/statBadge";
 import { useCategoryNames } from "@/hooks/useCategoryNames";
+import { LessonVideo } from "@/components/lessonVideo/lessonVideo";
 
 let courseData: CourseDataInterface;
 let coursePrice: number = 0;
@@ -104,6 +105,24 @@ export function CoursePromoSample() {
                     </div>
                     <div className="flex justify-between mt-4">
                         <div className="md:pl-5 md:w-[60%] space-y-7">
+                            {courseData.video && (
+                                <div className="w-full">
+                                    <LessonVideo
+                                        video_id={courseData.video}
+                                        opts={{
+                                            width: "100%", // Делаем видео адаптивным
+                                            height: "100%", // Делаем видео адаптивным
+                                            playerVars: {
+                                                modestbranding: 1, // Убираем логотип YouTube
+                                                rel: 0, // Убираем рекомендации в конце видео
+                                                showinfo: 0, // Убираем заголовок видео
+                                                controls: 1, // Показываем только минимальные контроллы
+                                                autoplay: 1,
+                                            },
+                                        }}
+                                    />
+                                </div>
+                            )}
                             {/* What You Will Learn */}
                             <div>
                                 <h2 className="text-2xl font-normal">
@@ -224,11 +243,11 @@ export function CoursePromoSample() {
                                         <h3 className="text-md font-semibold text-gray-800">
                                             You can learn right away
                                         </h3>
-                                        <p className="text-sm text-gray-600">
-                                            Buy from the company
+                                        <p className="text-sm text-gray-800 underline">
+                                            {courseData.attributes.workload}
                                         </p>
-                                        <p className="text-sm text-gray-600">
-                                            Buy as a gift
+                                        <p className="text-sm text-gray-800 underline">
+                                            {courseData.attributes.duration}
                                         </p>
                                         <Separator className="my-4" />
                                     </div>

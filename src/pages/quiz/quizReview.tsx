@@ -21,7 +21,7 @@ const quizData = {
                 "They is students.",
                 "We is students.",
                 "They are students.",
-                "Are they students?"
+                "Are they students?",
             ],
             correctAnswer: 2,
             selectedAnswer: 3, // User selected answer (index)
@@ -34,7 +34,7 @@ const quizData = {
                 "She are happy.",
                 "She is happy.",
                 "She am happy.",
-                "Are she happy?"
+                "Are she happy?",
             ],
             correctAnswer: 1,
             selectedAnswer: 1, // User selected answer (index)
@@ -60,13 +60,18 @@ export function QuizReview() {
                         onClick={handleBackButton}
                         className="flex items-center text-blue-700 hover:underline space-x-1 text-sm font-semibold"
                     >
-                        <ArrowLeft className="w-[18px] h-[18px]" /> <span>Back</span>
+                        <ArrowLeft className="w-[18px] h-[18px]" />{" "}
+                        <span>Back</span>
                     </button>
 
                     {/* Quiz Title */}
                     <div>
-                        <p className="text-md font-semibold text-gray-900">{quizData.title}</p>
-                        <p className="text-gray-500 text-xs">Graded Assignment • 1h</p>
+                        <p className="text-md font-semibold text-gray-900">
+                            {quizData.title}
+                        </p>
+                        <p className="text-gray-500 text-xs">
+                            Graded Assignment • 1h
+                        </p>
                     </div>
                 </div>
             </div>
@@ -76,33 +81,42 @@ export function QuizReview() {
             <div className=" bg-red-100 text-red-700 p-4 rounded-lg my-6">
                 <div className="flex justify-between items-center">
                     <div className="text-lg font-semibold">
-                        Your grade: <span className="text-red-700">{quizData.highestScore}%</span>
+                        Your grade:{" "}
+                        <span className="text-red-700">
+                            {quizData.highestScore}%
+                        </span>
                     </div>
                     <Button className="bg-blue-600 font-semibold hover:bg-blue-700 text-white px-6 py-2">
                         ↻ Retry
                     </Button>
                 </div>
-                    {/* Score Breakdown */}
+                {/* Score Breakdown */}
                 <div className="flex justify-start text-gray-700 text-sm space-x-4 mb-2">
-                    <span><strong>Your latest:</strong> {quizData.latestScore}%</span>
-                    <span><strong>Your highest:</strong> {quizData.highestScore}%</span>
-                    <span>To pass you need at least {quizData.passingScore}%. We keep your highest score.</span>
+                    <span>
+                        <strong>Your latest:</strong> {quizData.latestScore}%
+                    </span>
+                    <span>
+                        <strong>Your highest:</strong> {quizData.highestScore}%
+                    </span>
+                    <span>
+                        To pass you need at least {quizData.passingScore}%. We
+                        keep your highest score.
+                    </span>
                 </div>
-
             </div>
-
-            
 
             {/* Quiz Questions */}
             <div className="space-y-6">
                 {quizData.questions.map((item, questionIndex) => {
-                    const isCorrect = item.selectedAnswer === item.correctAnswer;
+                    const isCorrect =
+                        item.selectedAnswer === item.correctAnswer;
 
                     return (
                         <Card key={item.id} className="p-5 border-0 relative">
                             {/* Points Display (Top Right) */}
                             <div className="absolute top-2 right-2 px-2 py-1 bg-gray-100 rounded-lg text-gray-700 text-sm">
-                                {item.points} point{item.points !== "1" ? "s" : ""}
+                                {item.points} point
+                                {item.points !== "1" ? "s" : ""}
                             </div>
 
                             {/* Question Text */}
@@ -113,33 +127,55 @@ export function QuizReview() {
                             {/* Options */}
                             <RadioGroup className="mt-4 space-y-2">
                                 {item.options.map((option, optionIndex) => (
-                                    <Label 
-                                    key={optionIndex}
-                                    className={`flex items-center font-medium space-x-2 cursor-pointer text-gray-700`}
+                                    <Label
+                                        key={optionIndex}
+                                        className={`flex items-center font-medium space-x-2 cursor-pointer text-gray-700`}
                                     >
                                         <RadioGroupItem
                                             className={`border-gray-900 text-gray-900 `}
                                             value={String(optionIndex)}
-                                            checked={item.selectedAnswer === optionIndex} // This makes sure the selected option stays checked
+                                            checked={
+                                                item.selectedAnswer ===
+                                                optionIndex
+                                            } // This makes sure the selected option stays checked
                                             disabled
                                         />
-                                        <span>{String.fromCharCode(97 + optionIndex)}. {option}</span>
+                                        <span>
+                                            {String.fromCharCode(
+                                                97 + optionIndex
+                                            )}
+                                            . {option}
+                                        </span>
                                     </Label>
                                 ))}
                             </RadioGroup>
 
                             {/* Correct / Incorrect Feedback */}
-                            <div className={`mt-4 p-3 rounded-lg ${
-                                isCorrect ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                            }`}>
+                            <div
+                                className={`mt-4 p-3 rounded-lg ${
+                                    isCorrect
+                                        ? "bg-green-100 text-green-700"
+                                        : "bg-red-100 text-red-700"
+                                }`}
+                            >
                                 <div className="flex items-center space-x-2 font-semibold">
-                                    {isCorrect ? <CircleCheck className="w-5 h-5 text-green-600" /> : <XCircle className="w-5 h-5 text-red-600" />}
-                                    <span>{isCorrect ? "Correct!" : "Incorrect!"}</span>
+                                    {isCorrect ? (
+                                        <CircleCheck className="w-5 h-5 text-green-600" />
+                                    ) : (
+                                        <XCircle className="w-5 h-5 text-red-600" />
+                                    )}
+                                    <span>
+                                        {isCorrect ? "Correct!" : "Incorrect!"}
+                                    </span>
                                 </div>
                                 <p className="text-sm mt-1">
                                     {isCorrect
-                                        ? `The answer is: ${item.options[item.correctAnswer]}`
-                                        : `The correct answer was: ${item.options[item.correctAnswer]}`}
+                                        ? `The answer is: ${
+                                              item.options[item.correctAnswer]
+                                          }`
+                                        : `The correct answer was: ${
+                                              item.options[item.correctAnswer]
+                                          }`}
                                 </p>
                             </div>
                         </Card>

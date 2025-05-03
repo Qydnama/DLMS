@@ -19,9 +19,9 @@ const quizData = {
                 "They is students.",
                 "We is students.",
                 "They are students.",
-                "Are they students?"
+                "Are they students?",
             ],
-            correctAnswer: 2
+            correctAnswer: 2,
         },
         {
             id: 2,
@@ -30,9 +30,9 @@ const quizData = {
                 "She are happy.",
                 "She is happy.",
                 "She am happy.",
-                "Are she happy?"
+                "Are she happy?",
             ],
-            correctAnswer: 1
+            correctAnswer: 1,
         },
         {
             id: 3,
@@ -41,9 +41,9 @@ const quizData = {
                 "She are happy.",
                 "She is happy.",
                 "She am happy.",
-                "Are she happy?"
+                "Are she happy?",
             ],
-            correctAnswer: 1
+            correctAnswer: 1,
         },
         {
             id: 4,
@@ -52,9 +52,9 @@ const quizData = {
                 "She are happy. Next.js Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals",
                 "She is happy. Next.js Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals Fundamentals",
                 "She am happy.",
-                "Are she happy?"
+                "Are she happy?",
             ],
-            correctAnswer: 1
+            correctAnswer: 1,
         },
         {
             id: 5,
@@ -63,9 +63,9 @@ const quizData = {
                 "She are happy.",
                 "She is happy.",
                 "She am happy.",
-                "Are she happy?"
+                "Are she happy?",
             ],
-            correctAnswer: 1
+            correctAnswer: 1,
         },
         {
             id: 6,
@@ -74,9 +74,9 @@ const quizData = {
                 "She are happy.",
                 "She is happy.",
                 "She am happy.",
-                "Are she happy?"
+                "Are she happy?",
             ],
-            correctAnswer: 1
+            correctAnswer: 1,
         },
         {
             id: 7,
@@ -85,9 +85,9 @@ const quizData = {
                 "She are happy.",
                 "She is happy.",
                 "She am happy.",
-                "Are she happy?"
+                "Are she happy?",
             ],
-            correctAnswer: 1
+            correctAnswer: 1,
         },
         {
             id: 8,
@@ -96,9 +96,9 @@ const quizData = {
                 "She are happy.",
                 "She is happy.",
                 "She am happy.",
-                "Are she happy?"
+                "Are she happy?",
             ],
-            correctAnswer: 1
+            correctAnswer: 1,
         },
         {
             id: 9,
@@ -107,9 +107,9 @@ const quizData = {
                 "She are happy.",
                 "She is happy.",
                 "She am happy.",
-                "Are she happy?"
+                "Are she happy?",
             ],
-            correctAnswer: 1
+            correctAnswer: 1,
         },
         {
             id: 10,
@@ -118,16 +118,17 @@ const quizData = {
                 "She are happy.",
                 "She is happy.",
                 "She am happy.",
-                "Are she happy?"
+                "Are she happy?",
             ],
-            correctAnswer: 1
-        }
-    ]
+            correctAnswer: 1,
+        },
+    ],
 };
 
-
 export function QuizAttempt() {
-    const [selectedAnswers, setSelectedAnswers] = useState<number[]>(Array(quizData.questions.length).fill(-1));
+    const [selectedAnswers, setSelectedAnswers] = useState<number[]>(
+        Array(quizData.questions.length).fill(-1)
+    );
 
     const handleSelect = (questionIndex: number, optionIndex: number) => {
         setSelectedAnswers((prev) => {
@@ -140,7 +141,7 @@ export function QuizAttempt() {
 
     const handleBackButton = () => {
         navigate(-1);
-    }
+    };
 
     return (
         <div className="max-w-4xl mx-auto p-4 sm:p-6 md:p-8">
@@ -152,13 +153,18 @@ export function QuizAttempt() {
                         onClick={handleBackButton}
                         className="flex items-center text-blue-700 hover:underline space-x-1 text-sm font-semibold"
                     >
-                        <ArrowLeft className="w-[18px] h-[18px]"/> <span>Back</span>
+                        <ArrowLeft className="w-[18px] h-[18px]" />{" "}
+                        <span>Back</span>
                     </button>
 
                     {/* Center: Quiz Title */}
                     <div className="">
-                        <p className="text-md font-semibold text-gray-900">{quizData.title}</p>
-                        <p className="text-gray-500 text-xs">Graded Assignment • 1h</p>
+                        <p className="text-md font-semibold text-gray-900">
+                            {quizData.title}
+                        </p>
+                        <p className="text-gray-500 text-xs">
+                            Graded Assignment • 1h
+                        </p>
                     </div>
                 </div>
 
@@ -176,8 +182,6 @@ export function QuizAttempt() {
                 </div> */}
             </div>
             <div className="  ">
-                
-
                 <Separator className="mb-6" />
 
                 {/* Quiz Questions */}
@@ -187,18 +191,32 @@ export function QuizAttempt() {
                             <h3 className="text-md font-semibold text-gray-900">
                                 {questionIndex + 1}. {item.text}
                             </h3>
-                            <RadioGroup 
+                            <RadioGroup
                                 className="mt-4 space-y-2"
-                                value={selectedAnswers[questionIndex] !== -1 ? String(selectedAnswers[questionIndex]) : ""}
-                                onValueChange={(value) => handleSelect(questionIndex, Number(value))}
+                                value={
+                                    selectedAnswers[questionIndex] !== -1
+                                        ? String(selectedAnswers[questionIndex])
+                                        : ""
+                                }
+                                onValueChange={(value) =>
+                                    handleSelect(questionIndex, Number(value))
+                                }
                             >
                                 {item.options.map((option, optionIndex) => (
-                                    <Label 
+                                    <Label
                                         key={optionIndex}
                                         className="flex items-center font-medium space-x-2 text-black-50 cursor-pointer"
                                     >
-                                        <RadioGroupItem className="" value={String(optionIndex)} />
-                                        <span>{String.fromCharCode(97 + optionIndex)}. {option}</span>
+                                        <RadioGroupItem
+                                            className=""
+                                            value={String(optionIndex)}
+                                        />
+                                        <span>
+                                            {String.fromCharCode(
+                                                97 + optionIndex
+                                            )}
+                                            . {option}
+                                        </span>
                                     </Label>
                                 ))}
                             </RadioGroup>
