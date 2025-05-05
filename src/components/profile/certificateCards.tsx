@@ -19,7 +19,7 @@ export function CertificateCards({ certificates }: CertificateCardsProps) {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {certificates.map((certificate) => (
         <Link
-          to={`./certificate/${certificate.certificateAddress}`}
+          to={`/certificate/${certificate.certificateAddress}`}
           key={certificate.certificateAddress}
           className="block"
         >

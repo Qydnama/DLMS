@@ -1,6 +1,6 @@
 import { getCollectionData, getEventsUrl, ipfsToHttp } from "@/lib/tonHelpers";
 import { ApiResponse } from "@/types/tonTypes";
-import { CourseDataInterface, EnrolledCoursePreview } from "@/types/courseData";
+import { CertificateCompletionInterface, CourseDataInterface, EnrolledCoursePreview } from "@/types/courseData";
 
 const ENROLLED_MESSAGE = "You have successfully enrolled to the course!";
 
@@ -82,3 +82,34 @@ export async function listEnrolledCourses(
 
     return previews.filter(Boolean) as EnrolledCoursePreview[];
 }
+
+
+  
+  export async function fetchMockCertificate(): Promise<CertificateCompletionInterface> {
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 2 seconds
+    
+    return {
+      certificateId: "050202930193",
+      title: "Firefighter Training and Safety Course",
+      description: "Yamete Kudasai AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      courseImage: "/images/cards/1.png",
+      courseTitle: "Firefighter Training and Safety Course",
+      courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",
+      ownerAddress: "EQA8-SVqn4H2dew-CzMrfzpqg2ReIQSYCFxkzpr4ZnwcunaS",
+      attributes: {
+        "Completion Status": "Oh Yeah",
+        "Completion Date": "2025-04-08",
+        Instructor: "Dr. Akylzhan Akatakatukasay",
+        Student_IIN: "050204814823",
+        email: "animemylife@gmail.com",
+        "Average Grade": "100%",
+        Quiz1: "100%",
+        Quiz2: "100%",
+        Quiz3: "100%",
+        Quiz4: "100%",
+        Quiz5: "100%",
+        Quiz6: "100%",
+        Overall: "100%",
+      },
+    };
+  }

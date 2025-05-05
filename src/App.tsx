@@ -22,6 +22,7 @@ import { CoursePromoSample } from "@/pages/teach/createCourse/coursePromoSample"
 import { PageNotFound } from "@/pages/error/pageNotFound";
 import { UserNotAuthorized } from "@/pages/error/userNotAuthorized";
 import { ProtectedRoute } from '@/pages/protectedRoute/protectedRoute';
+import { Certificate } from '@/pages/certificate/certificate';
 
 export default function App() {
     const location = useLocation();
@@ -59,9 +60,12 @@ export default function App() {
 
                         <Route path="users/:walletAddr">
                             <Route index element={<MainLayout><UserProfile /></MainLayout>} />
-                            <Route path=":section" element={<MainLayout><UserProfile /></MainLayout>} />
                         </Route>
-
+                            
+                        <Route path="certificate/:certificateAddr"> 
+                            <Route index element={<MainLayout><Certificate /></MainLayout>} />
+                        </Route>
+                        
                         <Route path="/unauthorized" element={<MainLayout><UserNotAuthorized /></MainLayout>} />
                         <Route path="*" element={<MainLayout><PageNotFound /></MainLayout>} />
                         

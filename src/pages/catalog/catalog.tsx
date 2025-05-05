@@ -1,119 +1,128 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useMemo } from "react";
 import { CourseCard } from "@/components/catalogCard/courseCard";
 import { CourseCardSkeleton } from "@/components/catalogCard/courseCardSkeleton";
-import useSWR from "swr";
-import { CourseInterface, fetchCatalogCourses } from "@/lib/catalogService";
-import { ErrorPage } from "../error/error";
-
-const ITEMS_PER_PAGE = 12;
+import { useCatalogCourses } from "@/hooks/useCatalogCourses";
+import { ErrorPage } from "@/pages/error/error";
+import { SortButton } from "@/components/catalog/sortButton";
+import { FilterCourses } from "@/components/catalog/filterCourses";
+import { FilterType } from "@/types/courseData";
+import { filterAndSortCourses } from "@/components/catalog/filterAndSortLogic";
 
 export function Catalog() {
-    const {
-        data: courses,
-        error,
-        isLoading,
-    } = useSWR<CourseInterface[]>("catalog-courses", fetchCatalogCourses, {
-        shouldRetryOnError: false,
-    });
+    const { data: visibleCourses, isLoading, error } = useCatalogCourses();
 
-    const [visibleCourses, setVisibleCourses] = useState<CourseInterface[]>([]);
-    const [loadingMore, setLoadingMore] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
+    const [selectedDifficulty, setSelectedDifficulty] = useState<string[]>([]);
+    const [selectedRating, setSelectedRating] = useState<number[]>([]);
+    const [selectedPrice, setSelectedPrice] = useState<number[]>([]);
+    const [sortBy, setSortBy] = useState("featured");
 
-    const observerRef = useRef<HTMLDivElement | null>(null);
+    const filteredCourses = useMemo(() => {
+        return filterAndSortCourses(
+            visibleCourses ?? [],
+            selectedCategory,
+            selectedDifficulty,
+            selectedRating,
+            selectedPrice,
+            sortBy
+        );
+    }, [
+        visibleCourses,
+        selectedCategory,
+        selectedDifficulty,
+        selectedRating,
+        selectedPrice,
+        sortBy,
+    ]);
 
-    useEffect(() => {
-        if (courses) {
-            setVisibleCourses(courses.slice(0, ITEMS_PER_PAGE));
-        }
-    }, [courses]);
+    const anyFiltersActive =
+        selectedCategory.length > 0 ||
+        selectedDifficulty.length > 0 ||
+        selectedRating.length > 0 ||
+        selectedPrice.length > 0;
 
-    const loadMoreCourses = () => {
-        if (!courses) return;
-        if (loadingMore) return;
-
-        setLoadingMore(true);
-
-        // Next chunk
-        const start = visibleCourses.length;
-        const end = start + ITEMS_PER_PAGE;
-        const nextChunk = courses.slice(start, end);
-
-        // If no more data, stop
-        if (nextChunk.length === 0) {
-            setLoadingMore(false);
-            return;
-        }
-
-        setTimeout(() => {
-            setVisibleCourses((prev) => [...prev, ...nextChunk]);
-            setLoadingMore(false);
-        }, 1500);
+    const resetAllFilters = () => {
+        setSelectedCategory([]);
+        setSelectedDifficulty([]);
+        setSelectedRating([]);
+        setSelectedPrice([]);
     };
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting) {
-                    loadMoreCourses();
-                }
-            },
-            { threshold: 1.0 }
-        );
+    const handleFilterChange = (type: FilterType, value: string | number) => {
+        const toggle = <T,>(prev: T[], v: T): T[] =>
+            prev.includes(v) ? prev.filter((item) => item !== v) : [...prev, v];
 
-        if (observerRef.current) {
-            observer.observe(observerRef.current);
-        }
+        if (type === "difficulty" && typeof value === "string")
+            setSelectedDifficulty((prev) => toggle(prev, value));
+        else if (type === "rating" && typeof value === "number")
+            setSelectedRating((prev) => toggle(prev, value));
+        else if (type === "price" && typeof value === "number")
+            setSelectedPrice((prev) => toggle(prev, value));
+    };
 
-        return () => {
-            if (observerRef.current) {
-                observer.unobserve(observerRef.current);
-            }
-        };
-    }, [observerRef, visibleCourses, courses, loadingMore]);
-
-    if (error) {
+    if (error && !visibleCourses) {
         return (
             <ErrorPage
-                first={"Catalog Not Found"}
-                second={"We couldn't find catalog."}
-                third={"Please try again later."}
+                first="Catalog Not Found"
+                second="We couldn't find catalog."
+                third="Please try again later."
             />
         );
     }
 
     return (
-        <main className="min-h-screen bg-white rounded-[2vw] shadow-md p-4">
-            <div className="mx-auto p-2">
-                <h2 className="text-2xl font-bold mb-6 text-gray-800">
-                    Online Courses
-                </h2>
-
-                {/* 8) The grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6">
-                    {/* If we are still loading initial data (courses == undefined) */}
-                    {isLoading &&
-                        !courses &&
-                        Array.from({ length: ITEMS_PER_PAGE }).map((_, idx) => (
-                            <CourseCardSkeleton key={idx} />
-                        ))}
-
-                    {/* Otherwise, show the visible courses */}
-                    {visibleCourses.map((course) => (
-                        <CourseCard
-                            key={course.courseAddress + course.authorAddress}
-                            {...course}
-                        />
-                    ))}
-
-                    {/* If we have loaded some data, but we're actively loading more, show some skeleton placeholders */}
-                    {loadingMore &&
-                        Array.from({ length: ITEMS_PER_PAGE }).map((_, idx) => (
-                            <CourseCardSkeleton key={"loadMore-" + idx} />
-                        ))}
+        <main className="min-h-screen bg-white rounded-[2vw] shadow-md p-6">
+            <div className="max-w-7xl mx-auto space-y-8">
+                <div className="flex flex-col sm:flex-row md:items-center justify-between gap-4">
+                    <h2 className="text-2xl font-bold text-gray-900">
+                        Online Courses
+                    </h2>
+                    <SortButton sortBy={sortBy} setSortBy={setSortBy} />
                 </div>
 
-                {/* 9) Intersection observer sentinel */}
-                <div ref={observerRef} className="h-10" />
+                <div className="flex flex-col lg:flex-row gap-6">
+                    <div className="w-full lg:w-56 flex-shrink-0 space-y-4 lg:mt-2">
+                        <h3 className="text-xl font-semibold text-gray-800">
+                            Filters
+                        </h3>
+
+                        <FilterCourses
+                            selectedCategory={selectedCategory}
+                            setSelectedCategory={setSelectedCategory}
+                            selectedDifficulty={selectedDifficulty}
+                            selectedRating={selectedRating}
+                            selectedPrice={selectedPrice}
+                            handleFilterChange={handleFilterChange}
+                        />
+                        {anyFiltersActive && (
+                            <button
+                                onClick={resetAllFilters}
+                                className="text-sm text-blue-600 hover:underline hover:text-blue-800 transition mb-2"
+                            >
+                                Clear All Filters
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="flex-1">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6">
+                            {isLoading &&
+                                Array.from({ length: 9 }).map((_, idx) => (
+                                    <CourseCardSkeleton key={idx} />
+                                ))}
+
+                            {filteredCourses.map((course) => (
+                                <CourseCard
+                                    key={
+                                        course.courseAddress +
+                                        course.authorAddress
+                                    }
+                                    {...course}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     );

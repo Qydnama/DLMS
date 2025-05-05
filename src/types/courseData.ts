@@ -69,3 +69,31 @@ export interface CertificateInterface {
     title: string;
     image: string;
 }
+
+export interface CertificateCompletionInterface {
+    certificateId: string;
+    title: string;
+    description: string;
+    courseImage: string;
+    courseTitle: string;
+    courseAddress: string;
+    ownerAddress: string;
+    attributes: Record<string, string>;
+}
+
+export interface CatalogCourseInterface {
+    courseAddress: string;
+    authorAddress: string;
+    title: string;
+    author: string;
+    price: number;
+    duration: number;
+    rating: number;
+    image: string;
+    users: number;
+    difficulty: string,
+    categories: string[],
+    date: string;
+}
+
+export type FilterType = "difficulty" | "rating" | "price";
