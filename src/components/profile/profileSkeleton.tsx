@@ -11,7 +11,7 @@ export const ProfileSkeleton: React.FC = () => {
             <WalletTableSkeleton />
 
             {/* Card 2 (Tabs skeleton) */}
-            <div className="bg-white py-4 px-8 rounded-3xl shadow-sm">
+            <div className="bg-white py-4 px-8 rounded-3xl md:border-[6px] border-gray-200">
                 <CoursesSectionSkeleton />
                 <CertificatesSectionSkeleton />
             </div>

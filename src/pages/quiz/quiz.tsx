@@ -89,7 +89,7 @@ export function Quiz() {
 
     return (
         <SidebarProvider>
-            <div className="flex w-full mx-auto bg-white rounded-[2vw] shadow-md">
+            <div className="flex w-full mx-auto bg-white rounded-[2vw] md:border-[6px] border-gray-200">
                 {/* Quiz Sidebar */}
                 <div>
                     <QuizSidebar data={sidebarPayload} />

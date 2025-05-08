@@ -9,7 +9,7 @@ interface ErrorPageProps {
 
 export function ErrorPage({ first, second, third }: ErrorPageProps) {
     return (
-        <div className="min-h-[710px] flex flex-col justify-center items-center bg-white text-center rounded-3xl shadow-md">
+        <div className="min-h-[710px] flex flex-col justify-center items-center bg-white text-center rounded-[2vw] md:border-[6px] border-gray-200">
             <div className="flex flex-col md:flex-row md:items-start items-center md:space-x-10">
                 <div className="">
                     <img

@@ -40,7 +40,6 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
         name: "",
         description: "",
         image: "",
-        cover_image: "",
         social_links: [],
         attributes: {
             category: [],
@@ -145,7 +144,7 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <div className="p-6 max-w-4xl mx-auto bg-white rounded-3xl shadow-md">
+        <div className="p-6 max-w-4xl mx-auto bg-white rounded-3xl rounded-[2vw] md:border-[6px] border-gray-200">
             {children}
 
             <StepSlider

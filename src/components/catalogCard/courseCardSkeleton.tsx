@@ -1,10 +1,9 @@
-import React from "react";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export const CourseCardSkeleton: React.FC = () => {
+export function CourseCardSkeleton() {
     return (
-        <Card className="w-full h-auto md:h-[200px] border-0 bg-white rounded-lg shadow-inner shadow-md p-4 flex flex-col justify-between">
+        <Card className="w-full h-auto md:h-[200px] border-0 bg-white rounded-lg shadow-inner bg-gray-100 p-4 flex flex-col justify-between">
             {/* Main Content */}
             <div className="flex flex-1">
                 {/* Left Section */}

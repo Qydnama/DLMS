@@ -49,7 +49,7 @@ export interface CourseDataInterface {
     name: string;
     description: string;
     image: string;
-    cover_image: string;
+    cover_image?: string;
     video?: string;
     social_links: string[];
 
@@ -72,6 +72,7 @@ export interface CertificateInterface {
 
 export interface CertificateCompletionInterface {
     certificateId: string;
+    certificateAddress: string; 
     title: string;
     description: string;
     courseImage: string;

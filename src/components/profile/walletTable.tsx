@@ -9,8 +9,7 @@ interface WalletTableProps {
     userData?: UserDataInterface;
 }
 
-export function WalletTable({userData}: WalletTableProps) {
-
+export function WalletTable({ userData }: WalletTableProps) {
     const isMobile = useIsMobile();
     const [copied, setCopied] = useState(false);
 
@@ -20,16 +19,15 @@ export function WalletTable({userData}: WalletTableProps) {
             ? `${address?.slice(0, 8)}...${address?.slice(-8)}`
             : address;
     };
-        const handleCopy = () => {
-            if (!userData?.address) return;
-            navigator.clipboard.writeText(userData.address);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 1000);
-        };
-
+    const handleCopy = () => {
+        if (!userData?.address) return;
+        navigator.clipboard.writeText(userData.address);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1000);
+    };
 
     return (
-        <div className="rounded-3xl py-4 px-8 bg-white shadow-sm">
+        <div className="py-4 px-8 bg-white rounded-3xl md:border-[6px] border-gray-200">
             <div className="flex flex-row justify-between items-center">
                 <div className="space-y-2 text-left">
                     <Table>

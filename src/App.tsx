@@ -58,7 +58,7 @@ export default function App() {
                             </Route>
                         </Route>
 
-                        <Route path="users/:walletAddr">
+                        <Route path="user/:walletAddr">
                             <Route index element={<MainLayout><UserProfile /></MainLayout>} />
                         </Route>
                             

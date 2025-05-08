@@ -90,8 +90,9 @@ export async function listEnrolledCourses(
     
     return {
       certificateId: "050202930193",
+      certificateAddress: "kQAJ6JM9QyDaGH6gvHIxolnwC6bh7VAodnHcyecPvX1NLGoP",
       title: "Firefighter Training and Safety Course",
-      description: "Yamete Kudasai AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      description: "Description of the course goes here.",
       courseImage: "/images/cards/1.png",
       courseTitle: "Firefighter Training and Safety Course",
       courseAddress: "0:c4e8e20e802afd8b1fd347ad0c63662ab7dae4ef53ca7380a5ab5280b7464d98",

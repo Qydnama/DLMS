@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 export function LessonSkeleton() {
     return (
         <SidebarProvider>
-            <div className="flex w-full mx-auto bg-white rounded-[2vw] shadow-md">
+            <div className="flex w-full mx-auto bg-white rounded-[2vw] xl:border-[6px] border-gray-200">
                 {/* Skeleton Sidebar */}
                 <div className="">
                     <LessonSidebarSkeleton />

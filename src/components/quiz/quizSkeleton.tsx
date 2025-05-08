@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 export function QuizSkeleton() {
     return (
         <SidebarProvider>
-            <div className="flex w-full mx-auto bg-white rounded-2xl shadow-md">
+            <div className="flex w-full mx-auto bg-white rounded-[2vw] md:border-[6px] border-gray-200">
                 {/* Sidebar Skeleton */}
                 <div>
                     <QuizSidebarSkeleton />

@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -19,30 +18,19 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ className }) => {
     const { t } = useTranslation();
-    const [hideBorder, setHideBorder] = useState(false);
     const { network } = useTonConnect();
     // TESTNET = -3, MAINNET = -239
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 0) {
-                setHideBorder(true);
-            } else {
-                setHideBorder(false);
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll);
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-    }, []);
 
     return (
         <header
-            className={`bg-white fixed z-10 ${
-                hideBorder ? "" : "border-b border-gray-300"
-            } transition duration-300 ${className} `}
+            className={`
+            fixed z-50 inset-x-0 top-0 
+            backdrop-blur-lg backdrop-saturate-150
+            bg-white/70 dark:bg-black/50
+            transition-all duration-300
+            ${className}
+        `}
         >
             <div className="max-w-screen-xl flex justify-between items-center px-5 mx-auto">
                 <div className="flex items-center space-x-3">
@@ -110,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
                 {/* Right Block (Ton Connect and Wallet) */}
                 <div className="flex items-center space-x-1 sm:space-x-3">
                     <SearchBar className="" />
-                    <TonConnectButton className="p-0 m-0" />
+                    <TonConnectButton style={{ boxShadow: "none" }} className="p-0 m-0 !shadow-none" />
                     <SettingsPopover />
                 </div>
             </div>

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import React, { useRef, useState } from "react";
 
 interface ImageDropzoneProps {
-    value: string;
+    value?: string;
     onChange: (base64: string) => void;
     maxWidth?: string;
     maxHeight?: string;
@@ -71,7 +71,7 @@ export const ImageDropzone = ({
     return (
         <Card
             className={cn(
-                "flex flex-col hover:border-blue-400 items-center justify-center border-dashed border-2 rounded-lg relative p-4 transition-all",
+                "cursor-pointer flex flex-col hover:border-blue-400 items-center justify-center border-dashed border-2 rounded-lg relative p-4 transition-all",
                 hovered ? "border-blue-400 animate-pulse" : "border-gray-300"
             )}
             style={{ width: maxWidth, height: maxHeight }}

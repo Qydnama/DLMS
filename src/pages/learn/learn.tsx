@@ -27,7 +27,7 @@ export const Learn = () => {
     }
 
     return (
-        <main className="flex flex-col min-h-96 items-center mx-auto max-w-4xl w-full bg-white rounded-[2vw] shadow-md p-4 pt-6 pb-10">
+        <main className="flex flex-col min-h-96 items-center mx-auto max-w-4xl w-full bg-white p-4 pt-6 pb-10 rounded-[2vw] md:border-[6px] border-gray-200">
             <div className="w-full max-w-3xl">
                 <div className="mb-6">
                     <h2 className="md:text-2xl sm:text-xl font-bold">

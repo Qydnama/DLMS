@@ -6,7 +6,7 @@ import { CourseSidebarSkeleton } from "@/components/courseSidebar/couseSidebarSk
 export function SyllabusSkeleton() {
     return (
         <SidebarProvider>
-            <div className="flex w-full mx-auto bg-white rounded-[2vw] shadow-md">
+            <div className="flex w-full mx-auto bg-white rounded-[2vw] md:border-[6px] border-gray-200">
                 {/* Sidebar Skeleton */}
                 <CourseSidebarSkeleton />
 

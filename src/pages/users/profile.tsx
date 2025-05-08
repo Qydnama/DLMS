@@ -110,7 +110,7 @@ export function UserProfile() {
 
     // Rendered profile
     return (
-        <div className="mt-8 mx-auto space-y-3">
+        <div className="mt-8 mx-auto space-y-3 ">
             {isWalletLoading ? (
                 <WalletTableSkeleton />
             ) : (
@@ -118,7 +118,7 @@ export function UserProfile() {
             )}
 
             {/* Tabs Section */}
-            <div className="bg-white py-4 px-8 rounded-3xl shadow-sm">
+            <div className="bg-white py-4 px-8 rounded-3xl md:border-[6px] border-gray-200">
                 <Tabs
                     value={section}
                     onValueChange={(val) => {

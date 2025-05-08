@@ -23,6 +23,7 @@ interface BuyLogicProps {
 }
 
 const buySchema = z.object({
+    iic: z.string().regex(/^\d{12}$/, "IIC must be a 12-digit number"),
     email: z
         .string()
         .email("Invalid email address")
@@ -34,13 +35,14 @@ const buySchema = z.object({
 
 export function BuyLogic({ course }: BuyLogicProps) {
     const [email, setEmail] = useState("");
+    const [iic, setIIC] = useState("");
     const [accepted, setAccepted] = useState(false);
     const [error, setError] = useState("");
     const { toast } = useToast();
     const navigate = useNavigate();
 
     const handleBuy = () => {
-        const result = buySchema.safeParse({ email, accepted });
+        const result = buySchema.safeParse({ iic, email, accepted });
 
         if (!result.success) {
             const firstError =
@@ -94,15 +96,38 @@ export function BuyLogic({ course }: BuyLogicProps) {
                 </div>
                 <Separator />
                 <div className="grid gap-4 py-2">
-                    <Label htmlFor="email">Email (Gmail only)</Label>
-                    <Input
-                        id="email"
-                        placeholder="you@gmail.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="rounded-2xl border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    />
-
+                    <div>
+                        <Label htmlFor="iic">
+                            IIC (Individual Identity Code)
+                        </Label>
+                        <Input
+                            id="iic"
+                            placeholder="031104225930"
+                            type="number"
+                            inputMode="numeric"
+                            pattern="\d*"
+                            maxLength={12}
+                            minLength={12}
+                            value={iic}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (/^\d*$/.test(value) && value.length <= 12) {
+                                  setIIC(value);
+                                }
+                              }}
+                            className="rounded-2xl border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        />
+                    </div>
+                    <div>
+                        <Label htmlFor="email">Email (Gmail only)</Label>
+                        <Input
+                            id="email"
+                            placeholder="student@gmail.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="rounded-2xl border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        />
+                    </div>
                     <div className="flex items-center gap-2 mt-2">
                         <Checkbox
                             id="accept"

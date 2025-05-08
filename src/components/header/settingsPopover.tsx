@@ -18,7 +18,7 @@ export const SettingsPopover: React.FC = () => {
     );
 
     const { address, isConnected } = useTonConnect();
-    const profileLink = `/users/${address}`;
+    const profileLink = `/user/${address}`;
 
     const changeTheme = (newTheme: string) => {
         setTheme(newTheme);

@@ -77,7 +77,7 @@ export function Lesson() {
 
     return (
         <SidebarProvider>
-            <div className="flex w-full mx-auto bg-white rounded-[2vw] shadow-md">
+            <div className="flex w-full mx-auto bg-white rounded-[2vw] xl:border-[6px] border-gray-200">
                 {/* Sidebar with a fixed width */}
                 <div className="">
                     <LessonSidebar

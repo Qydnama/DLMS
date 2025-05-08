@@ -71,7 +71,7 @@ export function Catalog() {
     }
 
     return (
-        <main className="min-h-screen bg-white rounded-[2vw] shadow-md p-6">
+        <main className="min-h-screen bg-white p-6 rounded-[2vw] md:border-[6px] border-gray-200">
             <div className="max-w-7xl mx-auto space-y-8">
                 <div className="flex flex-col sm:flex-row md:items-center justify-between gap-4">
                     <h2 className="text-2xl font-bold text-gray-900">

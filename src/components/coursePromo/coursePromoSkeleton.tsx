@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 
 export function CoursePromoSkeleton() {
     return (
-        <div className="w-full bg-white rounded-[2vw] sm:pt-4 md:pt-6 pb-10">
+        <div className="w-full bg-white rounded-[2vw] md:border-[6px] border-gray-200 sm:pt-4 md:pt-6 pb-10">
             {/* 1. Background Image */}
             <div className="relative mx-auto h-[120px] sm:h-[160px] md:h-[200px] w-full sm:w-[96%] rounded-[2vw] overflow-hidden">
                 <Skeleton className="absolute top-1/2 left-1/2 w-full h-full transform -translate-x-1/2 -translate-y-1/2 scale-125" />

@@ -140,26 +140,57 @@ export function StepOne({
 
     return (
         <div className="space-y-2">
+            <h2 className="text-xl font-semibold mb-6 text-gray-800">
+                        Course Information
+                    </h2>
             {/* Logo Upload */}
-            <div>
-                <h2 className="text-xl font-semibold mb-6 text-gray-800">
-                    Course Information
-                </h2>
-                <Label
-                    htmlFor="title"
-                    className="mb-2 block text-sm font-medium"
-                >
-                    Course Logo
-                </Label>
-                <ImageDropzone
-                    value={courseData.image}
-                    onChange={(base64) =>
-                        setCourseData((prev) => ({ ...prev, image: base64 }))
-                    }
-                />
-                {showErrors && errors.image && (
-                    <p className="text-red-500 text-xs mt-1">{errors.image}</p>
-                )}
+            <div className="flex items-center mb-4 gap-5">
+                <div>
+                    
+                    <Label
+                        htmlFor="title"
+                        className="mb-2 block text-sm font-medium"
+                    >
+                        Course Logo
+                    </Label>
+                    <ImageDropzone
+                        value={courseData.image}
+                        onChange={(base64) =>
+                            setCourseData((prev) => ({
+                                ...prev,
+                                image: base64,
+                            }))
+                        }
+                    />
+                    {showErrors && errors.image && (
+                        <p className="text-red-500 text-xs mt-1">
+                            {errors.image}
+                        </p>
+                    )}
+                </div>
+                {/* Cover Image Upload */}
+                <div>
+                    <Label
+                        htmlFor="title"
+                        className="mb-2 block text-sm font-medium"
+                    >
+                        Cover Image (optional)
+                    </Label>
+                    <ImageDropzone
+                        value={courseData.cover_image}
+                        onChange={(base64) =>
+                            setCourseData((prev) => ({
+                                ...prev,
+                                cover_image: base64,
+                            }))
+                        }
+                    />
+                    {showErrors && errors.image && (
+                        <p className="text-red-500 text-xs mt-1">
+                            {errors.cover_image}
+                        </p>
+                    )}
+                </div>
             </div>
 
             {/* Title */}

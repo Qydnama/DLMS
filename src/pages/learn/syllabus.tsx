@@ -54,7 +54,7 @@ export function Syllabus() {
 
     return (
         <SidebarProvider>
-            <div className="flex w-full mx-auto bg-white rounded-[2vw] shadow-md">
+            <div className="flex w-full mx-auto bg-white rounded-[2vw] md:border-[6px] border-gray-200">
                 <CourseSidebar courseData={course} />
 
                 <div className="max-w-4xl flex-grow mx-auto p-0 pt-6 md:pr-6 md:p-6">

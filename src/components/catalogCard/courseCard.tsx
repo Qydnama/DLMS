@@ -33,7 +33,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
 
     const handleAuthorClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        navigate(`/author/${authorAddress}`);
+        navigate(`/user/${authorAddress}`);
     };
 
     return (

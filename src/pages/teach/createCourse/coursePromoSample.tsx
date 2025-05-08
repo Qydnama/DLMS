@@ -34,14 +34,22 @@ if (priceString) {
 
 export function CoursePromoSample() {
     return (
-        <div className="w-full bg-white rounded-[2vw] sm:pt-4 md:pt-6 pb-10">
+        <div className="w-full bg-white sm:pt-4 md:pt-6 pb-10 rounded-[2vw] md:border-[6px] border-gray-200">
             {/* 1. Background Image */}
             <div className="relative mx-auto h-[120px] sm:h-[160px] md:h-[200px] w-full sm:w-[96%] rounded-[2vw] overflow-hidden">
-                <img
-                    className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 scale-125 blur-[10px]"
-                    src={courseData.image}
-                    alt="Course Background"
-                />
+                {courseData.cover_image ? (
+                    <img
+                        className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2"
+                        src={courseData.cover_image}
+                        alt="Course Background"
+                    />
+                ) : (
+                    <img
+                        className="absolute top-1/2 left-1/2 w-full h-full object-cover transform -translate-x-1/2 -translate-y-1/2 scale-125 blur-[10px]"
+                        src={courseData.image}
+                        alt="Course Background"
+                    />
+                )}
             </div>
 
             {/* 2. Course Info */}

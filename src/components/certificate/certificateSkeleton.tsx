@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function CertificateSkeleton() {
   return (
-    <div className="bg-white rounded-[2vw] p-6 shadow-md w-full mx-auto">
+    <div className="bg-white p-6 w-full mx-auto rounded-[2vw] md:border-[6px] border-gray-200">
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Left image placeholder */}
         <div className="w-1/2">

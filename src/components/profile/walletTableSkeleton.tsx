@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function WalletTableSkeleton() {
     return (
-        <div className="rounded-3xl py-4 px-8 bg-white shadow-sm">
+        <div className="rounded-3xl py-4 px-8 bg-white md:border-[6px] border-gray-200">
                 <div className="space-y-4 pt-3 pb-4">
                     {/* Name row */}
                     <div className="flex items-center space-x-4">
