@@ -7,7 +7,7 @@ import { z } from "zod";
 import { checkPinataConnection } from "@/lib/pinata";
 import { CourseDataInterface } from "@/types/courseData";
 import { extractYoutubeVideoId } from "@/components/createCourse/youtubeIdExtract";
-import { Spinner } from "../../../components/ui/kibo-ui/spinner";
+import { Spinner } from "@/components/ui/kibo-ui/spinner";
 
 interface StepFiveProps {
     courseData: CourseDataInterface;

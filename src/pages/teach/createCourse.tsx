@@ -9,8 +9,8 @@ import { StepTwo } from "@/pages/teach/createCourse/stepTwo";
 import { StepThree } from "@/pages/teach/createCourse/stepThree";
 import { StepFour } from "@/pages/teach/createCourse/stepFour";
 import { StepFive } from "@/pages/teach/createCourse/stepFive";
-import { CourseDataInterface } from "@/types/courseData";
-import { CreateCourseLogic } from "@/components/createCourse/createCourseLogic";
+import { CourseDataInterface, VideoCheckState } from "@/types/courseData";
+import { CreateCourseButton } from "@/components/createCourse/createCourseButton";
 
 export function CreateCourse({ children }: { children: React.ReactNode }) {
     const [isDirty, setIsDirty] = useState(false);
@@ -35,7 +35,11 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
     const [activeModuleIndex, setActiveModuleIndex] = useState(0);
     const [activeQuizIndex, setActiveQuizIndex] = useState(0);
 
+    
+    const [videoCheckState, setVideoCheckState] = useState<VideoCheckState>({});
+
     // Единое состояние courseData
+
     const [courseData, setCourseData] = useState<CourseDataInterface>({
         name: "",
         description: "",
@@ -80,7 +84,7 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
         courseCompletion: [
             {
                 gradeHighThan: "90",
-                certificate: "/images/nfts/nft_sample.png",
+                certificate: "/images/cards/1.png",
             },
         ],
     });
@@ -139,7 +143,6 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
         isValidJwt;
 
     const handleCreateCourse = () => {
-        
         setShowDialog(true);
     };
 
@@ -174,6 +177,8 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
                         showErrors={showErrors.stepTwo}
                         setActiveModuleIndex={setActiveModuleIndex}
                         activeModuleIndex={activeModuleIndex}
+                        videoCheckState={videoCheckState}
+                        setVideoCheckState={setVideoCheckState}
                     />
                 )}
 
@@ -258,8 +263,9 @@ export function CreateCourse({ children }: { children: React.ReactNode }) {
                     </Button>
                 </div>
             </form>
-            <CreateCourseLogic
+            <CreateCourseButton
                 course={courseData}
+                jwt={jwt}
                 open={showDialog}
                 onOpenChange={setShowDialog}
             />

@@ -13,7 +13,7 @@ import {
 import { CourseDataInterface } from "@/types/courseData";
 import { CategorySelect } from "@/components/createCourse/categorySelect";
 import { ImageDropzone } from "@/components/createCourse/imageDropzone";
-import { extractYoutubeVideoId } from "@/components/createCourse/youtubeIdExtract";
+import { checkYouTubeVideo } from "@/components/createCourse/videoExistsLogic";
 
 interface StepOneProps {
     courseData: CourseDataInterface;
@@ -32,28 +32,26 @@ interface StepOneProps {
 const schema = z.object({
     image: z.string().min(1, "Logo is required"),
     name: z.string().min(5, "Title must be at least 5 characters"),
-    video: z
-        .string()
-        .optional()
-        .refine(
-            (val) => {
-                if (!val) return true; // Пусто — значит пропускаем
-                try {
-                    new URL(val); // Проверка что это URL
-                } catch {
-                    return false;
-                }
-
-                const videoId = extractYoutubeVideoId(val);
-                return !!videoId;
-            },
-            {
-                message: "Enter a valid YouTube URL with a video ID",
-            }
-        ),
+    description: z.string().min(5, "Description must be at least 5 characters"),
+    video: z.preprocess(
+        (val) => {
+            if (typeof val === "string" && val.trim() === "") return undefined;
+            return val;
+        },
+        z
+            .string()
+            .url("Must be a valid YouTube link")
+            .refine(
+                async (url) => {
+                    if (!url) return true; // skip if undefined
+                    return await checkYouTubeVideo(url);
+                },
+                { message: "YouTube video does not exist" }
+            )
+            .optional()
+    ),
 
     attributes: z.object({
-        summary: z.string().min(5, "Summary must be at least 5 characters"),
         workload: z.string().min(5, "Workload description required"),
         duration: z.string().min(5, "Duration description required"),
         learn: z.string().min(5, "This field is required"),
@@ -96,8 +94,8 @@ export function StepOne({
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        const validate = () => {
-            const result = schema.safeParse(courseData);
+        const validate = async () => {
+            const result = await schema.safeParseAsync(courseData);
             if (!result.success) {
                 const errorMessages: Record<string, string> = {};
 
@@ -141,56 +139,55 @@ export function StepOne({
     return (
         <div className="space-y-2">
             <h2 className="text-xl font-semibold mb-6 text-gray-800">
-                        Course Information
-                    </h2>
+                Course Information
+            </h2>
             {/* Logo Upload */}
-            <div className="flex items-center mb-4 gap-5">
-                <div>
-                    
-                    <Label
-                        htmlFor="title"
-                        className="mb-2 block text-sm font-medium"
-                    >
-                        Course Logo
-                    </Label>
-                    <ImageDropzone
-                        value={courseData.image}
-                        onChange={(base64) =>
-                            setCourseData((prev) => ({
-                                ...prev,
-                                image: base64,
-                            }))
-                        }
-                    />
-                    {showErrors && errors.image && (
-                        <p className="text-red-500 text-xs mt-1">
-                            {errors.image}
-                        </p>
-                    )}
+            <div>
+                <div className="flex items-center mb-4 gap-5">
+                    <div>
+                        <Label
+                            htmlFor="title"
+                            className="mb-2 block text-sm font-medium"
+                        >
+                            Course Logo
+                        </Label>
+                        <ImageDropzone
+                            value={courseData.image}
+                            onChange={(base64) =>
+                                setCourseData((prev) => ({
+                                    ...prev,
+                                    image: base64,
+                                }))
+                            }
+                        />
+                    </div>
+                    {/* Cover Image Upload */}
+                    <div>
+                        <Label
+                            htmlFor="title"
+                            className="mb-2 block text-sm font-medium"
+                        >
+                            Cover Image (optional)
+                        </Label>
+                        <ImageDropzone
+                            value={courseData.cover_image}
+                            onChange={(base64) =>
+                                setCourseData((prev) => ({
+                                    ...prev,
+                                    cover_image: base64,
+                                }))
+                            }
+                        />
+                        {showErrors && errors.image && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {errors.cover_image}
+                            </p>
+                        )}
+                    </div>
                 </div>
-                {/* Cover Image Upload */}
-                <div>
-                    <Label
-                        htmlFor="title"
-                        className="mb-2 block text-sm font-medium"
-                    >
-                        Cover Image (optional)
-                    </Label>
-                    <ImageDropzone
-                        value={courseData.cover_image}
-                        onChange={(base64) =>
-                            setCourseData((prev) => ({
-                                ...prev,
-                                cover_image: base64,
-                            }))
-                        }
-                    />
-                    {showErrors && errors.image && (
-                        <p className="text-red-500 text-xs mt-1">
-                            {errors.cover_image}
-                        </p>
-                    )}
-                </div>
+                {showErrors && errors.image && (
+                    <p className="text-red-500 text-xs mt-1">{errors.image}</p>
+                )}
             </div>
 
             {/* Title */}
@@ -223,34 +220,34 @@ export function StepOne({
                 </div>
             </div>
 
-            {/* Summary */}
+            {/* Description */}
             <div>
                 <Label
-                    htmlFor="summary"
+                    htmlFor="description"
                     className="mb-2 block text-sm font-medium"
                 >
-                    Summary
+                    Description
                 </Label>
                 <Textarea
-                    id="summary"
+                    id="description"
                     className="w-full rounded-2xl border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    placeholder="Enter a short summary of the course"
-                    value={courseData.attributes.summary}
+                    placeholder="Enter a short description of the course"
+                    value={courseData.description}
                     onChange={(e) =>
-                        handleAttributeInputChange("summary", e.target.value)
+                        handleInputChange("description", e.target.value)
                     }
                     maxLength={512}
                 />
                 <div className="flex justify-between">
                     <div>
-                        {showErrors && errors.summary && (
+                        {showErrors && errors.description && (
                             <p className="text-red-500 text-xs">
-                                {errors.summary}
+                                {errors.description}
                             </p>
                         )}
                     </div>
                     <div className="text-gray-500 text-xs mt-1 text-right">
-                        <span>{courseData.attributes.summary.length}/512</span>
+                        <span>{courseData.description.length}/512</span>
                     </div>
                 </div>
             </div>

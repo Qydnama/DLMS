@@ -6,7 +6,6 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";
@@ -14,35 +13,33 @@ import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { CourseDataInterface } from "@/types/courseData";
 import { useToast } from "@/hooks/use-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
+import { sendCourseToPinata } from "@/lib/pinata";
 
 interface CreateCourseLogicProps {
     course: CourseDataInterface;
+    jwt: string | null;
 }
 
 const buySchema = z.object({
-    email: z
-        .string()
-        .email("Invalid email address")
-        .endsWith("@gmail.com", "Only Gmail is allowed"),
     accepted: z.literal(true, {
         errorMap: () => ({ message: "You must accept the terms." }),
     }),
 });
 
-export function CreateCourseLogic({
+export function CreateCourseButton({
     course,
     open,
     onOpenChange,
+    jwt
 }: CreateCourseLogicProps & { open: boolean; onOpenChange: (open: boolean) => void }) {
-    const [email, setEmail] = useState("");
     const [accepted, setAccepted] = useState(false);
     const [error, setError] = useState("");
     const { toast } = useToast();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
-    const handleCreateCourse = () => {
-        const result = buySchema.safeParse({ email, accepted });
+    const handleCreateCourse = async () => {
+        const result = buySchema.safeParse({ accepted });
 
         if (!result.success) {
             const firstError =
@@ -52,6 +49,20 @@ export function CreateCourseLogic({
         }
 
         setError("");
+        const courseURL = await sendCourseToPinata(course, jwt ?? "");
+        console.log(courseURL);
+        // const courseJSON = JSON.stringify(finalCourse);
+
+        // Save the JSON file
+        // const blob = new Blob([courseJSON], { type: "application/json" });
+        // const url = URL.createObjectURL(blob);
+        // const link = document.createElement("a");
+        // link.href = url;
+        // link.download = `${course.name.replace(/\s+/g, "_")}_course.json`;
+        // document.body.appendChild(link);
+        // link.click();
+        // document.body.removeChild(link);
+        // URL.revokeObjectURL(url);
 
         // show toast
         toast({
@@ -59,7 +70,7 @@ export function CreateCourseLogic({
             description: `You've created the course: ${course.name}`,
             className: "bg-green-500 text-white rounded-[2vw]",
         });
-        navigate("/teach");
+        // navigate("/teach");
     };
 
     return (
@@ -82,10 +93,6 @@ export function CreateCourseLogic({
                             <span className="font-medium">Modules:</span>{" "}
                             {course.modules.length}
                         </p>
-                        <p>
-                            <span className="font-medium">Lessons:</span>{" "}
-                            {course.attributes.lessons}
-                        </p>
                     </div>
                     <div className="text-2xl font-bold text-blue-600">
                         100 TON
@@ -93,15 +100,6 @@ export function CreateCourseLogic({
                 </div>
                 <Separator />
                 <div className="grid gap-4 py-2">
-                    <Label htmlFor="email">Email (Gmail only)</Label>
-                    <Input
-                        id="email"
-                        placeholder="you@gmail.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="rounded-2xl border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    />
-
                     <div className="flex items-center gap-2 mt-2">
                         <Checkbox
                             id="accept"
@@ -124,7 +122,7 @@ export function CreateCourseLogic({
                 <DialogFooter>
                     <Button
                         onClick={handleCreateCourse}
-                        className="rounded-2xl bg-blue-500 hover:bg-blue-700 text-white"
+                        className="font-semibold rounded-2xl bg-goluboy hover:bg-blue-500 text-white"
                     >
                         Create Course
                     </Button>

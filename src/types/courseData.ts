@@ -72,7 +72,7 @@ export interface CertificateInterface {
 
 export interface CertificateCompletionInterface {
     certificateId: string;
-    certificateAddress: string; 
+    certificateAddress: string;
     title: string;
     description: string;
     courseImage: string;
@@ -92,9 +92,17 @@ export interface CatalogCourseInterface {
     rating: number;
     image: string;
     users: number;
-    difficulty: string,
-    categories: string[],
+    difficulty: string;
+    categories: string[];
     date: string;
 }
 
 export type FilterType = "difficulty" | "rating" | "price";
+
+export type VideoCheckState = Record<
+    number,
+    Record<
+        number,
+        { isChecking: boolean; isValid: boolean; lastChecked?: string }
+    >
+>;

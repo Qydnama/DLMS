@@ -5,25 +5,24 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X, CirclePlus } from "lucide-react";
-import { CourseDataInterface } from "@/types/courseData";
-import { extractYoutubeVideoId } from "@/components/createCourse/youtubeIdExtract";
+import { X, CirclePlus, Check, Search } from "lucide-react";
+import { CourseDataInterface, VideoCheckState } from "@/types/courseData";
+import {
+    checkYouTubeVideo,
+    extractYoutubeVideoId,
+} from "@/components/createCourse/videoExistsLogic";
+import { Spinner } from "@/components/ui/kibo-ui/spinner";
+import { VideoPreviewDialog } from "@/components/createCourse/videoPreviewDialog";
 
 // 1) Валидация урока
 const lessonSchema = z.object({
     title: z.string().min(5, "Lesson title must be at least 5 characters"),
     videoId: z
         .string()
-        .url()
-        .refine(
-            (url) => {
-                const videoId = extractYoutubeVideoId(url);
-                return !!videoId;
-            },
-            {
-                message: "Enter a valid YouTube URL with a video ID",
-            }
-        ),
+        .url("Must be a valid YouTube link")
+        .refine(async (url) => await checkYouTubeVideo(url), {
+            message: "YouTube video does not exist",
+        }),
 });
 
 // 2) Валидация модуля
@@ -56,6 +55,8 @@ interface StepTwoProps {
         }>
     >;
     showErrors: boolean;
+    videoCheckState: VideoCheckState;
+    setVideoCheckState: React.Dispatch<React.SetStateAction<VideoCheckState>>;
 
     // Логика табов для модулей
     activeModuleIndex: number;
@@ -69,6 +70,8 @@ export function StepTwo({
     showErrors,
     activeModuleIndex,
     setActiveModuleIndex,
+    videoCheckState,
+    setVideoCheckState
 }: StepTwoProps) {
     // Ошибки вида errors[moduleIndex][lessonIndex] = { title?: string; videoUrl?: string }
     const [errors, setErrors] = useState<
@@ -81,11 +84,14 @@ export function StepTwo({
         >
     >({});
 
+    const [previewVideoId, setPreviewVideoId] = useState<string | null>(null);
+
     useEffect(() => {
-        const validate = () => {
-            const result = stepTwoSchema.safeParse({
+        const validate = async () => {
+            const result = await stepTwoSchema.safeParseAsync({
                 modules: courseData.modules,
             });
+
             if (!result.success) {
                 const tempErrors: Record<
                     number,
@@ -103,26 +109,16 @@ export function StepTwo({
                         const moduleIndex = Number(issue.path[1]);
                         if (Number.isNaN(moduleIndex)) continue;
 
-                        // Ошибка в названии модуля
-                        if (issue.path[2] === "moduleTitle") {
-                            if (!tempErrors[moduleIndex]) {
-                                tempErrors[moduleIndex] = {
-                                    moduleTitle: undefined,
-                                    lessons: {},
-                                };
-                            }
+                        if (!tempErrors[moduleIndex]) {
+                            tempErrors[moduleIndex] = { lessons: {} };
+                        }
+
+                        if (issue.path[2] === "title") {
                             tempErrors[moduleIndex].moduleTitle = issue.message;
                         }
 
-                        // Ошибки в уроках
                         if (issue.path[2] === "lessons") {
                             const lessonIndex = Number(issue.path[3]);
-                            if (!tempErrors[moduleIndex]) {
-                                tempErrors[moduleIndex] = {
-                                    moduleTitle: undefined,
-                                    lessons: {},
-                                };
-                            }
                             if (!tempErrors[moduleIndex].lessons) {
                                 tempErrors[moduleIndex].lessons = {};
                             }
@@ -154,8 +150,15 @@ export function StepTwo({
             }
         };
 
-        validate();
+        (async () => {
+            await validate();
+        })();
     }, [courseData, setValidationStatus]);
+
+    const openDialogWithVideo = (videoId: string) => {
+        const id = extractYoutubeVideoId(videoId);
+        setPreviewVideoId(id);
+    };
 
     // Добавить модуль
     const handleAddModule = () => {
@@ -220,7 +223,7 @@ export function StepTwo({
         setCourseData((prev) => ({ ...prev, modules: updated }));
     };
 
-    const handleLessonFieldChange = (
+    const handleLessonFieldChange = async (
         moduleIndex: number,
         lessonIndex: number,
         field: "title" | "videoId",
@@ -232,6 +235,54 @@ export function StepTwo({
             [field]: value,
         };
         setCourseData((prev) => ({ ...prev, modules: updated }));
+
+        if (field === "videoId") {
+            const current = videoCheckState?.[moduleIndex]?.[lessonIndex];
+            if (current?.lastChecked === value) return;
+
+            setVideoCheckState((prev) => ({
+                ...prev,
+                [moduleIndex]: {
+                    ...prev[moduleIndex],
+                    [lessonIndex]: {
+                        isChecking: true,
+                        isValid: false,
+                        lastChecked: value,
+                    },
+                },
+            }));
+
+            // Проверка только одного видео
+            const isValid = await checkYouTubeVideo(value);
+            setVideoCheckState((prev) => ({
+                ...prev,
+                [moduleIndex]: {
+                    ...prev[moduleIndex],
+                    [lessonIndex]: {
+                        isChecking: false,
+                        isValid,
+                        lastChecked: value,
+                    },
+                },
+            }));
+
+            // Обновление ошибок по видео
+            setErrors((prev) => ({
+                ...prev,
+                [moduleIndex]: {
+                    ...prev[moduleIndex],
+                    lessons: {
+                        ...prev[moduleIndex]?.lessons,
+                        [lessonIndex]: {
+                            ...prev[moduleIndex]?.lessons?.[lessonIndex],
+                            videoUrl: isValid
+                                ? undefined
+                                : "YouTube video does not exist",
+                        },
+                    },
+                },
+            }));
+        }
     };
 
     return (
@@ -265,6 +316,7 @@ export function StepTwo({
                         <div className="flex space-x-0">
                             {courseData.modules.map((mod, index) => {
                                 const moduleHasError = !!errors[index];
+
                                 return (
                                     <div
                                         key={index}
@@ -404,19 +456,62 @@ export function StepTwo({
                                         {/* Lesson Video URL */}
                                         <div>
                                             <Label>YouTube URL</Label>
-                                            <Input
-                                                value={lesson.videoId}
-                                                onChange={(e) =>
-                                                    handleLessonFieldChange(
-                                                        modIndex,
-                                                        lessonIndex,
-                                                        "videoId",
-                                                        e.target.value
-                                                    )
-                                                }
-                                                placeholder="https://youtube.com/..."
-                                                className="rounded-2xl mt-1"
-                                            />
+                                            <div className="flex flex-col md:flex-row md:items-center md:space-x-2 space-y-2 md:space-y-0">
+                                                <Input
+                                                    value={lesson.videoId}
+                                                    onChange={(e) =>
+                                                        handleLessonFieldChange(
+                                                            modIndex,
+                                                            lessonIndex,
+                                                            "videoId",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    placeholder="https://youtube.com/..."
+                                                    className="rounded-2xl mt-1"
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    onClick={() =>
+                                                        openDialogWithVideo(
+                                                            lesson.videoId
+                                                        )
+                                                    }
+                                                    className="gap-1.5 flex items-center border-blue-500 text-blue-500 
+        hover:border-blue-700 hover:text-blue-700 transition-colors duration-200 rounded-2xl"
+                                                    disabled={
+                                                        !lesson.videoId ||
+                                                        videoCheckState?.[
+                                                            modIndex
+                                                        ]?.[lessonIndex]
+                                                            ?.isChecking ||
+                                                        !videoCheckState?.[
+                                                            modIndex
+                                                        ]?.[lessonIndex]
+                                                            ?.isValid
+                                                    }
+                                                >
+                                                    <span className="font-semibold text-xs sm:text-sm flex items-center gap-2">
+                                                        Preview
+                                                        {videoCheckState?.[
+                                                            modIndex
+                                                        ]?.[lessonIndex]
+                                                            ?.isChecking ? (
+                                                            <Spinner className="w-4 h-4 text-blue-500" />
+                                                        ) : !lesson.videoId ? (
+                                                            <Search className="w-4 h-4 text-blue-500" />
+                                                        ) : videoCheckState?.[
+                                                              modIndex
+                                                          ]?.[lessonIndex]
+                                                              ?.isValid ? (
+                                                            <Check className="w-4 h-4 text-blue-500" />
+                                                        ) : (
+                                                            <X className="w-4 h-4 text-blue-500" />
+                                                        )}
+                                                    </span>
+                                                </Button>
+                                            </div>
                                             {showErrors &&
                                                 errors[modIndex]?.lessons?.[
                                                     lessonIndex
@@ -456,6 +551,11 @@ export function StepTwo({
                     </TabsContent>
                 ))}
             </Tabs>
+            <VideoPreviewDialog
+                videoId={previewVideoId ?? ""}
+                open={!!previewVideoId}
+                onClose={() => setPreviewVideoId(null)}
+            />
         </div>
     );
 }
